@@ -4,15 +4,17 @@ import DefaultLayout from '../components/Layout/DefaultLayout'
 import Login from '../pages/Login'
 import Register from '../pages/Register'
 import Home from '../pages/Home'
+import Product from '../pages/Product'
+import ProductDetail from '../pages/ProductDetail/ProductDetail'
 
-export const navigation = [
-  {name: 'Home', to: '/'}
-]
+export const navigation = [{ name: 'Home', to: '/' }]
 
 export const publicRoutes = [
   { path: '/', component: Home },
   { path: '/login', component: Login, Layout: null },
   { path: '/register', component: Register, Layout: null },
+  { path: '/product', component: Product },
+  { path: '/product-details/:id', component: ProductDetail },
 ]
 
 const GenerateRoutes = (route) => {

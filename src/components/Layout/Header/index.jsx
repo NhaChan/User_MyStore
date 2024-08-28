@@ -1,8 +1,41 @@
+import { Drawer, Dropdown, Input } from 'antd'
 import React, { useState } from 'react'
-
+import { FaSearch, FaShoppingBag } from 'react-icons/fa'
+import { Link, useLocation } from 'react-router-dom'
+const items = [
+  {
+    key: '1',
+    label: <Link to="/login">Thông tin cá nhân</Link>,
+  },
+  {
+    key: '2',
+    label: (
+      <Link target="_blank" rel="noopener noreferrer" to="/">
+        Đơn đặt hàng
+      </Link>
+    ),
+  },
+  {
+    key: '3',
+    label: (
+      <Link target="_blank" rel="noopener noreferrer" to="/">
+        Đăng xuất
+      </Link>
+    ),
+  },
+]
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  const [open, setOpen] = useState(false)
+  const location = useLocation()
+
+  const showDrawer = () => {
+    setOpen(true)
+  }
+  const onClose = () => {
+    setOpen(false)
+  }
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
@@ -14,159 +47,126 @@ const Header = () => {
 
   return (
     <>
-      <nav className="bg-white shadow-md">
-        <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-          <a
-            href="https://flowbite.com/"
-            className="flex items-center space-x-3 rtl:space-x-reverse"
-          >
-            <img
-              src="https://flowbite.com/docs/images/logo.svg"
-              className="h-8"
-              alt="Flowbite Logo"
-            />
-            <span className="self-center text-2xl font-semibold whitespace-nowrap">Flowbite</span>
-          </a>
-          <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+      <nav className="bg-white shadow-md px-6 sticky top-0 z-30 h-24 flex items-center justify-between max-w-screen-2xl">
+        <Link to="/" className="flex items-center rtl:space-x-reverse">
+          <img src="/logo2.png" className="w-32 md:w-48" alt="logo" />
+        </Link>
+        <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+          <div className="flex items-center justify-center">
             <button
               type="button"
-              className="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-              id="user-menu-button"
-              aria-expanded={isDropdownOpen}
-              onClick={toggleDropdown}
+              onClick={showDrawer}
+              className="p-2 border-2 border-blue-700 rounded-full hover:bg-orange-200"
             >
-              <span className="sr-only">Open user menu</span>
+              <FaSearch className="text-sky-700 text-xl" />
+            </button>
+          </div>
+          <div>
+            <FaShoppingBag className="text-3xl text-sky-700 mx-4" />
+          </div>
+          <button
+            type="button"
+            className="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+            id="user-menu-button"
+            aria-expanded={isDropdownOpen}
+            onClick={toggleDropdown}
+          >
+            <Dropdown menu={{ items }} trigger={['click']}>
               <img
                 className="w-8 h-8 rounded-full"
                 src="https://i.pinimg.com/564x/c0/d3/21/c0d32107d903d756e9b14a24e8f34736.jpg"
-                alt="user photo"
+                alt="user"
               />
-            </button>
-            {isDropdownOpen && (
-              <div
-                className="z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600 absolute top-full mt-2 right-0"
-                id="user-dropdown"
-              >
-                <div className="px-4 py-3">
-                  <span className="block text-sm text-gray-900 dark:text-white">Bonnie Green</span>
-                  <span className="block text-sm text-gray-500 truncate dark:text-gray-400">
-                    name@flowbite.com
-                  </span>
-                </div>
-                <ul className="py-2" aria-labelledby="user-menu-button">
-                  <li>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                    >
-                      Dashboard
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                    >
-                      Settings
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                    >
-                      Earnings
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                    >
-                      Sign out
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            )}
-            <button
-              onClick={toggleMenu}
-              data-collapse-toggle="navbar-user"
-              type="button"
-              className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-              aria-controls="navbar-user"
-              aria-expanded={isMenuOpen}
-            >
-              <span className="sr-only">Open main menu</span>
-              <svg
-                className="w-5 h-5"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 17 14"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M1 1h15M1 7h15M1 13h15"
-                />
-              </svg>
-            </button>
-          </div>
-          <div
-            className={`items-center justify-between w-full md:flex md:w-auto md:order-1 ${
-              isMenuOpen ? 'block' : 'hidden'
-            }`}
-            id="navbar-user"
+            </Dropdown>
+          </button>
+          <button
+            onClick={toggleMenu}
+            data-collapse-toggle="navbar-user"
+            type="button"
+            className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-blue-700 dark:focus:ring-blue-600"
+            aria-controls="navbar-user"
+            aria-expanded={isMenuOpen}
           >
-            <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white">
-              <li>
-                <a
-                  href="#"
-                  className="block py-2 px-3 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500"
-                  aria-current="page"
-                >
-                  Home
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-                >
-                  About
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-                >
-                  Services
-                </a>
-              </li>
-              <li>
+            <span className="sr-only">Open main menu</span>
+            <svg
+              className="w-5 h-5"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 17 14"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M1 1h15M1 7h15M1 13h15"
+              />
+            </svg>
+          </button>
+        </div>
+        <div
+          className={`items-center justify-between w-full md:flex md:w-auto md:order-1 ${
+            isMenuOpen ? 'block' : 'hidden'
+          }`}
+          id="navbar-user"
+        >
+          <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white">
+            <li>
+              <Link
+                to="/"
+                className={`block py-2 px-3 rounded md:p-0 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:hover:bg-blue-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-blue-700 ${
+                  location.pathname === '/' ? 'text-blue-700' : 'text-gray-900'
+                }`}
+              >
+                Trang chủ
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/product"
+                className={`block py-2 px-3 rounded md:p-0 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:hover:bg-blue-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-blue-700 ${
+                  location.pathname === '/product' ? 'text-blue-700' : 'text-gray-900'
+                }`}
+              >
+                Sản phẩm
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/product-details"
+                className={`block py-2 px-3 rounded md:p-0 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:hover:bg-blue-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-blue-700 ${
+                  location.pathname === '/product-details' ? 'text-blue-700' : 'text-gray-900'
+                }`}
+              >
+                Thông tin
+              </Link>
+            </li>
+            {/* <li>
                 <a
                   href="#"
                   className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
                 >
                   Pricing
                 </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-                >
-                  Contact
-                </a>
-              </li>
-            </ul>
-          </div>
+              </li> */}
+            <li>
+              <Link
+                to="/product"
+                className={`block py-2 px-3 rounded md:p-0 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:hover:bg-blue-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-blue-700 ${
+                  location.pathname === '/product' ? 'text-blue-700' : 'text-gray-900'
+                }`}
+              >
+                Liên lạc
+              </Link>
+            </li>
+          </ul>
         </div>
       </nav>
+
+      <Drawer onClose={onClose} open={open} placement="top" height={150}>
+        <Input.Search placeholder="Tìm kiếm" size="large" />
+      </Drawer>
     </>
   )
 }

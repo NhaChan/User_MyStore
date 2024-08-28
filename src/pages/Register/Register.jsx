@@ -5,28 +5,20 @@ import { LockOutlined, UserOutlined, MailOutlined } from '@ant-design/icons'
 
 const Register = () => {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-blue-200">
-      <div className="flex flex-col lg:flex-row bg-white shadow-lg rounded-lg overflow-hidden">
-        <div className="lg:w-1/2 flex items-center justify-center p-12 bg-blue-700 text-white">
-          <div className="text-center">
-            <img
-              src="https://i.pinimg.com/564x/ca/ef/e4/caefe4de901d74fce1fb7162884a5c63.jpg"
-              alt="Logo"
-              className="w-44 mx-auto"
-            />
-            <h2 className="mt-6 text-3xl font-bold">Welcome aboard my friend</h2>
-            <p className="mt-4">Just a couple of clicks and we start</p>
-          </div>
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-l to-blue-500 from-sky-50">
+      <div className="grid grid-cols-2 w-3/5 md:w-4/5 lg:w-3/5 bg-white shadow-lg rounded-lg overflow-hidden">
+        <div className="hidden md:flex items-center justify-center bg-sky-100">
+          <img src="logo2.png" alt="Logo" className="w-96 mx-auto" />
         </div>
-        <div className="lg:w-1/2 p-12">
+        <div className="px-10 py-16 col-span-2 md:col-span-1">
           <h2 className="text-3xl font-bold text-center mb-6 text-indigo-600">Đăng ký</h2>
-          <Form labelCol={{ span: 24 }}>
+          <Form>
             <Form.Item>
               <Input
                 prefix={<UserOutlined className="text-gray-300 mx-1" />}
                 placeholder="Tên"
                 size="large"
-                className='text-gray-600'
+                className="text-gray-600"
               />
             </Form.Item>
             <Form.Item
@@ -47,7 +39,7 @@ const Register = () => {
                 prefix={<MailOutlined className="text-gray-300 mx-1" />}
                 placeholder="Email"
                 size="large"
-                className='text-gray-600'
+                className="text-gray-600"
               />
             </Form.Item>
             <Form.Item
@@ -90,9 +82,6 @@ const Register = () => {
                 size="large"
               />
             </Form.Item>
-            <div className="flex items-center justify-end">
-              <Link className="text-sm text-blue-700 mb-6">Forgot password?</Link>
-            </div>
             <Button
               type="primary"
               htmlType="submit"
