@@ -20,15 +20,15 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #2d3748;
-}
-
-::-webkit-scrollbar-thumb {
   background: #cbd5e0;
 }
 
-::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb {
   background: #718096;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2d3748;
 }
 
 .slick-arrow.slick-prev {
@@ -75,11 +75,4 @@
   border-radius: 50%;
   width: 33px;
   height: 33px;
-}
-
-.truncate-text {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 150px; /* Adjust as needed */
 }

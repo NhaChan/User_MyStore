@@ -1,4 +1,4 @@
-import { Button, Carousel, Image, InputNumber, Rate, Tabs } from 'antd'
+import { Button, Carousel, Image, InputNumber, Rate, Tabs, Skeleton } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { formatVND, showError, toImageLink } from '../../services/commonService'
 import productService from '../../services/products/productService'
@@ -35,7 +35,6 @@ const ProductDetail = () => {
       setIsLoading(true)
       try {
         const res = await productService.getById(id)
-        console.log('product', res.data)
         setData(res.data)
         setSelectedImage(toImageLink(res.data.imageUrls[0]))
       } catch (error) {
@@ -46,14 +45,20 @@ const ProductDetail = () => {
     }
     fetchData()
   }, [id])
+
   return (
-    <>
-      <div className="py-10 px-20 bg-gray-50">
-        <div className="bg-white">
-          <div className="flex flex-col md:flex-row sm:flex-col p-8">
+    <div className="md:py-10 md:px-20 sm:p-2 bg-gray-50">
+      <div className="bg-white">
+        <div className="flex flex-col lg:flex-row md:flex-col p-8">
+          {isLoading ? (
+            <Skeleton.Image className="w-full lg:w-1/2 px-4 mb-8 md:mb-0" />
+          ) : (
             <div className="w-full lg:w-1/2 px-4 mb-8 md:mb-0">
               <div className="flex items-center justify-center p-4">
-                <Image src={selectedImage} width={500} height={500} />
+                <Image
+                  src={selectedImage}
+                  className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl"
+                />
               </div>
               <Carousel
                 responsive={[
@@ -79,8 +84,11 @@ const ProductDetail = () => {
                   ))}
               </Carousel>
             </div>
-            <div className="w-full lg:w-1/2 px-4">
-              <div className="text-xl font-normal mb-4">{data.name}</div>
+          )}
+
+          <div className="w-full lg:w-1/2 px-4">
+            <Skeleton loading={isLoading} active>
+              <div className="md:text-xl sm:text-md font-normal mb-4">{data.name}</div>
               <div>
                 <Rate count={1} value={1} className="mb-4" /> 4.7
                 <div></div>
@@ -88,8 +96,8 @@ const ProductDetail = () => {
               <div className="mb-2 p-4 bg-gray-50">
                 {data.discount > 0 ? (
                   <>
-                    <span className="line-through px-4">{formatVND(data.price)}</span>
-                    <span className="text-2xl text-red-500 font-medium">
+                    <span className="line-through ">{formatVND(data.price)}</span>
+                    <span className="text-2xl text-red-500 font-medium px-4">
                       {formatVND(discountPrice())}
                     </span>
                   </>
@@ -107,12 +115,14 @@ const ProductDetail = () => {
                   Mua ngay
                 </Button>
               </div>
-            </div>
+            </Skeleton>
           </div>
-          <Tabs className="p-4" centered defaultActiveKey="1" items={items} onChange={onChange} />
         </div>
+        <Skeleton loading={isLoading} active>
+          <Tabs className="p-4" centered defaultActiveKey="1" items={items} onChange={onChange} />
+        </Skeleton>
       </div>
-    </>
+    </div>
   )
 }
 

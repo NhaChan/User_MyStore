@@ -6,6 +6,7 @@ import Register from '../pages/Register'
 import Home from '../pages/Home'
 import Product from '../pages/Product'
 import ProductDetail from '../pages/ProductDetail/ProductDetail'
+import CartItem from '../pages/CartItem'
 
 export const navigation = [{ name: 'Home', to: '/' }]
 
@@ -15,6 +16,7 @@ export const publicRoutes = [
   { path: '/register', component: Register, Layout: null },
   { path: '/product', component: Product },
   { path: '/product-details/:id', component: ProductDetail },
+  { path: '/cart', component: CartItem },
 ]
 
 const GenerateRoutes = (route) => {

@@ -17,7 +17,6 @@ const Home = () => {
       setIsLoading(true)
       try {
         const res = await productService.getAll()
-        console.log('product', res.data)
         setData(res.data.items)
       } catch (error) {
         showError(error)
@@ -140,7 +139,7 @@ const Home = () => {
               {data.map((product, i) => (
                 <Link to={`product-details/${product.id}`}>
                   <div key={i} className="px-2">
-                    <div className="flex flex-col lg:flex-row items-center justify-around space-x-2 px-2 py-4 bg-white shadow-md rounded-lg hover:shadow-lg transition-shadow duration-300 ease-in-out">
+                    <div className="flex flex-col lg:flex-row items-center justify-around space-x-2 px-2 py-4 bg-white shadow-md rounded-lg hover:shadow-lg hover:text-black transition-shadow duration-300 ease-in-out">
                       <img
                         className="rounded-full object-cover w-24 h-24"
                         src={toImageLink(product.imageUrl)}
@@ -148,7 +147,7 @@ const Home = () => {
                       />
                       <div className="">
                         <div className="text-md truncate w-32 md:w-36">{product.name}</div>
-                        <Rate value={1} count={1} disabled className="" />
+                        <Rate value={1} count={1} disabled />
                         <div className=" text-red-600">{formatVND(product.price)}</div>
                       </div>
                     </div>
@@ -179,7 +178,7 @@ const Home = () => {
                         />
                       }
                     >
-                      <div className="truncate-text">{product.name}</div>
+                      <div className="truncate w-32 md:w-36">{product.name}</div>
                       <div className="py-2">
                         <span className="text-red-600 text-lg font-sans">
                           {formatVND(discountPrice)}
@@ -210,7 +209,7 @@ const Home = () => {
                       />
                     }
                   >
-                    <div className="truncate-text">{product.name}</div>
+                    <div className="truncate w-32 md:w-48">{product.name}</div>
                     <div className="py-2">
                       <span className="text-red-600 text-lg font-sans">
                         {formatVND(product.price)}

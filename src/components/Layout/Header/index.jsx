@@ -61,9 +61,9 @@ const Header = () => {
               <FaSearch className="text-sky-700 text-xl" />
             </button>
           </div>
-          <div>
+          <Link to="/cart">
             <FaShoppingBag className="text-3xl text-sky-700 mx-4" />
-          </div>
+          </Link>
           <button
             type="button"
             className="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
