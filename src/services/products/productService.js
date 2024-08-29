@@ -28,6 +28,33 @@ const updateProduct = async (id, data) => await axios.put(API_URL + `/update/${i
 
 const deleteProduct = async (id) => await axios.delete(API_URL + `/delete/${id}`)
 
+const getFilteredProducts = async (
+  page,
+  pageSize,
+  discount,
+  sorter,
+  categoryIds,
+  brandIds,
+  rating,
+  minPrice,
+  maxPrice,
+  flashSale,
+) =>
+  await axios.get(API_URL + '/filters', {
+    params: {
+      page: page,
+      pageSize: pageSize,
+      discount: discount ?? false,
+      sorter: sorter ?? 0,
+      categoryIds: categoryIds.length > 0 ? categoryIds.join(',') : null,
+      brandIds: brandIds.length > 0 ? brandIds.join(',') : null,
+      rating: rating ?? null,
+      minPrice: minPrice ?? null,
+      maxPrice: maxPrice ?? null,
+      flashSale: flashSale ?? false,
+    },
+  })
+
 const productService = {
   getAll,
   fetchProductAttributes,
@@ -35,6 +62,7 @@ const productService = {
   getById,
   updateProduct,
   deleteProduct,
+  getFilteredProducts,
 }
 
 export default productService

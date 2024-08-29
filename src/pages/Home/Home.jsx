@@ -17,6 +17,7 @@ const Home = () => {
       setIsLoading(true)
       try {
         const res = await productService.getAll()
+        console.log(res.data.items)
         setData(res.data.items)
       } catch (error) {
         showError(error)
@@ -189,7 +190,7 @@ const Home = () => {
                         <div>
                           <Rate className="text-sm" disabled count={1} value={1} /> 4.7
                         </div>
-                        <div>30 Đã bán</div>
+                        <div>{product.sold} Đã bán</div>
                       </div>
                     </Card>
                   </Badge.Ribbon>
@@ -219,7 +220,7 @@ const Home = () => {
                       <div>
                         <Rate className="text-sm" disabled count={1} value={1} /> 4.7
                       </div>
-                      <div>30 Đã bán</div>
+                      <div>{product.sold} Đã bán</div>
                     </div>
                   </Card>
                 </Link>
