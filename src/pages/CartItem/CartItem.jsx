@@ -62,9 +62,9 @@ const CartItem = () => {
               <p>Card content</p>
             </Card>
             <Divider className="my-[0.1rem] border-0" />
-            <Button
+            <Button danger type='primary'
               size="large"
-              className="w-full rounded-sm bg-red-600 text-white hover:bg-red-400 hover:text-white"
+              className="w-full rounded-sm"
             >
               Mua hàng
             </Button>

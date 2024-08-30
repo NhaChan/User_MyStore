@@ -1,9 +1,36 @@
-import { Button, Form, Input } from 'antd'
-import React from 'react'
-import { Link } from 'react-router-dom'
+import { Button, Form, Input, notification, Spin } from 'antd'
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { LockOutlined, MailOutlined } from '@ant-design/icons'
+import { showError } from '../../services/commonService'
+import authService from '../../services/authService'
+import { useAuth } from '../../App'
+import authActions from '../../services/authAction'
 
 const Login = () => {
+  const [form] = Form.useForm()
+  const [loading, setLoading] = useState(false)
+  const { dispatch } = useAuth()
+  const navigate = useNavigate()
+
+  const handleSubmit = async () => {
+    setLoading(true)
+    try {
+      const data = form.getFieldsValue()
+      // console.log(res)
+      const res = await authService.login(data)
+      if (res.data?.roles?.includes('User')) {
+        dispatch(authActions.LOGIN(res.data?.roles))
+        notification.success({ message: 'Đăng nhập thành công' })
+        navigate('/')
+      }
+    } catch (error) {
+      showError(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-l to-blue-500 from-sky-50">
       <div className="grid grid-cols-2 w-3/5 md:w-4/5 lg:w-3/5 bg-white shadow-lg rounded-lg overflow-hidden">
@@ -14,7 +41,7 @@ const Login = () => {
         </div>
         <div className="px-10 py-16 col-span-2 md:col-span-1">
           <h2 className="text-3xl font-bold text-center mb-6 text-indigo-600">Đăng nhập</h2>
-          <Form>
+          <Form form={form} onFinish={handleSubmit}>
             <Form.Item
               // label="Email"
               name="username"
@@ -49,7 +76,9 @@ const Login = () => {
               />
             </Form.Item>
             <div className="flex items-center justify-end">
-              <Link className="text-sm text-blue-700 mb-6">Quên mật khẩu?</Link>
+              <Link to="/reset-password" className="text-sm text-blue-700 mb-6">
+                Quên mật khẩu?
+              </Link>
             </div>
             <Button
               type="primary"
@@ -57,7 +86,7 @@ const Login = () => {
               size="large"
               className="w-full px-4  text-white bg-blue-700 rounded-3xl hover:bg-blue-600 "
             >
-              Đăng nhập
+              {loading ? <Spin /> : 'Đăng nhập'}
             </Button>
           </Form>
           <div className="mt-6 text-center">
@@ -81,7 +110,7 @@ const Login = () => {
               </button>
             </div>
             <p className="mt-6 text-sm text-gray-700">
-              Have no account yet?
+              Bạn chưa có tài khoản?
               <Link to="/register" className="text-blue-700">
                 {' '}
                 Registration

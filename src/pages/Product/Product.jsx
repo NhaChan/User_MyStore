@@ -86,6 +86,7 @@ const Product = () => {
           <div>
             Sắp xếp:{' '}
             <Select
+              rootClassName="z-10"
               defaultValue={0}
               style={{
                 width: 120,

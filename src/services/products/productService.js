@@ -46,13 +46,14 @@ const getFilteredProducts = async (
       pageSize: pageSize,
       discount: discount ?? false,
       sorter: sorter ?? 0,
-      categoryIds: categoryIds.length > 0 ? categoryIds.join(',') : null,
-      brandIds: brandIds.length > 0 ? brandIds.join(',') : null,
+      categoryIds: categoryIds.length > 0 ? categoryIds : [],
+      brandIds: brandIds.length > 0 ? brandIds : [],
       rating: rating ?? null,
       minPrice: minPrice ?? null,
       maxPrice: maxPrice ?? null,
       flashSale: flashSale ?? false,
     },
+    paramsSerializer: { indexes: true },
   })
 
 const productService = {

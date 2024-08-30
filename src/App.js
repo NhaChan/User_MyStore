@@ -1,18 +1,26 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import './App.css'
-import GenerateRoutes, { publicRoutes } from './routes'
+import { generatePrivateRoutes, generatePublicRoutes } from './routes'
 import NotFound from './components/NotFound'
+import { createContext, useContext, useReducer } from 'react'
+import { initialState, reducer } from './services/authReducer'
+
+const AuthContext = createContext()
+export const useAuth = () => useContext(AuthContext)
 
 function App() {
+  const [state, dispatch] = useReducer(reducer, initialState)
+
   return (
-    <Router>
-      <div className="App">
+    <AuthContext.Provider value={{ state, dispatch }}>
+      <Router>
         <Routes>
-          {GenerateRoutes(publicRoutes)}
+          {generatePublicRoutes(state.isAuthenticated)}
+          {generatePrivateRoutes(state.isAuthenticated)}
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </div>
-    </Router>
+      </Router>
+    </AuthContext.Provider>
   )
 }
 
