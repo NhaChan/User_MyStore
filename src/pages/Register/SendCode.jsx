@@ -5,7 +5,7 @@ import { LockOutlined, MailOutlined, PhoneOutlined, UserOutlined } from '@ant-de
 import { showError } from '../../services/commonService'
 import authService from '../../services/authService'
 
-const Register = () => {
+const SendCode = () => {
   const [form] = Form.useForm()
   const [loadingSendEMail, setLoadingSendEMail] = useState(false)
   const [loadingConfirmCode, setLoadingConfirmCode] = useState(false)
@@ -279,4 +279,4 @@ const Register = () => {
   )
 }
 
-export default Register
+export default SendCode
