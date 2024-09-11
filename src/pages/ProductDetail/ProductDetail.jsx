@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { formatVND, showError, toImageLink } from '../../services/commonService'
 import productService from '../../services/products/productService'
 import { useParams } from 'react-router-dom'
+import { BsCartPlus, BsFire } from 'react-icons/bs'
 
 const ProductDetail = () => {
   const [data, setData] = useState({})
@@ -53,23 +54,25 @@ const ProductDetail = () => {
           {isLoading ? (
             <Skeleton.Image className="w-full lg:w-1/2 px-4 mb-8 md:mb-0" />
           ) : (
-            <div className="w-full lg:w-1/2 px-4 mb-8 md:mb-0">
-              <div className="flex items-center justify-center p-4">
+            <div className="w-full lg:w-1/3 px-4 mb-8 md:mb-0 space-y-1">
+              <div className="flex items-center justify-center">
                 <Image
+                  width={500}
+                  height={450}
                   src={selectedImage}
-                  className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl"
+                  className="w-full max-w-md h-auto"
                 />
               </div>
               <Carousel
                 responsive={[
-                  { breakpoint: 770, settings: { slidesToShow: 3 } },
-                  { breakpoint: 640, settings: { slidesToShow: 2 } },
+                  { breakpoint: 770, settings: { slidesToShow: 2 } },
+                  { breakpoint: 640, settings: { slidesToShow: 3 } },
                 ]}
                 infinite
                 arrows
                 autoplay
                 autoplaySpeed={3000}
-                slidesToShow={5}
+                slidesToShow={4}
                 centerMode
               >
                 {data.imageUrls &&
@@ -77,50 +80,97 @@ const ProductDetail = () => {
                     <div
                       key={i}
                       onClick={() => setSelectedImage(toImageLink(url))}
-                      className="cursor-pointer"
+                      className={`cursor-pointer p-1 ${
+                        selectedImage === toImageLink(url)
+                          ? 'border-2 border-gray-300'
+                          : 'border-none'
+                      }`}
                     >
-                      <img className="object-cover w-20 h-20" src={toImageLink(url)} alt={url} />
+                      <img
+                        className="object-cover w-20 h-20  md:w-20 md:h-20"
+                        src={toImageLink(url)}
+                        alt={url}
+                      />
                     </div>
                   ))}
               </Carousel>
             </div>
           )}
 
-          <div className="w-full lg:w-1/2 px-4">
+          <div className="w-full lg:w-2/3 px-4 space-y-4">
             <Skeleton loading={isLoading} active>
               <div className="md:text-xl sm:text-md font-normal mb-4">{data.name}</div>
+              <div className="text-gray-500 space-x-6">
+                <span>
+                  <Rate count={1} value={1} className="mb-4" /> 4.7
+                </span>
+                <span>|</span>
+                <span>6.8k Đánh giá</span>
+                <span>|</span>
+                <span>{data.sold} Đã bán</span>
+              </div>
               <div>
-                <Rate count={1} value={1} className="mb-4" /> 4.7
-                <div></div>
-              </div>
-              <div className="mb-2 p-4 bg-gray-50">
-                {data.discount > 0 ? (
-                  <>
-                    <span className="line-through ">{formatVND(data.price)}</span>
-                    <span className="text-2xl text-red-500 font-medium px-4">
-                      {formatVND(discountPrice())}
+                <div className="flex items-center w-full bg-gradient-to-r from-red-700 via-red-500 to-pink-500 p-2 text-white text-2xl">
+                  <BsFire className="text-red-300 text-2xl" />
+                  Flash Sale
+                </div>
+                <div className="mb-2 p-4 bg-gray-50">
+                  {data.discount > 0 ? (
+                    <>
+                      <span className="line-through text-xl">{formatVND(data.price)}</span>
+                      <span className="text-3xl text-red-600 font-medium px-4">
+                        {formatVND(discountPrice())}
+                      </span>
+                    </>
+                  ) : (
+                    <span className="text-2xl text-red-500 font-medium">
+                      {formatVND(data.price)}
                     </span>
-                  </>
-                ) : (
-                  <span className="text-2xl text-red-500 font-medium">{formatVND(data.price)}</span>
-                )}
+                  )}
+                </div>
               </div>
-              <div className="text-gray-700 mb-4">{data.description}</div>
-              <InputNumber min={1} max={10} defaultValue={1} className="mb-4" />
-              <div className="grid grid-cols-2 gap-4 pt-4">
-                <Button type="primary" className="w-full">
-                  Thêm giỏ hàng
-                </Button>
-                <Button danger className="w-full">
+              {/* <div className="text-gray-700 mb-4">{data.description}</div> */}
+              <div className="space-x-4 pt-4">
+                <span className="text-gray-500">Số lượng:</span>
+                <InputNumber
+                  size="large"
+                  min={1}
+                  max={10}
+                  defaultValue={1}
+                  className="mb-4 rounded-none"
+                />
+                <span className="text-gray-500">{data.quantity} Sản phẩm có sẵn</span>
+              </div>
+              <div className="flex space-x-2 pt-4">
+                <Button
+                  size="large"
+                  danger
+                  type="primary"
+                  className="rounded-none flex items-center justify-center p-6"
+                >
                   Mua ngay
+                </Button>
+                <Button
+                  size="large"
+                  danger
+                  className="rounded-none flex items-center justify-center p-6"
+                >
+                  <BsCartPlus className="text-xl" />
+                  <span className="px-2">Thêm vào giỏ hàng</span>
                 </Button>
               </div>
             </Skeleton>
           </div>
         </div>
-        <Skeleton loading={isLoading} active>
-          <Tabs className="p-4" centered defaultActiveKey="1" items={items} onChange={onChange} />
-        </Skeleton>
+        <div className="p-12">
+          <Tabs
+            size="large"
+            className="p-4 border border-gray-100"
+            defaultActiveKey="1"
+            items={items}
+            onChange={onChange}
+          />
+        </div>
       </div>
     </div>
   )

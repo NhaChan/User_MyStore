@@ -1,4 +1,4 @@
-import { Button, Form, Input, notification, Spin } from 'antd'
+import { Button, Divider, Form, Input, notification, Spin } from 'antd'
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { LockOutlined, MailOutlined } from '@ant-design/icons'
@@ -33,7 +33,7 @@ const Login = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-l to-blue-500 from-sky-50">
-      <div className="grid grid-cols-2 w-3/5 md:w-4/5 lg:w-3/5 bg-white shadow-lg rounded-lg overflow-hidden">
+      <div className="grid grid-cols-2 w-4/5 md:w-4/5 lg:w-3/5 bg-white shadow-lg rounded-lg overflow-hidden">
         <div className="hidden md:flex items-center justify-center bg-sky-100">
           <Link to="/">
             <img src="logo2.png" alt="Logo" className="w-96 mx-auto" />
@@ -90,7 +90,7 @@ const Login = () => {
             </Button>
           </Form>
           <div className="mt-6 text-center">
-            <p className="text-gray-700">Hoặc</p>
+            <Divider plain>Hoặc</Divider>
             <div className="flex justify-center mt-4">
               <button className="flex items-center px-4 py-2 border border-blue-700 rounded-3xl hover:bg-blue-300 mx-2">
                 <img
@@ -113,7 +113,7 @@ const Login = () => {
               Bạn chưa có tài khoản?
               <Link to="/register" className="text-blue-700">
                 {' '}
-                Registration
+                Đăng ký
               </Link>
             </p>
           </div>

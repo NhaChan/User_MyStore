@@ -11,14 +11,12 @@ import { Link } from 'react-router-dom'
 const Home = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [data, setData] = useState([])
-
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true)
       try {
-        const res = await productService.getAll()
-        console.log(res.data.items)
-        setData(res.data.items)
+        const data = await productService.getAll()
+        setData(data.data.items)
       } catch (error) {
         showError(error)
       } finally {
@@ -27,6 +25,13 @@ const Home = () => {
     }
     fetchData()
   }, [])
+
+  const bestSelling = data.sort((a, b) => b.sold - a.sold).slice(0, 6)
+
+  const discounted = data
+    .filter((product) => product.discount > 0)
+    .sort((a, b) => b.discount - a.discount)
+    .slice(0, 6)
 
   return (
     <>
@@ -162,7 +167,7 @@ const Home = () => {
             <div className="text-4xl text-secondary">Bán chạy</div>
           </Divider>
           <div className="grid lg:grid-cols-6 md:grid-cols-3 grid-cols-2 gap-4 p-4">
-            {data.map((product, i) => {
+            {bestSelling.map((product, i) => {
               const discountPrice = product.price - product.price * (product.discount / 100)
               return product.discount > 0 ? (
                 <Link to={`product-details/${product.id}`}>
@@ -231,48 +236,41 @@ const Home = () => {
             <div className="text-4xl"> Đang giảm giá</div>
           </Divider>
           <div className="grid lg:grid-cols-6 md:grid-cols-3 grid-cols-2 gap-8 p-4">
-            <Card
-              hoverable
-              className="w-full"
-              cover={<img className="h-64 object-cover" alt="example" src="/img2.jpg" />}
-            >
-              <Meta title="Europe Street beat" description="www.instagram.com" />
-            </Card>
-            <Card
-              hoverable
-              className="w-full"
-              cover={<img className="h-64 object-cover" alt="example" src="/img2.jpg" />}
-            >
-              <Meta title="Europe Street beat" description="www.instagram.com" />
-            </Card>
-            <Card
-              hoverable
-              className="w-full"
-              cover={<img className="h-64 object-cover" alt="example" src="/img2.jpg" />}
-            >
-              <Meta title="Europe Street beat" description="www.instagram.com" />
-            </Card>
-            <Card
-              hoverable
-              className="w-full"
-              cover={<img className="h-64 object-cover" alt="example" src="/img2.jpg" />}
-            >
-              <Meta title="Europe Street beat" description="www.instagram.com" />
-            </Card>
-            <Card
-              hoverable
-              className="w-full"
-              cover={<img className="h-64 object-cover" alt="example" src="/img2.jpg" />}
-            >
-              <Meta title="Europe Street beat" description="www.instagram.com" />
-            </Card>
-            <Card
-              hoverable
-              className="w-full"
-              cover={<img className="h-64 object-cover" alt="example" src="/img2.jpg" />}
-            >
-              <Meta title="Europe Street beat" description="www.instagram.com" />
-            </Card>
+            {discounted.map((product, i) => {
+              const discountPrice = product.price - product.price * (product.discount / 100)
+              return (
+                <Link to={`product-details/${product.id}`}>
+                  <Badge.Ribbon key={i} text={`${product.discount} %`} color="red">
+                    <Card
+                      loading={isLoading}
+                      hoverable
+                      className="w-full h-fit"
+                      cover={
+                        <img
+                          className="h-64 object-cover"
+                          alt={product.name}
+                          src={toImageLink(product.imageUrl)}
+                        />
+                      }
+                    >
+                      <div className="truncate w-32 md:w-36">{product.name}</div>
+                      <div className="py-2">
+                        <span className="text-red-600 text-lg font-sans">
+                          {formatVND(discountPrice)}
+                        </span>{' '}
+                        <span className="line-through">{formatVND(product.price)}</span>
+                      </div>
+                      <div className="flex justify-between text-gray-400">
+                        <div>
+                          <Rate className="text-sm" disabled count={1} value={1} /> 4.7
+                        </div>
+                        <div>{product.sold} Đã bán</div>
+                      </div>
+                    </Card>
+                  </Badge.Ribbon>
+                </Link>
+              )
+            })}
           </div>
         </div>
       </div>

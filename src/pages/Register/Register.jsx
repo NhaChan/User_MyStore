@@ -151,7 +151,7 @@ const Register = () => {
                     Bạn đã có tài khoản?
                     <Link to="/login" className="text-blue-700">
                       {' '}
-                      Login
+                      Đăng nhập
                     </Link>
                   </p>
                 </div>

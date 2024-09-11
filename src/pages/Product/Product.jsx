@@ -1,8 +1,9 @@
-import { Badge, Button, Card, Checkbox, Rate, Select, Slider } from 'antd'
+import { Badge, Button, Card, Checkbox, Divider, Rate, Select, Slider } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { formatVND, showError, toImageLink } from '../../services/commonService'
 import { Link } from 'react-router-dom'
 import productService from '../../services/products/productService'
+import { BsFire } from 'react-icons/bs'
 
 const Product = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -103,16 +104,21 @@ const Product = () => {
         </div>
       </div>
       <div className="flex flex-col md:flex-row sm:flex-col justify-between">
-        <div className="w-full lg:w-1/5 md:1/3 px-4 mb-8 md:mb-0">
+        <div className="w-full lg:w-1/5 md:1/3 px-8 mb-8 md:mb-0">
           <div className="text-2xl">Danh mục</div>
-          <Checkbox.Group onChange={handleCategoryChange} value={selectCategory} className="w-full">
+          <Checkbox.Group
+            onChange={handleCategoryChange}
+            value={selectCategory}
+            className="w-full flex-col"
+          >
             {productAttributes.categories?.map((category) => (
               <div key={category.id} className="p-2">
                 <Checkbox value={category.id}>{category.name}</Checkbox>
               </div>
             ))}
           </Checkbox.Group>
-          <div className="text-2xl pt-4">Giá</div>
+          <Divider />
+          <div className="text-2xl">Giá</div>
           <Slider
             range
             min={0}
@@ -121,17 +127,25 @@ const Product = () => {
             value={priceRange}
             step={50000}
           />
-          <div className="text-2xl pt-4">Thương hiệu</div>
-          <Checkbox.Group onChange={handleBrandChange} value={selectBrand} className="w-full">
+          <Divider />
+          <div className="text-2xl">Thương hiệu</div>
+          <Checkbox.Group
+            onChange={handleBrandChange}
+            value={selectBrand}
+            className="w-full flex-col"
+          >
             {productAttributes.brands?.map((brand) => (
               <div key={brand.id} className="p-2">
                 <Checkbox value={brand.id}>{brand.name}</Checkbox>
               </div>
             ))}
           </Checkbox.Group>
-          <div className="text-2xl pt-4">
+          <Divider />
+          <div className="text-2xl">
             <Checkbox onChange={handleDiscountChange} checked={filterDiscount}>
-              Chỉ hiển thị sản phẩm đang giảm giá
+              <span className="flex">
+                Đang giảm giá <BsFire className="text-red-700 text-2xl" />
+              </span>
             </Checkbox>
           </div>
         </div>
