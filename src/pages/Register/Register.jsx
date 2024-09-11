@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { LockOutlined, MailOutlined, PhoneOutlined, UserOutlined } from '@ant-design/icons'
 import { showError } from '../../services/commonService'
 import authService from '../../services/authService'
+import { IoIosArrowRoundBack } from 'react-icons/io'
 
 const Register = () => {
   const [form] = Form.useForm()
@@ -159,9 +160,12 @@ const Register = () => {
             </>
           ) : !isConfirmCode ? (
             <>
-              <h2 className="text-3xl font-bold text-center mb-6 text-indigo-600">
-                Nhập mã xác nhận
-              </h2>
+              <div className="text-3xl flex items-center  mb-6">
+                <Link to={-1}>
+                  <IoIosArrowRoundBack className="text-gray-400" />
+                </Link>
+                <span className="justify-end text-indigo-600">Nhập mã xác nhận</span>
+              </div>
               <Form form={form} onFinish={handleConfirmCode}>
                 <Form.Item
                   // label="Email"

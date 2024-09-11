@@ -1,15 +1,18 @@
-import { Button, Carousel, Image, InputNumber, Rate, Tabs, Skeleton } from 'antd'
+import { Button, Carousel, Image, InputNumber, Rate, Tabs, Skeleton, notification } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { formatVND, showError, toImageLink } from '../../services/commonService'
 import productService from '../../services/products/productService'
 import { useParams } from 'react-router-dom'
 import { BsCartPlus, BsFire } from 'react-icons/bs'
+import cartService from '../../services/cartService'
 
 const ProductDetail = () => {
   const [data, setData] = useState({})
   const [isLoading, setIsLoading] = useState(false)
+  const [isAddCart, setIsAddCart] = useState(false)
   const { id } = useParams()
   const [selectedImage, setSelectedImage] = useState('')
+  const [quantity, setQuantity] = useState(1)
 
   const onChange = (key) => {
     console.log(key)
@@ -46,6 +49,24 @@ const ProductDetail = () => {
     }
     fetchData()
   }, [id])
+
+  const addToCart = async () => {
+    setIsAddCart(true)
+    try {
+      const cartItem = {
+        productId: id,
+        quantity: quantity,
+      }
+      await cartService.addToCart(cartItem)
+      notification.success({ message: 'Thêm vào giỏ hành thành công.' })
+    } catch (error) {
+      if (error.response?.status === 401) {
+        notification.error({ message: error.response.data || 'Bạn chưa đăng nhập tài khoản!' })
+      }
+    } finally {
+      setIsAddCart(false)
+    }
+  }
 
   return (
     <div className="md:py-10 md:px-20 sm:p-2 bg-gray-50">
@@ -135,8 +156,10 @@ const ProductDetail = () => {
                 <InputNumber
                   size="large"
                   min={1}
-                  max={10}
+                  max={data.quantity}
                   defaultValue={1}
+                  value={quantity}
+                  onChange={(value) => setQuantity(value)}
                   className="mb-4 rounded-none"
                 />
                 <span className="text-gray-500">{data.quantity} Sản phẩm có sẵn</span>
@@ -151,8 +174,10 @@ const ProductDetail = () => {
                   Mua ngay
                 </Button>
                 <Button
+                  onClick={addToCart}
                   size="large"
                   danger
+                  loading={isAddCart}
                   className="rounded-none flex items-center justify-center p-6"
                 >
                   <BsCartPlus className="text-xl" />

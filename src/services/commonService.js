@@ -7,10 +7,15 @@ export const toImageLink = (link) => {
 }
 
 export const showError = (error) => {
-  const errorMessage = error?.response?.data?.title || error?.response?.data || error?.message
+  const errorMessage =
+    error?.response?.data ||
+    error?.response?.message ||
+    error?.response?.data?.title ||
+    error?.response?.data ||
+    error?.message
 
   notification.error({
-    message: 'Error',
+    message: 'Lỗi',
     description: errorMessage,
   })
 }
