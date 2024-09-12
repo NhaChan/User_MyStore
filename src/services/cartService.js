@@ -8,9 +8,20 @@ const getAllCartByUserId = async () => await axios.get(API_URL, { headers: authH
 const addToCart = async (data) =>
   await axios.post(API_URL + '/create', data, { headers: authHeader() })
 
+const deleteCart = async (productIds) => {
+  const params = new URLSearchParams()
+  productIds.forEach((id) => params.append('productId', id))
+
+  return await axios.delete(API_URL + '/delete', {
+    params,
+    headers: authHeader(),
+  })
+}
+
 const cartService = {
   getAllCartByUserId,
   addToCart,
+  deleteCart,
 }
 
 export default cartService

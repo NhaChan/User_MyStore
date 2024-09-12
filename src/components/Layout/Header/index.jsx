@@ -97,7 +97,11 @@ const Header = () => {
             </button>
           </div>
           <Link to="/cart">
-            <FaShoppingBag className="text-3xl text-sky-700 hover:text-orange-300  mx-4" />
+            <FaShoppingBag
+              className={`text-3xl text-sky-700 hover:text-orange-300  mx-4 ${
+                location.pathname === '/cart' ? 'text-orange-300' : 'text-sky-700'
+              }`}
+            />
           </Link>
           {state.isAuthenticated ? (
             <>

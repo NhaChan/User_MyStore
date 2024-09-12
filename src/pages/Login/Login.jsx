@@ -17,13 +17,10 @@ const Login = () => {
     setLoading(true)
     try {
       const data = form.getFieldsValue()
-      // console.log(res)
-      const res = await authService.login(data)
-      if (res.data?.roles?.includes('User')) {
-        dispatch(authActions.LOGIN(res.data?.roles))
-        notification.success({ message: 'Đăng nhập thành công' })
-        navigate('/')
-      }
+      await authService.login(data)
+      dispatch(authActions.LOGIN())
+      notification.success({ message: 'Đăng nhập thành công' })
+      navigate('/')
     } catch (error) {
       showError(error)
     } finally {

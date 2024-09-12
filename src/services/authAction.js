@@ -1,7 +1,6 @@
-export const LOGIN = (roles) => {
+export const LOGIN = () => {
   return {
     type: 'LOGIN',
-    roles: roles ?? [],
   }
 }
 
