@@ -2,13 +2,13 @@ import { Button, Carousel, Image, InputNumber, Rate, Tabs, Skeleton, notificatio
 import React, { useEffect, useState } from 'react'
 import { formatVND, showError, toImageLink } from '../../services/commonService'
 import productService from '../../services/products/productService'
-import { useParams } from 'react-router-dom'
+import { useLocation, useParams } from 'react-router-dom'
 import { BsCartPlus, BsFire } from 'react-icons/bs'
 import cartService from '../../services/cartService'
 import { HomeOutlined } from '@ant-design/icons'
 import BreadcrumbLink from '../../components/BreadcrumbLink'
 
-const breadcrumb = (id) => [
+const breadcrumb = (id, name) => [
   {
     path: '/',
     title: <HomeOutlined />,
@@ -18,7 +18,7 @@ const breadcrumb = (id) => [
     title: 'Sản phẩm',
   },
   {
-    title: `Chi tiết sản phẩm #${id}`,
+    title: `${name}`,
   },
 ]
 
@@ -29,6 +29,8 @@ const ProductDetail = () => {
   const { id } = useParams()
   const [selectedImage, setSelectedImage] = useState('')
   const [quantity, setQuantity] = useState(1)
+  const location = useLocation()
+  const queryParams = new URLSearchParams(location.search)
 
   const onChange = (key) => {
     console.log(key)
@@ -87,7 +89,7 @@ const ProductDetail = () => {
   return (
     <>
       <div className="py-2 px-8 sticky top-[6rem] z-40 bg-gray-50">
-        <BreadcrumbLink breadcrumb={breadcrumb(id)} />
+        <BreadcrumbLink breadcrumb={breadcrumb(id, queryParams.get('name'))} />
       </div>
       <div className="md:px-10 sm:p-2 bg-gray-50">
         <div className="bg-white">

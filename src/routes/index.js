@@ -8,6 +8,7 @@ import ProductDetail from '../pages/ProductDetail/ProductDetail'
 import CartItem from '../pages/CartItem'
 import Register from '../pages/Register'
 import ResetPassword from '../pages/ResetPassword'
+import Profile from '../pages/Profile'
 
 export const navigation = [{ name: 'Home', to: '/' }]
 
@@ -21,7 +22,10 @@ export const publicRoutes = [
   { path: '/product-details/:id', component: ProductDetail },
 ]
 
-export const privateRoutes = [{ path: '/cart', component: CartItem }]
+export const privateRoutes = [
+  { path: '/cart', component: CartItem },
+  { path: '/profile', component: Profile },
+]
 
 export const generatePublicRoutes = () => {
   return publicRoutes.map((route, index) => {

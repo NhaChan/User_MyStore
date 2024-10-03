@@ -20,6 +20,9 @@ import { formatVND, showError, toImageLink } from '../../services/commonService'
 import cartService from '../../services/cartService'
 import TextArea from 'antd/es/input/TextArea'
 import BreadcrumbLink from '../../components/BreadcrumbLink'
+import { FaMapMarkerAlt } from 'react-icons/fa'
+import userService from '../../services/userService'
+import addressService from '../../services/addressService'
 
 const breadcrumb = [
   {
@@ -39,14 +42,30 @@ const CartItem = () => {
   const [approximatePrice, setApproximatePrice] = useState(0)
   const [shippingFee, setShippingFee] = useState(0)
   const [currentStep, setCurrentStep] = useState(0)
+  const [dataAddress, setDataAddress] = useState('')
+  const [form] = Form.useForm()
+
+  const [provinces, setProvince] = useState([])
+  const [districts, setDistrict] = useState([])
+  const [wards, setWard] = useState([])
+
+  const [selectedProvince, setSelectedProvince] = useState(null)
+  const [selectedDistrict, setSelectedDistrict] = useState(null)
+  const [loadingUpdate, setLoadingUpdate] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true)
       try {
         const res = await cartService.getAllCartByUserId()
-        console.log(res)
+        const address = await userService.getAddress()
+        const result = await addressService.getProvince()
+        //console.log('data', result)
+        //console.log(address)
+        //console.log(res)
         setData(res.data)
+        setDataAddress(address.data)
+        setProvince(result.data || [])
       } catch (error) {
         showError(error)
       } finally {
@@ -85,18 +104,57 @@ const CartItem = () => {
   }
 
   const showModal = () => {
+    form.setFieldsValue(dataAddress)
     setIsModalOpen(true)
   }
 
-  const handleOk = () => {
-    setIsModalOpen(false)
-  }
   const handleCancel = () => {
     setIsModalOpen(false)
   }
 
-  const handleChange = (value) => {
-    console.log(`selected ${value}`)
+  const handleProvinceChange = async (value, option) => {
+    setSelectedProvince(value)
+    try {
+      const res = await addressService.getDistrictsProvice(value)
+      //console.log('quan', res)
+      setDistrict(res.data?.districts ?? [])
+      setWard([])
+      form.setFieldsValue({ province_name: option.label })
+    } catch (error) {
+      showError(error)
+    }
+  }
+
+  const handleDistrictChange = async (value, option) => {
+    setSelectedDistrict(value)
+    try {
+      const res = await addressService.getWardsProvice(value)
+      //console.log('phuong', res)
+      setWard(res.data?.wards ?? [])
+      form.setFieldsValue({ district_name: option.label })
+    } catch (error) {
+      showError(error)
+    }
+  }
+
+  const handleWardChange = (value, option) => {
+    form.setFieldsValue({ ward_name: option.label })
+  }
+
+  const handleOk = async () => {
+    setLoadingUpdate(true)
+    try {
+      const value = await form.validateFields()
+      console.log(value)
+      await userService.updateAddress(value)
+      notification.success({ message: 'Cập nhật địa chỉ thành công.' })
+      setIsModalOpen(false)
+      setDataAddress(value)
+    } catch (error) {
+      showError(error)
+    } finally {
+      setLoadingUpdate(false)
+    }
   }
 
   const [value, setValue] = useState(1)
@@ -228,16 +286,28 @@ const CartItem = () => {
 
               <div className="w-full lg:w-1/3 sm:w-full">
                 <Card className="rounded-sm mb-2">
-                  <span className="space-x-2">
-                    <span>Địa chỉ giao hàng:</span>
-                    <span className="font-bold">Ninh Kiều - Cần Thơ</span>
-                    <span
-                      onClick={showModal}
-                      className="text-blue-500 cursor-pointer hover:text-sky-300"
-                    >
-                      Thay đổi
-                    </span>
-                  </span>
+                  <div className="space-x-2">
+                    <div className="flex-col flex">
+                      <div className="flex justify-between">
+                        <div className="flex space-x-1 py-2">
+                          <FaMapMarkerAlt className="text-xl text-red-700" />
+                          <span className="font-bold">
+                            {dataAddress.name} - {dataAddress.phoneNumber}
+                          </span>
+                        </div>
+                        <span
+                          onClick={showModal}
+                          className="text-blue-500 cursor-pointer hover:text-sky-300 py-2"
+                        >
+                          Thay đổi
+                        </span>
+                      </div>
+                      <span className="truncate w-80 lg:w-80 md:w-full">
+                        {dataAddress.detail} - {dataAddress.ward_name} - {dataAddress.district_name}{' '}
+                        - {dataAddress.province_name}
+                      </span>
+                    </div>
+                  </div>
                   <Divider className="my-[0.8rem]" />
                   <div className="flex justify-between py-2">
                     <div>Tạm tính</div>
@@ -291,12 +361,18 @@ const CartItem = () => {
         </div>
       </div>
 
-      <Modal title="Địa chỉ giao hàng" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-        <Form layout="vertical">
+      <Modal
+        title="Địa chỉ giao hàng"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        loading={loadingUpdate}
+      >
+        <Form form={form} layout="vertical">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Form.Item
               label="Tên người nhận"
-              name=""
+              name="name"
               rules={[
                 {
                   required: true,
@@ -308,7 +384,7 @@ const CartItem = () => {
             </Form.Item>
             <Form.Item
               label="Số điện thoại"
-              name=""
+              name="phoneNumber"
               rules={[
                 {
                   required: true,
@@ -321,7 +397,7 @@ const CartItem = () => {
           </div>
           <Form.Item
             label="Tỉnh/ Thành Phố"
-            name=""
+            name="province_name"
             rules={[
               {
                 required: true,
@@ -330,26 +406,19 @@ const CartItem = () => {
             ]}
           >
             <Select
-              ClassName="w-full"
+              className="w-full"
               size="large"
-              defaultValue="Cần Thơ"
-              onChange={handleChange}
-              options={[
-                {
-                  value: 'Cần Thơ',
-                  label: 'Cần Thơ',
-                },
-                {
-                  value: 'Vĩnh Long',
-                  label: 'Vĩnh Long',
-                },
-              ]}
+              onChange={handleProvinceChange}
+              options={provinces?.map((province) => ({
+                value: province.code,
+                label: province.name,
+              }))}
             />
           </Form.Item>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Form.Item
               label="Quận/ Huyện"
-              name=""
+              name="district_name"
               rules={[
                 {
                   required: true,
@@ -358,25 +427,19 @@ const CartItem = () => {
               ]}
             >
               <Select
-                ClassName="w-full"
+                className="w-full"
                 size="large"
-                defaultValue="Cần Thơ"
-                onChange={handleChange}
-                options={[
-                  {
-                    value: 'Cần Thơ',
-                    label: 'Cần Thơ',
-                  },
-                  {
-                    value: 'Vĩnh Long',
-                    label: 'Vĩnh Long',
-                  },
-                ]}
+                onChange={handleDistrictChange}
+                options={districts?.map((district) => ({
+                  value: district.code,
+                  label: district.name,
+                }))}
+                disabled={!selectedProvince}
               />
             </Form.Item>
             <Form.Item
               label="Xã/ Phường/ Thị trấn"
-              name="price"
+              name="ward_name"
               rules={[
                 {
                   required: true,
@@ -385,26 +448,20 @@ const CartItem = () => {
               ]}
             >
               <Select
-                ClassName="w-full"
+                className="w-full"
                 size="large"
-                defaultValue="Cần Thơ"
-                onChange={handleChange}
-                options={[
-                  {
-                    value: 'Cần Thơ',
-                    label: 'Cần Thơ',
-                  },
-                  {
-                    value: 'Vĩnh Long',
-                    label: 'Vĩnh Long',
-                  },
-                ]}
+                onChange={handleWardChange}
+                options={wards?.map((ward) => ({
+                  value: ward.code,
+                  label: ward.name,
+                }))}
+                disabled={!selectedDistrict}
               />
             </Form.Item>
           </div>
           <Form.Item
             label="Địa chỉ cụ thể"
-            name=""
+            name="detail"
             rules={[
               {
                 required: true,

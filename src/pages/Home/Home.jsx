@@ -142,7 +142,7 @@ const Home = () => {
               className="py-6"
             >
               {data.map((product, i) => (
-                <Link to={`product-details/${product.id}`}>
+                <Link to={`/product-details/${product.id}?name=${product.name}`}>
                   <div key={i} className="px-2">
                     <div className="flex flex-col lg:flex-row items-center justify-around space-x-2 px-2 py-4 bg-white shadow-md rounded-lg hover:shadow-lg hover:text-black transition-shadow duration-300 ease-in-out">
                       <img
@@ -169,7 +169,7 @@ const Home = () => {
             {bestSelling.map((product, i) => {
               const discountPrice = product.price - product.price * (product.discount / 100)
               return product.discount > 0 ? (
-                <Link to={`product-details/${product.id}`}>
+                <Link to={`/product-details/${product.id}?name=${product.name}`}>
                   <Badge.Ribbon key={i} text={`${product.discount} %`} color="red">
                     <Card
                       loading={isLoading}
@@ -200,7 +200,7 @@ const Home = () => {
                   </Badge.Ribbon>
                 </Link>
               ) : (
-                <Link to={`product-details/${product.id}`}>
+                <Link to={`/product-details/${product.id}?name=${product.name}`}>
                   {' '}
                   <Card
                     hoverable
@@ -238,7 +238,7 @@ const Home = () => {
             {discounted.map((product, i) => {
               const discountPrice = product.price - product.price * (product.discount / 100)
               return (
-                <Link to={`product-details/${product.id}`}>
+                <Link to={`/product-details/${product.id}?name=${product.name}`}>
                   <Badge.Ribbon key={i} text={`${product.discount} %`} color="red">
                     <Card
                       loading={isLoading}

@@ -50,7 +50,7 @@ const Header = () => {
   const items = [
     {
       key: '1',
-      label: <Link to="/login">Thông tin cá nhân</Link>,
+      label: <Link to="/profile">Thông tin cá nhân</Link>,
     },
     {
       key: '2',

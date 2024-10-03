@@ -179,7 +179,7 @@ const Product = () => {
                 {data.map((product, i) => {
                   const discountPrice = product.price - product.price * (product.discount / 100)
                   return product.discount > 0 ? (
-                    <Link to={`/product-details/${product.id}`} key={i}>
+                    <Link to={`/product-details/${product.id}?name=${product.name}`} key={i}>
                       <Badge.Ribbon text={`${product.discount} %`} color="red">
                         <Card
                           loading={isLoading}
@@ -210,7 +210,7 @@ const Product = () => {
                       </Badge.Ribbon>
                     </Link>
                   ) : (
-                    <Link to={`/product-details/${product.id}`} key={i}>
+                    <Link to={`/product-details/${product.id}?name=${product.name}`} key={i}>
                       <Card
                         hoverable
                         className="w-full h-fit"
