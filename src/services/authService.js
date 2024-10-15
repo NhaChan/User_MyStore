@@ -15,7 +15,7 @@ const login = async (data) =>
     const in12Hours = new Date(new Date().getTime() + exp)
 
     Cookies.set('user_data', JSON.stringify(res.data), { expires: in12Hours })
-    Cookies.set('access_token', res.data?.access_token, { expires: 12 * 60 * 60 * 1000 })
+    Cookies.set('access_token', res.data?.access_token, { expires: in12Hours })
     return res
   })
 

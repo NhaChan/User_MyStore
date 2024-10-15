@@ -23,6 +23,9 @@ import BreadcrumbLink from '../../components/BreadcrumbLink'
 import { FaMapMarkerAlt } from 'react-icons/fa'
 import userService from '../../services/userService'
 import addressService from '../../services/addressService'
+import debounce from 'debounce'
+import orderService from '../../services/orderService'
+import { useNavigate } from 'react-router-dom'
 
 const breadcrumb = [
   {
@@ -52,6 +55,7 @@ const CartItem = () => {
   const [selectedProvince, setSelectedProvince] = useState(null)
   const [selectedDistrict, setSelectedDistrict] = useState(null)
   const [loadingUpdate, setLoadingUpdate] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchData = async () => {
@@ -75,16 +79,47 @@ const CartItem = () => {
     fetchData()
   }, [])
 
+  const debounceUpdateQuantity = debounce(async (id, quantity) => {
+    try {
+      await cartService.updateQuantity(id, { quantity })
+      //notification.success({ message: 'Thành công!' })
+    } catch (error) {
+      showError(error)
+    }
+  }, 500)
+
+  const handleQuantityChange = (value, record) => {
+    debounceUpdateQuantity(record.id, value)
+
+    setData((prevData) =>
+      prevData.map((item) => (item.id === record.id ? { ...item, quantity: value } : item)),
+    )
+
+    if (selectedRowKeys.includes(record.productId)) {
+      const selectedItems = data
+        .map((item) => (item.productId === record.productId ? { ...item, quantity: value } : item))
+        .filter((item) => selectedRowKeys.includes(item.productId))
+
+      const newApproximatePrice = selectedItems.reduce(
+        (acc, item) => acc + (item.price - (item.price * item.discount) / 100) * item.quantity,
+        0,
+      )
+
+      setApproximatePrice(newApproximatePrice)
+      totalShippingFee(newApproximatePrice)
+    }
+  }
+
   const totalShippingFee = (approximate) => {
-    if (approximate < 200000) {
-      setShippingFee(40000)
-      setCurrentStep(1)
+    if (approximate > 400000 || approximate === 0) {
+      setShippingFee(0)
+      setCurrentStep(2)
     } else if (approximate >= 200000 && approximate < 400000) {
       setShippingFee(20000)
-      setCurrentStep(2)
+      setCurrentStep(1)
     } else {
-      setShippingFee(0)
-      setCurrentStep(3)
+      setShippingFee(40000)
+      setCurrentStep(0)
     }
   }
   const onSelectChange = (newSelectedRowKeys) => {
@@ -145,7 +180,7 @@ const CartItem = () => {
     setLoadingUpdate(true)
     try {
       const value = await form.validateFields()
-      console.log(value)
+      //console.log(value)
       await userService.updateAddress(value)
       notification.success({ message: 'Cập nhật địa chỉ thành công.' })
       setIsModalOpen(false)
@@ -157,7 +192,7 @@ const CartItem = () => {
     }
   }
 
-  const [value, setValue] = useState(1)
+  const [value, setValue] = useState(2)
   const onChange = (e) => {
     console.log('radio checked', e.target.value)
     setValue(e.target.value)
@@ -193,6 +228,31 @@ const CartItem = () => {
     }
   }
 
+  const handleOrder = async () => {
+    try {
+      const order = {
+        total: approximatePrice + shippingFee,
+        shippingCost: shippingFee,
+        receiver: `${dataAddress.name} - ${dataAddress.phoneNumber}`,
+        deliveryAddress: `${dataAddress.detail}, ${dataAddress.ward_name},
+                          ${dataAddress.district_name}, ${dataAddress.province_name}`,
+        //code: 'string',
+        cartIds: selectedRowKeys.map(String),
+        paymentMethodId: value,
+        //userIP: 'string',
+      }
+      if (selectedRowKeys.length === 0) {
+        notification.warning({ message: 'Vui lòng chọn sản phẩm muốn mua' })
+        return
+      }
+      await orderService.createOrder(order)
+      notification.success({ message: 'Đặt hàng thành công.' })
+      navigate('/')
+    } catch (error) {
+      showError(error)
+    }
+  }
+
   const columns = [
     {
       title: 'Sản phẩm',
@@ -223,7 +283,14 @@ const CartItem = () => {
       title: 'Số lượng',
       align: 'center',
       dataIndex: 'quantity',
-      render: (value) => <InputNumber className="w-14" value={value} />,
+      render: (value, record) => (
+        <InputNumber
+          className="w-14"
+          value={value}
+          min={1}
+          onChange={(newValue) => handleQuantityChange(newValue, record)}
+        />
+      ),
     },
     {
       title: 'Thành tiền',
@@ -263,7 +330,7 @@ const CartItem = () => {
               <div className="w-full lg:2/3 sm:w-full">
                 <div>
                   <div className="bg-white p-4">
-                    <Steps initial={0} current={currentStep}>
+                    <Steps size="small" initial={0} current={currentStep}>
                       <Steps.Step title="40.000 VND" description="dưới 200.000 VND" />
                       <Steps.Step
                         title="20.000 VND"
@@ -331,12 +398,12 @@ const CartItem = () => {
                     value={value}
                     className="flex flex-col space-y-3"
                   >
-                    <Radio value={1}>
+                    <Radio value={2}>
                       <div className="flex p-2 items-center">
                         <span>Thanh toán khi nhận hàng</span>
                       </div>
                     </Radio>
-                    <Radio value={2}>
+                    <Radio value={1}>
                       <div className="flex space-x-4 p-2 items-center">
                         <img src="pay1.svg" alt="Logo" className="w-12 mx-auto" />
                         <span>PayOS</span>
@@ -352,7 +419,13 @@ const CartItem = () => {
                   </Radio.Group>
                 </Card>
                 <Divider className="my-[0.1rem] border-0" />
-                <Button danger type="primary" size="large" className="w-full rounded-sm">
+                <Button
+                  onClick={handleOrder}
+                  danger
+                  type="primary"
+                  size="large"
+                  className="w-full rounded-sm"
+                >
                   Mua hàng
                 </Button>
               </div>

@@ -8,6 +8,9 @@ const getAllCartByUserId = async () => await axios.get(API_URL, { headers: authH
 const addToCart = async (data) =>
   await axios.post(API_URL + '/create', data, { headers: authHeader() })
 
+const updateQuantity = async (id, quantity) =>
+  await axios.put(API_URL + `/update/${id}`, quantity, { headers: authHeader() })
+
 const deleteCart = async (productIds) => {
   const params = new URLSearchParams()
   productIds.forEach((id) => params.append('productId', id))
@@ -22,6 +25,7 @@ const cartService = {
   getAllCartByUserId,
   addToCart,
   deleteCart,
+  updateQuantity,
 }
 
 export default cartService

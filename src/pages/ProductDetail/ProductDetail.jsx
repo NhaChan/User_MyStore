@@ -78,6 +78,7 @@ const ProductDetail = () => {
       await cartService.addToCart(cartItem)
       notification.success({ message: 'Thêm vào giỏ hành thành công.' })
     } catch (error) {
+      console.log(error)
       if (error.response?.status === 401) {
         notification.error({ message: error.response.data || 'Bạn chưa đăng nhập tài khoản!' })
       }
@@ -112,7 +113,7 @@ const ProductDetail = () => {
                     { breakpoint: 640, settings: { slidesToShow: 3 } },
                   ]}
                   infinite
-                  arrows
+                  //arrows
                   autoplay
                   autoplaySpeed={3000}
                   slidesToShow={4}
