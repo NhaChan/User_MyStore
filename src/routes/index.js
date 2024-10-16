@@ -9,6 +9,8 @@ import CartItem from '../pages/CartItem'
 import Register from '../pages/Register'
 import ResetPassword from '../pages/ResetPassword'
 import Profile from '../pages/Profile'
+import OrderDetail from '../pages/Order'
+import Order from '../pages/Order/Order'
 
 export const navigation = [{ name: 'Home', to: '/' }]
 
@@ -25,6 +27,8 @@ export const publicRoutes = [
 export const privateRoutes = [
   { path: '/cart', component: CartItem },
   { path: '/profile', component: Profile },
+  { path: '/orders', component: Order },
+  { path: '/order-details/:id', component: OrderDetail },
 ]
 
 export const generatePublicRoutes = () => {

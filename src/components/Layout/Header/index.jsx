@@ -54,11 +54,7 @@ const Header = () => {
     },
     {
       key: '2',
-      label: (
-        <Link target="_blank" rel="noopener noreferrer" to="/">
-          Đơn đặt hàng
-        </Link>
-      ),
+      label: <Link to="/orders">Đơn đặt hàng</Link>,
     },
     {
       key: '3',

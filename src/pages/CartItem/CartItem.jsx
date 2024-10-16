@@ -64,12 +64,12 @@ const CartItem = () => {
         const res = await cartService.getAllCartByUserId()
         const address = await userService.getAddress()
         const result = await addressService.getProvince()
-        //console.log('data', result)
-        //console.log(address)
+        // console.log('data', result)
+        // console.log(address)
         //console.log(res)
         setData(res.data)
         setDataAddress(address.data)
-        setProvince(result.data || [])
+        setProvince(result.data.data || [])
       } catch (error) {
         showError(error)
       } finally {
@@ -115,10 +115,10 @@ const CartItem = () => {
       setShippingFee(0)
       setCurrentStep(2)
     } else if (approximate >= 200000 && approximate < 400000) {
-      setShippingFee(20000)
+      setShippingFee(2000)
       setCurrentStep(1)
     } else {
-      setShippingFee(40000)
+      setShippingFee(4000)
       setCurrentStep(0)
     }
   }
@@ -151,8 +151,8 @@ const CartItem = () => {
     setSelectedProvince(value)
     try {
       const res = await addressService.getDistrictsProvice(value)
-      //console.log('quan', res)
-      setDistrict(res.data?.districts ?? [])
+      // console.log('quan', res.data)
+      setDistrict(res.data.data ?? [])
       setWard([])
       form.setFieldsValue({ province_name: option.label })
     } catch (error) {
@@ -164,8 +164,8 @@ const CartItem = () => {
     setSelectedDistrict(value)
     try {
       const res = await addressService.getWardsProvice(value)
-      //console.log('phuong', res)
-      setWard(res.data?.wards ?? [])
+      // console.log('phuong', res)
+      setWard(res.data?.data ?? [])
       form.setFieldsValue({ district_name: option.label })
     } catch (error) {
       showError(error)
@@ -245,9 +245,15 @@ const CartItem = () => {
         notification.warning({ message: 'Vui lòng chọn sản phẩm muốn mua' })
         return
       }
-      await orderService.createOrder(order)
-      notification.success({ message: 'Đặt hàng thành công.' })
-      navigate('/')
+      const res = await orderService.createOrder(order)
+
+      if (order.paymentMethodId !== 2) {
+        // console.log(res.data)
+        window.location.replace(res.data)
+      } else {
+        notification.success({ message: 'Đặt hàng thành công.' })
+        navigate('/')
+      }
     } catch (error) {
       showError(error)
     }
@@ -331,9 +337,9 @@ const CartItem = () => {
                 <div>
                   <div className="bg-white p-4">
                     <Steps size="small" initial={0} current={currentStep}>
-                      <Steps.Step title="40.000 VND" description="dưới 200.000 VND" />
+                      <Steps.Step title="4.000 VND" description="dưới 200.000 VND" />
                       <Steps.Step
-                        title="20.000 VND"
+                        title="2.000 VND"
                         description="từ 200.000 VND đến dưới 400.000 VND"
                       />
                       <Steps.Step title="Miễn phí" description="trên 400.000 VND" />
@@ -403,19 +409,19 @@ const CartItem = () => {
                         <span>Thanh toán khi nhận hàng</span>
                       </div>
                     </Radio>
-                    <Radio value={1}>
+                    <Radio value={3}>
                       <div className="flex space-x-4 p-2 items-center">
                         <img src="pay1.svg" alt="Logo" className="w-12 mx-auto" />
                         <span>PayOS</span>
                       </div>
                     </Radio>
 
-                    <Radio value={3}>
+                    {/* <Radio value={3}>
                       <div className="flex space-x-4 items-center">
                         <img src="pay2.webp" alt="Logo" className="w-12 mx-auto" />
                         <span>Momo</span>
                       </div>
-                    </Radio>
+                    </Radio> */}
                   </Radio.Group>
                 </Card>
                 <Divider className="my-[0.1rem] border-0" />
@@ -483,8 +489,8 @@ const CartItem = () => {
               size="large"
               onChange={handleProvinceChange}
               options={provinces?.map((province) => ({
-                value: province.code,
-                label: province.name,
+                value: province.ProvinceID,
+                label: province.ProvinceName,
               }))}
             />
           </Form.Item>
@@ -504,8 +510,8 @@ const CartItem = () => {
                 size="large"
                 onChange={handleDistrictChange}
                 options={districts?.map((district) => ({
-                  value: district.code,
-                  label: district.name,
+                  value: district.DistrictID,
+                  label: district.DistrictName,
                 }))}
                 disabled={!selectedProvince}
               />
@@ -525,8 +531,8 @@ const CartItem = () => {
                 size="large"
                 onChange={handleWardChange}
                 options={wards?.map((ward) => ({
-                  value: ward.code,
-                  label: ward.name,
+                  value: ward.WardCode,
+                  label: ward.WardName,
                 }))}
                 disabled={!selectedDistrict}
               />
