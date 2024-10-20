@@ -8,9 +8,16 @@ const getAddress = async () => await axios.get(API_URL + '/get-address', { heade
 const updateAddress = async (data) =>
   await axios.put(API_URL + '/update-address', data, { headers: authHeader() })
 
+const getInfo = async () => await axios.get(API_URL + '/info', { headers: authHeader() })
+
+const updateInfo = async (data) =>
+  await axios.put(API_URL + '/info', data, { headers: authHeader() })
+
 const userService = {
   getAddress,
   updateAddress,
+  getInfo,
+  updateInfo,
 }
 
 export default userService

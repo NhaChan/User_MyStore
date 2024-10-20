@@ -76,7 +76,7 @@ const ProductDetail = () => {
         quantity: quantity,
       }
       await cartService.addToCart(cartItem)
-      notification.success({ message: 'Thêm vào giỏ hành thành công.' })
+      notification.success({ message: 'Thêm vào giỏ hành thành công.', placement: 'top' })
     } catch (error) {
       console.log(error)
       if (error.response?.status === 401) {

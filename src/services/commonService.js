@@ -16,6 +16,7 @@ export const showError = (error) => {
   notification.error({
     message: 'Lỗi',
     description: errorMessage,
+    placement: 'top',
   })
 }
 
