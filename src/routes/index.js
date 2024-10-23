@@ -11,6 +11,7 @@ import ResetPassword from '../pages/ResetPassword'
 import Profile from '../pages/Profile'
 import OrderDetail from '../pages/Order'
 import Order from '../pages/Order/Order'
+import Payment from '../pages/Payment/Payment'
 
 export const navigation = [{ name: 'Home', to: '/' }]
 
@@ -29,6 +30,7 @@ export const privateRoutes = [
   { path: '/profile', component: Profile },
   { path: '/orders', component: Order },
   { path: '/order-details/:id', component: OrderDetail },
+  { path: '/payment', component: Payment, Layout: null },
 ]
 
 export const generatePublicRoutes = () => {

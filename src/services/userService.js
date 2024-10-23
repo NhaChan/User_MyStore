@@ -13,11 +13,22 @@ const getInfo = async () => await axios.get(API_URL + '/info', { headers: authHe
 const updateInfo = async (data) =>
   await axios.put(API_URL + '/info', data, { headers: authHeader() })
 
+const addFavorite = async (productId) =>
+  await axios.post(API_URL + '/favorite', { id: productId }, { headers: authHeader() })
+
+const getFavorite = async () => await axios.get(API_URL + '/favorite', { headers: authHeader() })
+
+const deleteFavorite = async (productId) =>
+  await axios.delete(API_URL + `/favorite/${productId}`, { headers: authHeader() })
+
 const userService = {
   getAddress,
   updateAddress,
   getInfo,
   updateInfo,
+  addFavorite,
+  getFavorite,
+  deleteFavorite,
 }
 
 export default userService

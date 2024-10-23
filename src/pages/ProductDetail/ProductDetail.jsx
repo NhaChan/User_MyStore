@@ -1,12 +1,14 @@
 import { Button, Carousel, Image, InputNumber, Rate, Tabs, Skeleton, notification } from 'antd'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { formatVND, showError, toImageLink } from '../../services/commonService'
 import productService from '../../services/products/productService'
 import { useLocation, useParams } from 'react-router-dom'
 import { BsCartPlus, BsFire } from 'react-icons/bs'
 import cartService from '../../services/cartService'
-import { HomeOutlined } from '@ant-design/icons'
+import { HeartFilled, HeartOutlined, HomeOutlined } from '@ant-design/icons'
 import BreadcrumbLink from '../../components/BreadcrumbLink'
+import userService from '../../services/userService'
+import { FavoritesContext } from '../../App'
 
 const breadcrumb = (id, name) => [
   {
@@ -22,15 +24,37 @@ const breadcrumb = (id, name) => [
   },
 ]
 
-const ProductDetail = () => {
+const ProductDetail = ({ product }) => {
   const [data, setData] = useState({})
   const [isLoading, setIsLoading] = useState(false)
   const [isAddCart, setIsAddCart] = useState(false)
-  const { id } = useParams()
+  // const { id } = useParams()
   const [selectedImage, setSelectedImage] = useState('')
   const [quantity, setQuantity] = useState(1)
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
+
+  const favorite = useContext(FavoritesContext)
+  const [favorites, setFavorite] = favorite
+
+  const { id: stringId } = useParams()
+  const id = parseInt(stringId, 10)
+
+  const isFavorite = favorites.includes(id)
+
+  const clickFavorite = async () => {
+    try {
+      if (isFavorite) {
+        await userService.deleteFavorite(id)
+        setFavorite(favorites.filter((favId) => favId !== id))
+      } else {
+        await userService.addFavorite(id)
+        setFavorite([...favorites, id])
+      }
+    } catch (error) {
+      showError(error)
+    }
+  }
 
   const onChange = (key) => {
     console.log(key)
@@ -104,7 +128,7 @@ const ProductDetail = () => {
                     width={500}
                     height={450}
                     src={selectedImage}
-                    className="w-full max-w-md h-auto"
+                    className="w-full max-w-md h-auto object-cover"
                   />
                 </div>
                 <Carousel
@@ -131,7 +155,7 @@ const ProductDetail = () => {
                         }`}
                       >
                         <img
-                          className="object-cover w-20 h-20  md:w-20 md:h-20"
+                          className="object-contain w-20 h-20  md:w-20 md:h-20"
                           src={toImageLink(url)}
                           alt={url}
                         />
@@ -143,7 +167,16 @@ const ProductDetail = () => {
 
             <div className="w-full lg:w-2/3 px-4 space-y-4">
               <Skeleton loading={isLoading} active>
-                <div className="md:text-xl sm:text-md font-normal mb-4">{data.name}</div>
+                <div className="flex flex-row justify-between items-baseline">
+                  <div className="md:text-xl sm:text-md font-normal mb-4 pr-4">{data.name}</div>
+                  <button onClick={clickFavorite}>
+                    {isFavorite ? (
+                      <HeartFilled className="text-xl md:text-3xl text-red-500" />
+                    ) : (
+                      <HeartOutlined className="text-xl md:text-3xl text-gray-500" />
+                    )}
+                  </button>
+                </div>
                 <div className="text-gray-500 space-x-6">
                   <span>
                     <Rate count={1} value={1} className="mb-4" /> 4.7
@@ -205,7 +238,7 @@ const ProductDetail = () => {
                     className="rounded-none flex items-center justify-center p-6"
                   >
                     <BsCartPlus className="text-xl" />
-                    <span className="px-2">Thêm vào giỏ hàng</span>
+                    <div className="px-2 hidden sm:block">Thêm vào giỏ hàng</div>
                   </Button>
                 </div>
               </Skeleton>

@@ -1,4 +1,4 @@
-import { Badge, Button, Card, Carousel, Divider, Rate, Skeleton } from 'antd'
+import { Button, Carousel, Divider, Rate, Skeleton } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { FaCarSide } from 'react-icons/fa'
 import { FaArrowsRotate, FaPhoneFlip } from 'react-icons/fa6'
@@ -6,6 +6,7 @@ import { MdOutlineSecurity } from 'react-icons/md'
 import productService from '../../services/products/productService'
 import { formatVND, showError, toImageLink } from '../../services/commonService'
 import { Link } from 'react-router-dom'
+import CardProduct from '../../components/CardProduct/CardProduct'
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -166,110 +167,17 @@ const Home = () => {
             <div className="text-4xl text-secondary">Bán chạy</div>
           </Divider>
           <div className="grid lg:grid-cols-6 md:grid-cols-3 grid-cols-2 gap-4 p-4">
-            {bestSelling.map((product, i) => {
-              const discountPrice = product.price - product.price * (product.discount / 100)
-              return product.discount > 0 ? (
-                <Link key={i} to={`/product-details/${product.id}?name=${product.name}`}>
-                  <Badge.Ribbon text={`${product.discount} %`} color="red">
-                    <Card
-                      loading={isLoading}
-                      hoverable
-                      className="w-full h-fit"
-                      cover={
-                        <img
-                          className="h-64 object-cover"
-                          alt={product.name}
-                          src={toImageLink(product.imageUrl)}
-                        />
-                      }
-                    >
-                      <div className="truncate w-32 md:w-36">{product.name}</div>
-                      <div className="py-2">
-                        <span className="text-red-600 text-lg font-sans">
-                          {formatVND(discountPrice)}
-                        </span>{' '}
-                        <span className="line-through">{formatVND(product.price)}</span>
-                      </div>
-                      <div className="flex justify-between text-gray-400">
-                        <div>
-                          <Rate className="text-sm" disabled count={1} value={1} /> 4.7
-                        </div>
-                        <div>{product.sold} Đã bán</div>
-                      </div>
-                    </Card>
-                  </Badge.Ribbon>
-                </Link>
-              ) : (
-                <Link to={`/product-details/${product.id}?name=${product.name}`}>
-                  {' '}
-                  <Card
-                    hoverable
-                    key={i}
-                    className="w-full h-fit"
-                    cover={
-                      <img
-                        className="h-64 object-cover"
-                        alt={product.name}
-                        src={toImageLink(product.imageUrl)}
-                      />
-                    }
-                  >
-                    <div className="truncate w-32 md:w-48">{product.name}</div>
-                    <div className="py-2">
-                      <span className="text-red-600 text-lg font-sans">
-                        {formatVND(product.price)}
-                      </span>
-                    </div>
-                    <div className="flex justify-between text-gray-400">
-                      <div>
-                        <Rate className="text-sm" disabled count={1} value={1} /> 4.7
-                      </div>
-                      <div>{product.sold} Đã bán</div>
-                    </div>
-                  </Card>
-                </Link>
-              )
-            })}
+            {bestSelling.map((product, i) => (
+              <CardProduct product={product} key={i} isLoading={isLoading} />
+            ))}
           </div>
           <Divider plain>
             <div className="text-4xl"> Đang giảm giá</div>
           </Divider>
           <div className="grid lg:grid-cols-6 md:grid-cols-3 grid-cols-2 gap-8 p-4">
-            {discounted.map((product, i) => {
-              const discountPrice = product.price - product.price * (product.discount / 100)
-              return (
-                <Link key={i} to={`/product-details/${product.id}?name=${product.name}`}>
-                  <Badge.Ribbon text={`${product.discount} %`} color="red">
-                    <Card
-                      loading={isLoading}
-                      hoverable
-                      className="w-full h-fit"
-                      cover={
-                        <img
-                          className="h-64 object-cover"
-                          alt={product.name}
-                          src={toImageLink(product.imageUrl)}
-                        />
-                      }
-                    >
-                      <div className="truncate w-32 md:w-36">{product.name}</div>
-                      <div className="py-2">
-                        <span className="text-red-600 text-lg font-sans">
-                          {formatVND(discountPrice)}
-                        </span>{' '}
-                        <span className="line-through">{formatVND(product.price)}</span>
-                      </div>
-                      <div className="flex justify-between text-gray-400">
-                        <div>
-                          <Rate className="text-sm" disabled count={1} value={1} /> 4.7
-                        </div>
-                        <div>{product.sold} Đã bán</div>
-                      </div>
-                    </Card>
-                  </Badge.Ribbon>
-                </Link>
-              )
-            })}
+            {discounted.map((product, i) => (
+              <CardProduct product={product} key={i} isLoading={isLoading} />
+            ))}
           </div>
         </div>
       </div>

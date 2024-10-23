@@ -65,7 +65,7 @@ const CartItem = () => {
         const address = await userService.getAddress()
         const result = await addressService.getProvince()
         // console.log('data', result)
-        // console.log(address)
+        console.log(address)
         //console.log(res)
         setData(res.data)
         setDataAddress(address.data)
@@ -154,7 +154,9 @@ const CartItem = () => {
       // console.log('quan', res.data)
       setDistrict(res.data.data ?? [])
       setWard([])
-      form.setFieldsValue({ province_name: option.label })
+      form.setFieldsValue({ provinceID: value, provinceName: option.label })
+      form.setFieldsValue({ districtID: [], districtName: [] })
+      form.setFieldsValue({ wardID: [], wardName: [] })
     } catch (error) {
       showError(error)
     }
@@ -166,21 +168,22 @@ const CartItem = () => {
       const res = await addressService.getWardsProvice(value)
       // console.log('phuong', res)
       setWard(res.data?.data ?? [])
-      form.setFieldsValue({ district_name: option.label })
+      form.setFieldsValue({ districtID: value, districtName: option.label })
+      form.setFieldsValue({ wardID: [], wardName: [] })
     } catch (error) {
       showError(error)
     }
   }
 
   const handleWardChange = (value, option) => {
-    form.setFieldsValue({ ward_name: option.label })
+    form.setFieldsValue({ wardID: value, wardName: option.label })
   }
 
   const handleOk = async () => {
     setLoadingUpdate(true)
     try {
       const value = await form.validateFields()
-      //console.log(value)
+      console.log(value)
       await userService.updateAddress(value)
       notification.success({ message: 'Cập nhật địa chỉ thành công.' })
       setIsModalOpen(false)
@@ -192,7 +195,7 @@ const CartItem = () => {
     }
   }
 
-  const [value, setValue] = useState(2)
+  const [value, setValue] = useState(1)
   const onChange = (e) => {
     console.log('radio checked', e.target.value)
     setValue(e.target.value)
@@ -234,11 +237,13 @@ const CartItem = () => {
         total: approximatePrice + shippingFee,
         shippingCost: shippingFee,
         receiver: `${dataAddress.name} - ${dataAddress.phoneNumber}`,
-        deliveryAddress: `${dataAddress.detail}, ${dataAddress.ward_name},
-                          ${dataAddress.district_name}, ${dataAddress.province_name}`,
+        deliveryAddress: `${dataAddress.detail}, ${dataAddress.wardName},
+                          ${dataAddress.districtName}, ${dataAddress.provinceName}`,
         //code: 'string',
         cartIds: selectedRowKeys.map(String),
         paymentMethodId: value,
+        DistrictID: dataAddress.districtID,
+        WardID: `${dataAddress.wardID}`,
         //userIP: 'string',
       }
       if (selectedRowKeys.length === 0) {
@@ -247,12 +252,12 @@ const CartItem = () => {
       }
       const res = await orderService.createOrder(order)
 
-      if (order.paymentMethodId !== 2) {
+      if (order.paymentMethodId !== 1) {
         // console.log(res.data)
         window.location.replace(res.data)
       } else {
         notification.success({ message: 'Đặt hàng thành công.' })
-        navigate('/')
+        navigate('/orders')
       }
     } catch (error) {
       showError(error)
@@ -376,8 +381,8 @@ const CartItem = () => {
                         </span>
                       </div>
                       <span className="truncate w-80 lg:w-80 md:w-full">
-                        {dataAddress.detail} - {dataAddress.ward_name} - {dataAddress.district_name}{' '}
-                        - {dataAddress.province_name}
+                        {dataAddress.detail} - {dataAddress.wardName} - {dataAddress.districtName} -{' '}
+                        {dataAddress.provinceName}
                       </span>
                     </div>
                   </div>
@@ -404,12 +409,12 @@ const CartItem = () => {
                     value={value}
                     className="flex flex-col space-y-3"
                   >
-                    <Radio value={2}>
+                    <Radio value={1}>
                       <div className="flex p-2 items-center">
                         <span>Thanh toán khi nhận hàng</span>
                       </div>
                     </Radio>
-                    <Radio value={3}>
+                    <Radio value={2}>
                       <div className="flex space-x-4 p-2 items-center">
                         <img src="pay1.svg" alt="Logo" className="w-12 mx-auto" />
                         <span>PayOS</span>
@@ -474,9 +479,12 @@ const CartItem = () => {
               <Input size="large" placeholder="..." />
             </Form.Item>
           </div>
+          <Form.Item name="provinceID" hidden>
+            <Input type="hidden" />
+          </Form.Item>
           <Form.Item
             label="Tỉnh/ Thành Phố"
-            name="province_name"
+            name="provinceName"
             rules={[
               {
                 required: true,
@@ -494,10 +502,13 @@ const CartItem = () => {
               }))}
             />
           </Form.Item>
+          <Form.Item name="districtID" hidden>
+            <Input type="hidden" />
+          </Form.Item>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Form.Item
               label="Quận/ Huyện"
-              name="district_name"
+              name="districtName"
               rules={[
                 {
                   required: true,
@@ -516,9 +527,12 @@ const CartItem = () => {
                 disabled={!selectedProvince}
               />
             </Form.Item>
+            <Form.Item name="wardID" hidden>
+              <Input type="hidden" />
+            </Form.Item>
             <Form.Item
               label="Xã/ Phường/ Thị trấn"
-              name="ward_name"
+              name="wardName"
               rules={[
                 {
                   required: true,

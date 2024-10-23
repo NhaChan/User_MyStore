@@ -1,11 +1,11 @@
-import { Badge, Button, Card, Checkbox, Divider, Rate, Select, Slider } from 'antd'
+import { Button, Checkbox, Divider, Select, Slider } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { formatVND, showError, toImageLink } from '../../services/commonService'
-import { Link } from 'react-router-dom'
+import { showError } from '../../services/commonService'
 import productService from '../../services/products/productService'
 import { BsFire } from 'react-icons/bs'
 import { HomeOutlined } from '@ant-design/icons'
 import BreadcrumbLink from '../../components/BreadcrumbLink'
+import CardProduct from '../../components/CardProduct/CardProduct'
 
 const breadcrumb = [
   {
@@ -176,68 +176,9 @@ const Product = () => {
               <div className="text-center text-gray-500">Không có sản phẩm nào</div>
             ) : (
               <div className="grid lg:grid-cols-5 grid-cols-2 gap-4">
-                {data.map((product, i) => {
-                  const discountPrice = product.price - product.price * (product.discount / 100)
-                  return product.discount > 0 ? (
-                    <Link to={`/product-details/${product.id}?name=${product.name}`} key={i}>
-                      <Badge.Ribbon text={`${product.discount} %`} color="red">
-                        <Card
-                          loading={isLoading}
-                          hoverable
-                          className="w-full h-fit"
-                          cover={
-                            <img
-                              className="h-64 object-cover"
-                              alt={product.name}
-                              src={toImageLink(product.imageUrl)}
-                            />
-                          }
-                        >
-                          <div className="truncate w-36 md:w-48">{product.name}</div>
-                          <div className="py-2">
-                            <span className="text-red-600 text-lg font-sans">
-                              {formatVND(discountPrice)}
-                            </span>{' '}
-                            <span className="line-through">{formatVND(product.price)}</span>
-                          </div>
-                          <div className="flex justify-between text-gray-400">
-                            <div>
-                              <Rate className="text-sm" disabled count={1} value={1} /> 4.7
-                            </div>
-                            <div>{product.sold} Đã bán</div>
-                          </div>
-                        </Card>
-                      </Badge.Ribbon>
-                    </Link>
-                  ) : (
-                    <Link to={`/product-details/${product.id}?name=${product.name}`} key={i}>
-                      <Card
-                        hoverable
-                        className="w-full h-fit"
-                        cover={
-                          <img
-                            className="h-64 object-cover"
-                            alt={product.name}
-                            src={toImageLink(product.imageUrl)}
-                          />
-                        }
-                      >
-                        <div className="truncate w-36 md:w-48">{product.name}</div>
-                        <div className="py-2">
-                          <span className="text-red-600 text-lg font-sans">
-                            {formatVND(product.price)}
-                          </span>
-                        </div>
-                        <div className="flex justify-between text-gray-400">
-                          <div>
-                            <Rate className="text-sm" disabled count={1} value={1} /> 4.7
-                          </div>
-                          <div>{product.sold} Đã bán</div>
-                        </div>
-                      </Card>
-                    </Link>
-                  )
-                })}
+                {data.map((product, i) => (
+                  <CardProduct product={product} key={i} isLoading={isLoading} />
+                ))}
               </div>
             )}
             {data.length > 0 && totalProducts > data.length && (
