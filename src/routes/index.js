@@ -12,6 +12,7 @@ import Profile from '../pages/Profile'
 import OrderDetail from '../pages/Order'
 import Order from '../pages/Order/Order'
 import Payment from '../pages/Payment/Payment'
+import Favorite from '../pages/Favorite/Favorite'
 
 export const navigation = [{ name: 'Home', to: '/' }]
 
@@ -31,6 +32,7 @@ export const privateRoutes = [
   { path: '/orders', component: Order },
   { path: '/order-details/:id', component: OrderDetail },
   { path: '/payment', component: Payment, Layout: null },
+  { path: '/favorites', component: Favorite },
 ]
 
 export const generatePublicRoutes = () => {

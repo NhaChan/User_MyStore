@@ -21,6 +21,16 @@ const getFavorite = async () => await axios.get(API_URL + '/favorite', { headers
 const deleteFavorite = async (productId) =>
   await axios.delete(API_URL + `/favorite/${productId}`, { headers: authHeader() })
 
+const getFavoriteProduct = async (page, pageSize, search) =>
+  await axios.get(API_URL + '/favorite-product', {
+    headers: authHeader(),
+    params: {
+      page: page,
+      pageSize: pageSize,
+      search: search ?? '',
+    },
+  })
+
 const userService = {
   getAddress,
   updateAddress,
@@ -29,6 +39,7 @@ const userService = {
   addFavorite,
   getFavorite,
   deleteFavorite,
+  getFavoriteProduct,
 }
 
 export default userService

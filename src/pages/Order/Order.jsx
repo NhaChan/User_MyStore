@@ -6,6 +6,7 @@ import { formatDateTime, formatVND, showError, toImageLink } from '../../service
 import BreadcrumbLink from '../../components/BreadcrumbLink'
 import { Link } from 'react-router-dom'
 import { OrderStatus } from '../../services/const'
+import SiderMenu from '../../components/SiderMenu/SiderMenu'
 
 const Order = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -89,60 +90,72 @@ const Order = () => {
       <div className="py-2 px-8 sticky top-[6rem] z-40 bg-gray-100">
         <BreadcrumbLink breadcrumb={breadcrumb} />
       </div>
-      {isLoading && currentPage === 1 ? (
-        <Skeleton paragraph={{ rows: 15 }} />
-      ) : (
-        <>
-          <List
-            className="bg-gray-100 md:px-28 sm:px-4 py-4"
-            itemLayout="vertical"
-            size="large"
-            dataSource={data}
-            loadMore={loadMore}
-            renderItem={(order) => (
-              <List.Item key={order.id} className="bg-white p-4 shadow-lg rounded-md mb-4">
-                <div className="mb-4">
-                  <div className="flex justify-between">
-                    <span>{formatDateTime(order.orderDate)}</span>
-                    <span>Mã đơn #{order.id}</span>
 
-                    <span className="text-red-500">
-                      <OrderStatusDisplay orderStatus={order.orderStatus} />
-                    </span>
-                  </div>
-                  <Divider />
-                  <div>Phương thức thanh toán: {order.paymentMethod}</div>
-                  <Divider />
-                  <div className="flex items-center ">
-                    <img className="w-20 h-20" src={toImageLink(order.product?.imageUrl)} alt="" />
-                    <span className="px-4">{order.product?.name}</span>
-                  </div>
-                  <Divider />
-                  <div className="flex items-center justify-end py-4">
-                    Thành tiền:{' '}
-                    <span className="text-xl font-semibold text-red-500 px-3">
-                      {formatVND(order.total)}
-                    </span>
-                  </div>
-                  <div className="flex justify-end space-x-2">
-                    <Button size="large" className="rounded-none">
-                      Đánh giá
-                    </Button>
-                    <Button size="large" type="primary" danger className="rounded-none">
-                      Xác nhận hủy
-                    </Button>
-                    <Link to={`/order-details/${order.id}`}>
-                      <Button size="large" className="rounded-none">
-                        Xem chi tiết
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-              </List.Item>
-            )}
-          />
-        </>
-      )}
+      <div className="lg:px-28 px-2 py-4 bg-gray-100">
+        <div className="flex justify-between lg:px-28 px-2">
+          <div className="w-1/5">
+            <SiderMenu />
+          </div>
+          {isLoading && currentPage === 1 ? (
+            <Skeleton paragraph={{ rows: 15 }} />
+          ) : (
+            <div className="w-4/5">
+              <List
+                // className=" md:px-28 sm:px-4 py-4"
+                itemLayout="vertical"
+                size="large"
+                dataSource={data}
+                loadMore={loadMore}
+                renderItem={(order) => (
+                  <List.Item key={order.id} className="bg-white p-4 shadow-lg rounded-md mb-4">
+                    <div className="mb-4">
+                      <div className="flex justify-between">
+                        <span>{formatDateTime(order.orderDate)}</span>
+                        <span>Mã đơn #{order.id}</span>
+
+                        <span className="text-red-500">
+                          <OrderStatusDisplay orderStatus={order.orderStatus} />
+                        </span>
+                      </div>
+                      <Divider />
+                      <div>Phương thức thanh toán: {order.paymentMethod}</div>
+                      <Divider />
+                      <div className="flex items-center ">
+                        <img
+                          className="w-20 h-20"
+                          src={toImageLink(order.product?.imageUrl)}
+                          alt=""
+                        />
+                        <span className="px-4">{order.product?.name}</span>
+                      </div>
+                      <Divider />
+                      <div className="flex items-center justify-end py-4">
+                        Thành tiền:{' '}
+                        <span className="text-xl font-semibold text-red-500 px-3">
+                          {formatVND(order.total)}
+                        </span>
+                      </div>
+                      <div className="flex flex-col sm:flex-row justify-end sm:space-x-2">
+                        <Button size="large" className="rounded-none">
+                          Đánh giá
+                        </Button>
+                        <Button size="large" type="primary" danger className="rounded-none">
+                          Xác nhận hủy
+                        </Button>
+                        <Link to={`/order-details/${order.id}`}>
+                          <Button size="large" className="rounded-none w-full">
+                            Xem chi tiết
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                  </List.Item>
+                )}
+              />
+            </div>
+          )}
+        </div>
+      </div>
     </>
   )
 }

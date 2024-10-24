@@ -58,6 +58,10 @@ const Header = () => {
     },
     {
       key: '3',
+      label: <Link to="/favorites">Sản phẩm yêu thích</Link>,
+    },
+    {
+      key: '4',
       label: (
         <div onClick={showModal} className="cursor-pointer">
           Đăng xuất
