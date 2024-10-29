@@ -29,8 +29,17 @@ const Favorite = () => {
       setIsLoading(true)
       try {
         const res = await userService.getFavoriteProduct(currentPage, currentPageSize)
-        console.log(res.data.items)
-        setData((prev) => [...prev, ...res.data.items])
+        // console.log(res.data.items)
+        if (currentPage === 1) {
+          setData(res.data.items)
+        } else {
+          setData((prevData) => {
+            const newItems = res.data.items.filter(
+              (item) => !prevData.some((prevItem) => prevItem.id === item.id),
+            )
+            return [...prevData, ...newItems]
+          })
+        }
         setTotalItems(res.data?.totalItems)
       } catch (error) {
         showError(error)

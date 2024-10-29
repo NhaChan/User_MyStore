@@ -28,6 +28,8 @@ const updateProduct = async (id, data) => await axios.put(API_URL + `/update/${i
 
 const deleteProduct = async (id) => await axios.delete(API_URL + `/delete/${id}`)
 
+const getReview = async (id) => await axios.get(API_URL + `/${id}/reviews`)
+
 const getFilteredProducts = async (
   page,
   pageSize,
@@ -64,6 +66,7 @@ const productService = {
   updateProduct,
   deleteProduct,
   getFilteredProducts,
+  getReview,
 }
 
 export default productService

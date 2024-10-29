@@ -9,6 +9,7 @@ import { HeartFilled, HeartOutlined, HomeOutlined } from '@ant-design/icons'
 import BreadcrumbLink from '../../components/BreadcrumbLink'
 import userService from '../../services/userService'
 import { FavoritesContext } from '../../App'
+import Review from '../../components/Review'
 
 const breadcrumb = (id, name) => [
   {
@@ -62,13 +63,36 @@ const ProductDetail = ({ product }) => {
   const items = [
     {
       key: '1',
-      label: 'Mô tả',
+      label: 'CHI TẾT SẨN PHẨM',
       children: 'Content of Tab Pane 1',
     },
     {
       key: '2',
-      label: 'Đánh giá',
-      children: 'Content of Tab Pane 2',
+      label: 'VẬN CHUYỂN & TRẢ HÀNG',
+      children: (
+        <>
+          <div className="py-6">
+            <div className="font-bold">VẬN CHUYỂN</div>
+            <div>
+              Phí giao hàng dao động từ 10.000đ đến 30.000đ, vận chuyển trong vòng 1 đến 7 ngày làm
+              việc. Khách hàng có bất kỳ thắc mắc vui lòng liên hệ đến số điện thoại{' '}
+              <span className="text-blue-700">090108912</span> để được tư vấn.
+            </div>
+          </div>
+          <div>
+            <div className="font-bold">TRẢ LẠI VÀ ĐỔI HÀNG</div>
+            <div>
+              Dễ dàng và miễn phí, trong vòng 14 ngày. Xem các điều kiện và thủ tục trong Câu hỏi
+              thường gặp về hoàn trả của chúng tôi.
+            </div>
+          </div>
+        </>
+      ),
+    },
+    {
+      key: '3',
+      label: <span className="">ĐÁNH GIÁ</span>,
+      children: <Review id={id} />,
     },
   ]
 
@@ -247,6 +271,7 @@ const ProductDetail = ({ product }) => {
           <div className="p-12">
             <Tabs
               size="large"
+              centered
               className="p-4 border border-gray-100"
               defaultActiveKey="1"
               items={items}

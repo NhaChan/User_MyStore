@@ -1,10 +1,14 @@
-import { Button, Divider, Skeleton } from 'antd'
+import { Divider, Skeleton, Steps } from 'antd'
 import React, { useEffect, useState } from 'react'
 import orderService from '../../services/orderService'
 import { HomeTwoTone } from '@ant-design/icons'
 import { formatDateTime, formatVND, showError, toImageLink } from '../../services/commonService'
 import BreadcrumbLink from '../../components/BreadcrumbLink'
 import { useParams } from 'react-router-dom'
+import { FaTruck } from 'react-icons/fa'
+import { MdAssignmentReturned, MdCancel, MdOutlineRecommend } from 'react-icons/md'
+import { IoDocumentSharp } from 'react-icons/io5'
+import { PiCopyFill } from 'react-icons/pi'
 
 const OrderDetail = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -44,6 +48,27 @@ const OrderDetail = () => {
     fetchData()
   }, [id])
 
+  const getCurrentStep = (status) => {
+    switch (status) {
+      case 'Processing':
+        return 0
+      case 'Confirmed':
+        return 1
+      case 'AwaitingPickup':
+        return 2
+      case 'Shipping':
+        return 3
+      case 'Received':
+        return 4
+      case 'Canceled':
+        return -1
+      default:
+        return 0
+    }
+  }
+
+  const currentStep = getCurrentStep(orderInfo.orderStatus)
+
   return (
     <>
       <div className="py-2 px-8 sticky top-[6rem] z-40 bg-gray-100">
@@ -55,45 +80,278 @@ const OrderDetail = () => {
         <>
           <div className="bg-gray-100 md:px-28 px-2 py-4">
             <div className="px-0 md:px-28">
+              <div className="bg-white p-4 flex justify-between font-thin">
+                <div>MÃ ĐƠN HÀNG: #{orderInfo.id}</div>
+                <div className="flex">
+                  <span>Phương thức thanh toán: </span>
+                  <span className="font-semibold text-green-600">
+                    {orderInfo.paymentMethodName === 'COD'
+                      ? 'Thanh toán khi nhận hàng'
+                      : 'Thanh toán bằng PayOS'}
+                  </span>
+                </div>
+              </div>
+              <Divider className="my-[0.1rem] border-0 " />
+
+              {/* <div className="bg-white p-4">
+                <Steps
+                  current={currentStep}
+                  status=""
+                  labelPlacement="vertical"
+                  items={[
+                    {
+                      title: 'Đã đặt hàng',
+                      description: <div>{formatDateTime(orderInfo.orderDate)}</div>,
+                      icon: (
+                        <button
+                          className={`p-2 border-2 rounded-full ${
+                            currentStep === 0 ? 'bg-orange-200' : 'border-green-500'
+                          }`}
+                        >
+                          <IoDocumentSharp
+                            className={`p-2 border-2 rounded-full ${
+                              currentStep === 0
+                                ? 'bg-orange-200 text-orange-500'
+                                : currentStep > 0
+                                ? 'bg-green-200 text-green-500'
+                                : 'border-green-500 text-green-500'
+                            }`}
+                          />
+                        </button>
+                      ),
+                    },
+                    {
+                      title: 'Đã xác nhận',
+                      icon: (
+                        <button
+                          className={`p-2 border-2 rounded-full ${
+                            currentStep === 0
+                              ? 'bg-orange-200 text-orange-500'
+                              : currentStep > 0
+                              ? 'bg-green-200 text-green-500'
+                              : 'border-green-500 text-green-500'
+                          }`}
+                        >
+                          <PiCopyFill
+                            className={`${
+                              currentStep === 1 ? 'text-orange-500' : 'text-green-500'
+                            } text-3xl`}
+                          />
+                        </button>
+                      ),
+                    },
+                    {
+                      title: 'Đã giao cho đơn vị vận chuyển',
+                      icon: (
+                        <button
+                          className={`p-2 border-2 rounded-full ${
+                            currentStep === 0
+                              ? 'bg-orange-200 text-orange-500'
+                              : currentStep > 1
+                              ? 'bg-green-200 text-green-500'
+                              : 'border-green-500 text-green-500'
+                          }`}
+                        >
+                          <FaTruck
+                            className={`${
+                              currentStep === 2 ? 'text-orange-500' : 'text-green-500'
+                            } text-3xl`}
+                          />
+                        </button>
+                      ),
+                    },
+                    {
+                      title: 'Đã nhận được hàng',
+                      icon: (
+                        <button
+                          className={`p-2 border-2 rounded-full ${
+                            currentStep === 3 ? 'bg-orange-200' : 'border-green-500'
+                          }`}
+                        >
+                          <MdAssignmentReturned
+                            className={`${
+                              currentStep === 3 ? 'text-orange-500' : 'text-green-500'
+                            } text-3xl`}
+                          />
+                        </button>
+                      ),
+                    },
+                    {
+                      title: 'Hoàn thành',
+                      icon: (
+                        <button
+                          className={`p-2 border-2 rounded-full ${
+                            currentStep === 4 ? 'bg-orange-200' : 'border-green-500'
+                          }`}
+                        >
+                          <MdOutlineRecommend
+                            className={`${
+                              currentStep === 4 ? 'text-orange-500' : 'text-green-500'
+                            } text-3xl`}
+                          />
+                        </button>
+                      ),
+                    },
+                    {
+                      title: 'Đã hủy',
+                      icon: (
+                        <button
+                          className={`p-2 border-2 rounded-full ${
+                            currentStep === 5 ? 'bg-orange-200' : 'border-red-500'
+                          }`}
+                        >
+                          <MdCancel
+                            className={`${
+                              currentStep === 5 ? 'text-orange-500' : 'text-red-500'
+                            } text-3xl`}
+                          />
+                        </button>
+                      ),
+                    },
+                  ]}
+                />
+              </div> */}
+              {/* {currentStep !== -1 ? ( */}
+              <div className="bg-white p-4">
+                <Steps
+                  current={currentStep}
+                  status="process"
+                  labelPlacement="vertical"
+                  items={[
+                    {
+                      title: 'Đã đặt hàng',
+                      description: <div>{formatDateTime(orderInfo.orderDate)}</div>,
+                      icon: (
+                        <button
+                          className={`p-2 border-2 rounded-full ${
+                            currentStep === 0
+                              ? 'bg-orange-200 text-orange-500'
+                              : currentStep > 0
+                              ? 'bg-green-200 text-green-500'
+                              : 'border-green-500 text-green-500'
+                          }`}
+                        >
+                          <IoDocumentSharp className="text-3xl" />
+                        </button>
+                      ),
+                    },
+                    {
+                      title: 'Đã xác nhận',
+                      icon: (
+                        <button
+                          className={`p-2 border-2 rounded-full ${
+                            currentStep === 1
+                              ? 'bg-orange-200 text-orange-500'
+                              : currentStep > 1
+                              ? 'bg-green-200 text-green-500'
+                              : 'border-green-500 text-green-500'
+                          }`}
+                        >
+                          <PiCopyFill className="text-3xl" />
+                        </button>
+                      ),
+                    },
+                    {
+                      description: 'Đã giao cho đơn vị vận chuyển',
+                      icon: (
+                        <button
+                          className={`p-2 border-2 rounded-full ${
+                            currentStep === 2
+                              ? 'bg-orange-200 text-orange-500'
+                              : currentStep > 2
+                              ? 'bg-green-200 text-green-500'
+                              : 'border-green-500 text-green-500'
+                          }`}
+                        >
+                          <FaTruck className="text-3xl" />
+                        </button>
+                      ),
+                    },
+                    {
+                      description: 'Đã nhận được hàng',
+                      icon: (
+                        <button
+                          className={`p-2 border-2 rounded-full ${
+                            currentStep === 3
+                              ? 'bg-orange-200 text-orange-500'
+                              : currentStep > 3
+                              ? 'bg-green-200 text-green-500'
+                              : 'border-green-500 text-green-500'
+                          }`}
+                        >
+                          <MdAssignmentReturned className="text-3xl" />
+                        </button>
+                      ),
+                    },
+                    {
+                      title: 'Hoàn thành',
+                      icon: (
+                        <button
+                          className={`p-2 border-2 rounded-full ${
+                            currentStep === 4 ? 'bg-orange-200' : 'border-green-500'
+                          }`}
+                        >
+                          <MdOutlineRecommend
+                            className={`${
+                              currentStep === 4 ? 'text-orange-500' : 'text-green-500'
+                            } text-3xl`}
+                          />
+                        </button>
+                      ),
+                    },
+                    {
+                      title: 'Đã hủy',
+                      icon: (
+                        <button
+                          className={`p-2 border-2 rounded-full ${
+                            currentStep === -1 ? 'bg-orange-200' : 'border-red-500'
+                          }`}
+                        >
+                          <MdCancel
+                            className={`${
+                              currentStep === -1 ? 'text-orange-500' : 'text-red-500'
+                            } text-3xl`}
+                          />
+                        </button>
+                      ),
+                    },
+                  ]}
+                />
+              </div>
+              {/* ) : (
+                <div className="bg-white p-4 text-center text-red-500 font-semibold">
+                  Đơn hàng đã bị hủy
+                </div>
+              )} */}
+              <Divider className="my-[0.1rem] border-0 " />
+              <div className="flex flex-col sm:flex-row justify-between bg-white p-4 font-thin">
+                <div className="pb-4 text-lg">Thông tin nhận hàng</div>
+                <div className="pb-2 text-gray-500">{orderInfo.receiver}</div>
+                <div className="text-gray-500">{orderInfo.deliveryAddress}</div>
+              </div>
+              <Divider className="my-[0.1rem] border-0" />
               <div className="bg-white p-4 shadow-lg rounded-md">
                 <div className="mb-4">
-                  <div className="flex justify-between">
-                    <div>
-                      <div className="pb-4 text-lg">Thông tin nhận hàng</div>
-                    </div>
-
-                    <Button ghost disabled>
-                      {formatDateTime(orderInfo.orderDate)}
-                    </Button>
-                  </div>
-                  <div className="pb-2 text-gray-500">{orderInfo.receiver}</div>
-                  <div className="text-gray-500">{orderInfo.deliveryAddress}</div>
-
-                  {/* <div className="font-light">Mã đơn #{orderInfo.id}</div> */}
-
-                  {/* <span className="text-red-500">
-                    <OrderStatusDisplay orderStatus={orderInfo.orderStatus} />
-                  </span> */}
-
-                  <Divider />
                   {data.map((product, i) => (
-                    <div className="flex justify-between items-center" key={i}>
-                      <div className="flex items-center py-2">
-                        <img className="w-20 h-20" src={toImageLink(product.imageUrl)} alt="" />
-                        <span className="px-4">
-                          <div className="">{product.productName}</div>
-                          <div>x {product.quantity}</div>
-                        </span>
+                    <>
+                      <div className="flex justify-between items-center" key={i}>
+                        <div className="flex items-center py-2">
+                          <img className="w-20 h-20" src={toImageLink(product.imageUrl)} alt="" />
+                          <span className="px-4">
+                            <div className="">{product.productName}</div>
+                            <div>x {product.quantity}</div>
+                          </span>
+                        </div>
+                        <div className="items-end">
+                          <span className="line-through font-thin text-gray-400 px-2">
+                            {formatVND(product.originPrice)}
+                          </span>
+                          <span className="text-red-600">{formatVND(product.price)}</span>
+                        </div>
                       </div>
-                      <div className="items-end">
-                        <span className="line-through font-thin text-gray-400 px-2">
-                          {formatVND(product.originPrice)}
-                        </span>
-                        <span className="text-red-600">{formatVND(product.price)}</span>
-                      </div>
-                    </div>
+                      <Divider />
+                    </>
                   ))}
-                  <Divider />
                   <div className="grid grid-cols-6 gap-4 p-4">
                     <div className="col-span-4"></div>
                     <div className="text-left space-y-2">

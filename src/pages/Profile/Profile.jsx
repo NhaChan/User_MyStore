@@ -78,8 +78,12 @@ const Profile = () => {
                     <Divider />
                     <Form form={form} layout="vertical" onFinish={handleOk}>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <Form.Item name="id" hidden></Form.Item>
-                        <Form.Item name="roles" hidden></Form.Item>
+                        <Form.Item name="id" hidden>
+                          <Input />
+                        </Form.Item>
+                        <Form.Item name="roles" hidden>
+                          <Input />
+                        </Form.Item>
                         <Form.Item
                           label="Tên của bạn"
                           name="fullname"
