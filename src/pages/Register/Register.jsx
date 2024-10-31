@@ -72,8 +72,8 @@ const Register = () => {
         token: code,
         ...items,
       }
-      const res = await authService.register(data)
-      console.log(res)
+      await authService.register(data)
+      // console.log(res)
       notification.success({
         message: 'Đăng ký tài khoản thành công',
       })

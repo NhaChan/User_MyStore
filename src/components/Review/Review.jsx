@@ -4,7 +4,7 @@ import { formatDateTime, showError, toImageLink } from '../../services/commonSer
 import productService from '../../services/products/productService'
 import { CiUser } from 'react-icons/ci'
 
-const Review = ({ id }) => {
+const Review = ({ id, rating }) => {
   const [data, setData] = useState([])
 
   useEffect(() => {
@@ -23,9 +23,9 @@ const Review = ({ id }) => {
   return (
     <>
       <button className="bg-red-50 w-full h-40 border-gray-500 text-red-500 mb-2">
-        <span className="text-2xl font-bold">4.9</span>
-        <span> trên 5</span>
-        <Rate allowHalf disabled defaultValue={4.7} />
+        <span className="text-4xl font-bold">{rating}</span>
+        <span className="text-2xl"> trên 5</span>
+        <Rate className="text-3xl" allowHalf disabled defaultValue={rating} />
       </button>
       {data.map((review, i) => (
         <React.Fragment key={review.id}>

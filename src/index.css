@@ -86,21 +86,3 @@
   /* scrollbar-width: thin; */
   scrollbar-color: transparent transparent;
 }
-
-/* .ant-modal-content {
-  display: flex;
-  flex-direction: column;
-}
-
-.ant-modal-header {
-  flex: 0 0 auto;
-}
-
-.ant-modal-footer {
-  flex: 0 0 auto;
-} */
-
-/* .ant-modal-body {
-  flex: 1 1 auto;
-  overflow-y: auto;
-} */

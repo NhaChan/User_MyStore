@@ -49,16 +49,11 @@ const Order = () => {
   ]
 
   useEffect(() => {
-    console.log(orderStatus)
+    // console.log(orderStatus)
 
     const fetchData = async () => {
       setIsLoading(true)
       try {
-        // if (orderStatus === 'all') {
-        //   getAllOrder()
-        // } else {
-        //   getStatus()
-        // }
         let res
         if (orderStatus === 'all') {
           res = await orderService.getAllOrder(currentPage, currentPageSize, '')
@@ -179,6 +174,23 @@ const Order = () => {
     setFileList(updatedList)
   }
 
+  const nextOrderStatus = async (id) => {
+    try {
+      setLoading(true)
+      await orderService.updateStatus(id)
+      // setData((pre) => pre.filter((e) => e.id !== id))
+      setData((pre) =>
+        pre.map((order) =>
+          order.id === id ? { ...order, orderStatus: order.orderStatus + 1 } : order,
+        ),
+      )
+    } catch (error) {
+      showError(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const loadMore =
     !isLoading && totalItems > data.length ? (
       <div className="text-center my-4">
@@ -207,6 +219,9 @@ const Order = () => {
         color = 'cyan'
         break
       case 5:
+        color = '#87d068'
+        break
+      case 6:
         color = 'error'
         break
       default:
@@ -423,14 +438,31 @@ const Order = () => {
                                   </span>
                                 </div>
                                 <div className="flex flex-col sm:flex-row justify-end sm:space-x-2">
-                                  {order.orderStatus === 4 && order.reviewed === false && (
-                                    <Button
-                                      onClick={() => showModal(order.id)}
-                                      size="large"
-                                      className="rounded-none"
+                                  {(order.orderStatus === 4 || order.orderStatus === 5) &&
+                                    order.reviewed === false && (
+                                      <Button
+                                        onClick={() => showModal(order.id)}
+                                        size="large"
+                                        className="rounded-none"
+                                      >
+                                        Đánh giá
+                                      </Button>
+                                    )}
+                                  {order.orderStatus === 4 && (
+                                    <Popconfirm
+                                      title="Xác nhận đơn hàng đã được giao đến bạn"
+                                      loading={loading}
+                                      onConfirm={() => nextOrderStatus(order.id)}
                                     >
-                                      Đánh giá
-                                    </Button>
+                                      <Button
+                                        size="large"
+                                        type="dashed"
+                                        danger
+                                        className="rounded-none"
+                                      >
+                                        Đã nhận hàng
+                                      </Button>
+                                    </Popconfirm>
                                   )}
                                   {order.orderStatus === 0 && (
                                     <Popconfirm

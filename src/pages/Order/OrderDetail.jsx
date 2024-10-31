@@ -9,6 +9,7 @@ import { FaTruck } from 'react-icons/fa'
 import { MdAssignmentReturned, MdCancel, MdOutlineRecommend } from 'react-icons/md'
 import { IoDocumentSharp } from 'react-icons/io5'
 import { PiCopyFill } from 'react-icons/pi'
+import { BsHourglassTop } from 'react-icons/bs'
 
 const OrderDetail = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -36,7 +37,7 @@ const OrderDetail = () => {
       setIsLoading(true)
       try {
         const res = await orderService.getOrderId(id)
-        console.log(res.data)
+        // console.log(res.data)
         setData(res.data.productOrderDetails)
         setOrderInfo(res.data)
       } catch (error) {
@@ -60,6 +61,8 @@ const OrderDetail = () => {
         return 3
       case 'Received':
         return 4
+      case 'Finish':
+        return 5
       case 'Canceled':
         return -1
       default:
@@ -252,7 +255,8 @@ const OrderDetail = () => {
                       ),
                     },
                     {
-                      description: 'Đã giao cho đơn vị vận chuyển',
+                      title: 'Chờ đơn vị vận chuyển lấy hàng',
+                      // description: <div>{formatDateTime(orderInfo.updatedAt)}</div>,
                       icon: (
                         <button
                           className={`p-2 border-2 rounded-full ${
@@ -263,12 +267,12 @@ const OrderDetail = () => {
                               : 'border-green-500 text-green-500'
                           }`}
                         >
-                          <FaTruck className="text-3xl" />
+                          <BsHourglassTop className="text-3xl" />
                         </button>
                       ),
                     },
                     {
-                      description: 'Đã nhận được hàng',
+                      title: 'Đang giao hàng',
                       icon: (
                         <button
                           className={`p-2 border-2 rounded-full ${
@@ -279,21 +283,52 @@ const OrderDetail = () => {
                               : 'border-green-500 text-green-500'
                           }`}
                         >
+                          <FaTruck className="text-3xl" />
+                        </button>
+                      ),
+                    },
+                    {
+                      title: 'Đã nhận hàng',
+                      description: (
+                        <div>
+                          {(currentStep === 4 || currentStep === 5) &&
+                            formatDateTime(orderInfo.dateReceived)}
+                        </div>
+                      ),
+                      icon: (
+                        <button
+                          className={`p-2 border-2 rounded-full ${
+                            currentStep === 4
+                              ? 'bg-orange-200 text-orange-500'
+                              : currentStep > 4
+                              ? 'bg-green-200 text-green-500'
+                              : 'border-green-500 text-green-500'
+                          }`}
+                        >
                           <MdAssignmentReturned className="text-3xl" />
                         </button>
                       ),
                     },
                     {
                       title: 'Hoàn thành',
+                      description: (
+                        <div>
+                          {' '}
+                          {currentStep === 4 &&
+                            orderInfo.updatedAt &&
+                            formatDateTime(orderInfo.dateReceived)}
+                          {/* {formatDateTime(orderInfo.dateReceived)} */}
+                        </div>
+                      ),
                       icon: (
                         <button
                           className={`p-2 border-2 rounded-full ${
-                            currentStep === 4 ? 'bg-orange-200' : 'border-green-500'
+                            currentStep === 5 ? 'bg-orange-200' : 'border-green-500'
                           }`}
                         >
                           <MdOutlineRecommend
                             className={`${
-                              currentStep === 4 ? 'text-orange-500' : 'text-green-500'
+                              currentStep === 5 ? 'text-orange-500' : 'text-green-500'
                             } text-3xl`}
                           />
                         </button>

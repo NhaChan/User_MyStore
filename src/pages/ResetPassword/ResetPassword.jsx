@@ -71,15 +71,15 @@ const ResetPassword = () => {
         token: code,
         ...items,
       }
-      const res = await authService.resetPassword(data)
-      console.log(res)
+      await authService.resetPassword(data)
+      // console.log(res)
       notification.success({
         message: 'Đổi mật khẩu thành công.',
       })
       navigate('/login')
     } catch (error) {
       showError(error)
-      console.log(error)
+      // console.log(error)
     } finally {
       setLoadingResetPW(false)
     }

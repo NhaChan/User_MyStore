@@ -71,7 +71,7 @@ const Product = () => {
   }
 
   const handleBrandChange = (checkedBrands) => {
-    console.log(checkedBrands)
+    // console.log(checkedBrands)
     setSelectBrand(checkedBrands)
   }
 

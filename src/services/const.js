@@ -4,7 +4,8 @@ export const OrderStatus = {
   2: 'Chờ lấy hàng',
   3: 'Đang giao hàng',
   4: 'Đã nhận hàng',
-  5: 'Đã hủy',
+  5: 'Hoàn Thành',
+  6: 'Đã hủy',
 }
 
-export const CancelStatus = 5
+export const CancelStatus = 6

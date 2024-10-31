@@ -65,7 +65,7 @@ const CartItem = () => {
         const address = await userService.getAddress()
         const result = await addressService.getProvince()
         // console.log('data', result)
-        console.log(address)
+        // console.log(address)
         //console.log(res)
         setData(res.data)
         setDataAddress(address.data)
@@ -183,7 +183,7 @@ const CartItem = () => {
     setLoadingUpdate(true)
     try {
       const value = await form.validateFields()
-      console.log(value)
+      // console.log(value)
       await userService.updateAddress(value)
       notification.success({ message: 'Cập nhật địa chỉ thành công.' })
       setIsModalOpen(false)
@@ -197,7 +197,7 @@ const CartItem = () => {
 
   const [value, setValue] = useState(1)
   const onChange = (e) => {
-    console.log('radio checked', e.target.value)
+    // console.log('radio checked', e.target.value)
     setValue(e.target.value)
   }
 

@@ -58,7 +58,7 @@ const ProductDetail = ({ product }) => {
   }
 
   const onChange = (key) => {
-    console.log(key)
+    // console.log(key)
   }
   const items = [
     {
@@ -92,7 +92,7 @@ const ProductDetail = ({ product }) => {
     {
       key: '3',
       label: <span className="">ĐÁNH GIÁ</span>,
-      children: <Review id={id} />,
+      children: <Review id={id} rating={data.rating} />,
     },
   ]
 
@@ -105,6 +105,7 @@ const ProductDetail = ({ product }) => {
       setIsLoading(true)
       try {
         const res = await productService.getById(id)
+        // console.log(res)
         setData(res.data)
         setSelectedImage(toImageLink(res.data.imageUrls[0]))
       } catch (error) {
@@ -126,7 +127,7 @@ const ProductDetail = ({ product }) => {
       await cartService.addToCart(cartItem)
       notification.success({ message: 'Thêm vào giỏ hành thành công.', placement: 'top' })
     } catch (error) {
-      console.log(error)
+      // console.log(error)
       if (error.response?.status === 401) {
         notification.error({ message: error.response.data || 'Bạn chưa đăng nhập tài khoản!' })
       }
@@ -203,10 +204,10 @@ const ProductDetail = ({ product }) => {
                 </div>
                 <div className="text-gray-500 space-x-6">
                   <span>
-                    <Rate count={1} value={1} className="mb-4" /> 4.7
+                    <Rate disabled allowHalf value={data.rating} className="mb-4" /> {data.rating}
                   </span>
                   <span>|</span>
-                  <span>6.8k Đánh giá</span>
+                  <span>{data.ratingCount} Đánh giá</span>
                   <span>|</span>
                   <span>{data.sold} Đã bán</span>
                 </div>

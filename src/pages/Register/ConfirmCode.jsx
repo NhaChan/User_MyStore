@@ -13,7 +13,7 @@ const ConfirmCode = () => {
     setLoading(true)
     try {
       const res = await authService.sendCodeRegister(form.getFieldsValue(email))
-      console.log(res)
+      // console.log(res)
       notification.success({
         message: 'Gửi mã thành công',
       })
@@ -29,7 +29,7 @@ const ConfirmCode = () => {
   }
 
   const onChange = (text) => {
-    console.log('onChange:', text)
+    // console.log('onChange:', text)
   }
   const sharedProps = {
     onChange,

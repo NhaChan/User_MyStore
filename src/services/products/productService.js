@@ -47,7 +47,7 @@ const getFilteredProducts = async (
       page: page,
       pageSize: pageSize,
       discount: discount ?? false,
-      sorter: sorter ?? 0,
+      sorter: sorter,
       categoryIds: categoryIds.length > 0 ? categoryIds : [],
       brandIds: brandIds.length > 0 ? brandIds : [],
       rating: rating ?? null,

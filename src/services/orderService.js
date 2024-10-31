@@ -22,6 +22,9 @@ const cancel = async (id) => await axios.delete(API_URL + `/${id}`, { headers: a
 const review = async (id, data) =>
   await axios.post(API_URL + `/review/${id}`, data, { headers: authHeader() })
 
+const updateStatus = async (id) =>
+  await axios.put(API_URL + `/${id}`, {}, { headers: authHeader() })
+
 const getStatus = async (status, page, pageSize, search) =>
   await axios.get(API_URL + `/user/${status}`, {
     headers: authHeader(),
@@ -39,6 +42,7 @@ const orderService = {
   cancel,
   review,
   getStatus,
+  updateStatus,
 }
 
 export default orderService

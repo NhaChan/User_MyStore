@@ -59,7 +59,8 @@ const CardProduct = ({ product, isLoading }) => {
           </div>
           <div className="flex justify-between text-gray-400">
             <div>
-              <Rate className="text-sm" disabled count={1} value={1} /> 4.7
+              <Rate className="text-sm" disabled count={1} value={1} />
+              {product.rating}
             </div>
             <div>{product.sold} Đã bán</div>
           </div>
@@ -95,7 +96,7 @@ const CardProduct = ({ product, isLoading }) => {
         </div>
         <div className="flex justify-between text-gray-400">
           <div>
-            <Rate className="text-sm" disabled count={1} value={1} /> 4.7
+            <Rate className="text-sm" disabled count={1} value={1} /> {product.rating}
           </div>
           <div>{product.sold} Đã bán</div>
         </div>
