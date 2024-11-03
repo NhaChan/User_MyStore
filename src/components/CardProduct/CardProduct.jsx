@@ -70,6 +70,7 @@ const CardProduct = ({ product, isLoading }) => {
   ) : (
     <Link to={`/product-details/${product.id}?name=${product.name}`}>
       <Card
+        loading={isLoading}
         hoverable
         className="w-full h-fit"
         cover={

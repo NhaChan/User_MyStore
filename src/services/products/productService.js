@@ -30,31 +30,9 @@ const deleteProduct = async (id) => await axios.delete(API_URL + `/delete/${id}`
 
 const getReview = async (id) => await axios.get(API_URL + `/${id}/reviews`)
 
-const getFilteredProducts = async (
-  page,
-  pageSize,
-  discount,
-  sorter,
-  categoryIds,
-  brandIds,
-  rating,
-  minPrice,
-  maxPrice,
-  flashSale,
-) =>
+const getFilteredProducts = async (filters) =>
   await axios.get(API_URL + '/filters', {
-    params: {
-      page: page,
-      pageSize: pageSize,
-      discount: discount ?? false,
-      sorter: sorter,
-      categoryIds: categoryIds.length > 0 ? categoryIds : [],
-      brandIds: brandIds.length > 0 ? brandIds : [],
-      rating: rating ?? null,
-      minPrice: minPrice ?? null,
-      maxPrice: maxPrice ?? null,
-      flashSale: flashSale ?? false,
-    },
+    params: filters,
     paramsSerializer: { indexes: true },
   })
 

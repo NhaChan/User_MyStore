@@ -73,8 +73,6 @@ const Order = () => {
     fetchData()
   }, [orderStatus, currentPage, currentPageSize, isReviewSubmit])
 
-  //const handleFileChange = ({ fileList: newFileList }) => setFileList(newFileList)
-
   const handleLoadMore = () => {
     setCurrentPage((prevPage) => prevPage + 1)
   }
@@ -94,6 +92,7 @@ const Order = () => {
   }
 
   const showModal = async (orderId) => {
+    form.resetFields()
     setIsModalOpen(true)
     try {
       setID(orderId)
@@ -106,6 +105,7 @@ const Order = () => {
   }
 
   const handleCancel = () => {
+    // form.resetFields()
     setIsModalOpen(false)
   }
 
@@ -143,6 +143,10 @@ const Order = () => {
           description: 'Đã gửi đánh giá của bạn.',
           className: 'text-green-500',
         })
+
+        setData((prevData) =>
+          prevData.map((order) => (order.id === id ? { ...order, reviewed: true } : order)),
+        )
         setFileList([])
         setIsReviewSubmit(!isReviewSubmit)
       } catch (error) {
