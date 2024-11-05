@@ -272,8 +272,8 @@ const Product = () => {
             <Divider />
             <div className="text-3xl">
               <Checkbox onChange={handleDiscountChange} checked={discount}>
-                <span className="flex items-center">
-                  <BsFire className="text-red-700 text-2xl" /> Đang giảm giá
+                <span className="flex items-center text-2xl text-red-600">
+                  <BsFire className=" " /> Đang giảm giá
                 </span>
               </Checkbox>
             </div>
@@ -285,7 +285,7 @@ const Product = () => {
               <>
                 {products.length === 0 ? (
                   <div>
-                    <Empty />
+                    <Empty title="Không có sản phẩm nào!" />
                   </div>
                 ) : (
                   <div className="grid lg:grid-cols-5 grid-cols-2 gap-4 pb-4">
@@ -294,9 +294,11 @@ const Product = () => {
                     ))}
                   </div>
                 )}
-                <div>
+                <div className="flex justify-center py-4">
                   <Pagination
-                    align="end"
+                    // align="end"
+                    hideOnSinglePage
+                    showSizeChanger
                     current={page}
                     pageSize={pageSize}
                     total={totalItems}

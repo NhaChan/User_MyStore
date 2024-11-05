@@ -116,8 +116,6 @@ const Order = () => {
         setLoading(true)
         const formData = new FormData()
 
-        // review.forEach((e) => delete e.productName) // Xóa productName
-
         review.forEach((item, i) => {
           Object.keys(item).forEach((key) => {
             const value = item[key]

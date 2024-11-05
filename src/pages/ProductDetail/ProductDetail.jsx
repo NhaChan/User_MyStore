@@ -10,6 +10,7 @@ import BreadcrumbLink from '../../components/BreadcrumbLink'
 import userService from '../../services/userService'
 import { FavoritesContext } from '../../App'
 import Review from '../../components/Review'
+import Empty from '../../components/Empty'
 
 const breadcrumb = (id, name) => [
   {
@@ -92,7 +93,14 @@ const ProductDetail = ({ product }) => {
     {
       key: '3',
       label: <span className="">ĐÁNH GIÁ</span>,
-      children: <Review id={id} rating={data.rating} />,
+      children:
+        data.rating > 0 ? (
+          <Review id={id} rating={data.rating} />
+        ) : (
+          <div>
+            <Empty title="Chưa có đánh giá nào!" />
+          </div>
+        ),
     },
   ]
 
@@ -202,9 +210,14 @@ const ProductDetail = ({ product }) => {
                     )}
                   </button>
                 </div>
-                <div className="text-gray-500 space-x-6">
+                <div className="text-gray-500 space-x-6 text-xl">
                   <span>
-                    <Rate disabled allowHalf value={data.rating} className="mb-4" /> {data.rating}
+                    <Rate disabled allowHalf value={data.rating || 0} className="mb-4" />
+                    {data.rating !== undefined
+                      ? data.rating % 2 === 0
+                        ? data.rating
+                        : data.rating.toFixed(1)
+                      : 0}
                   </span>
                   <span>|</span>
                   <span>{data.ratingCount} Đánh giá</span>

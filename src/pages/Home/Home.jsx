@@ -11,6 +11,7 @@ import CardProduct from '../../components/CardProduct/CardProduct'
 const Home = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [data, setData] = useState([])
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true)
@@ -166,19 +167,27 @@ const Home = () => {
           <Divider plain className="border-0">
             <div className="text-4xl text-secondary">Bán chạy</div>
           </Divider>
-          <div className="grid lg:grid-cols-6 md:grid-cols-3 grid-cols-2 gap-4 p-4">
-            {bestSelling.map((product, i) => (
-              <CardProduct product={product} key={i} isLoading={isLoading} />
-            ))}
-          </div>
+          {isLoading ? (
+            <Skeleton />
+          ) : (
+            <div className="grid lg:grid-cols-6 md:grid-cols-3 grid-cols-2 gap-4 p-4">
+              {bestSelling.map((product, i) => (
+                <CardProduct product={product} key={i} isLoading={isLoading} />
+              ))}
+            </div>
+          )}
           <Divider plain>
             <div className="text-4xl"> Đang giảm giá</div>
           </Divider>
-          <div className="grid lg:grid-cols-6 md:grid-cols-3 grid-cols-2 gap-8 p-4">
-            {discounted.map((product, i) => (
-              <CardProduct product={product} key={i} isLoading={isLoading} />
-            ))}
-          </div>
+          {isLoading ? (
+            <Skeleton />
+          ) : (
+            <div className="grid lg:grid-cols-6 md:grid-cols-3 grid-cols-2 gap-8 p-4">
+              {discounted.map((product, i) => (
+                <CardProduct product={product} key={i} isLoading={isLoading} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </>

@@ -23,7 +23,9 @@ const Review = ({ id, rating }) => {
   return (
     <>
       <button className="bg-red-50 w-full h-40 border-gray-500 text-red-500 mb-2">
-        <span className="text-4xl font-bold">{rating}</span>
+        <span className="text-4xl font-bold">
+          {rating !== undefined ? (rating % 2 === 0 ? rating : rating.toFixed(1)) : 0}
+        </span>
         <span className="text-2xl"> trên 5</span>
         <Rate className="text-3xl" allowHalf disabled defaultValue={rating} />
       </button>
