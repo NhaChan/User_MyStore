@@ -1,12 +1,12 @@
 import { Button, Carousel, Divider, Rate, Skeleton } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { FaCarSide } from 'react-icons/fa'
-import { FaArrowsRotate, FaPhoneFlip } from 'react-icons/fa6'
-import { MdOutlineSecurity } from 'react-icons/md'
 import productService from '../../services/products/productService'
 import { formatVND, showError, toImageLink } from '../../services/commonService'
 import { Link } from 'react-router-dom'
 import CardProduct from '../../components/CardProduct/CardProduct'
+import Category from '../../components/Category'
+import Policy from '../../components/Policy'
+import CarouselComponent from '../../components/CarouselComponent'
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -37,89 +37,18 @@ const Home = () => {
   return (
     <>
       <div className="bg-gray-50">
-        <div className="h-[calc(100vh-6rem)] bg-[url('/public/Carousel1.jpg')] bg-cover">
-          <div className="h-full flex flex-col md:flex-row justify-around items-center backdrop-blur-md">
-            <div className="p-4 w-full md:w-1/3">
-              <p className="mt-4 text-xl md:text-3xl font-black text-blue-600 text-opacity-75 ">
-                Mua sắm và trải nghiệm các ưu đãi!
-              </p>
-              <button className="mt-6 bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-6 rounded-full">
-                Mua ngay
-              </button>
-            </div>
-            <Carousel
-              className="w-80 md:w-[30rem] h-64 md:h-80"
-              autoplay
-              autoplaySpeed={3000}
-              infinite
-            >
-              <div>
-                <img
-                  src="/Carousel1.jpg"
-                  alt=""
-                  className="w-80 md:w-[30rem] h-64 md:h-80 bg-slate-800 text-red-500 rounded-lg drop-shadow-2xl"
-                ></img>
-              </div>
-              <div>
-                <img
-                  src="/Carousel2.jpg"
-                  alt=""
-                  className="w-80 md:w-[30rem] h-64 md:h-80 bg-slate-800 text-red-500 rounded-lg drop-shadow-2xl"
-                ></img>
-              </div>
-              <div>
-                <img
-                  src="/Carousel3.jpg"
-                  alt=""
-                  className="w-80 md:w-[30rem] h-64 md:h-80 bg-slate-800 text-red-500 rounded-lg drop-shadow-2xl"
-                ></img>
-              </div>
-              <div>
-                <img
-                  src="/Carousel4.jpg"
-                  alt=""
-                  className="w-80 md:w-[30rem] h-64 md:h-80 bg-slate-800 text-red-500 rounded-lg drop-shadow-2xl"
-                ></img>
-              </div>
-            </Carousel>
-          </div>
-        </div>
+        <CarouselComponent />
 
         {/* Categories */}
+        <div>
+          <Category />
+        </div>
 
-        <div className="p-4">
-          <section className="py-8">
-            <div className="grid md:grid-cols-4 grid-cols-2 gap-16 px-8">
-              <div className="flex flex-col justify-center items-center px-5 py-6 bg-white shadow-sm rounded-lg">
-                <FaCarSide className="text-white text-6xl p-3 bg-indigo-600 bg-opacity-75 rounded-full " />
-                <div className="text-center text-lg text-slate-400 p-3">Miễn phí giao hàng</div>
-                <div className="text-slate-500">Khi mua đơn hơn 400.000đ</div>
-              </div>
-
-              <div className="flex flex-col items-center px-5 py-6 bg-white shadow-sm justify-center rounded-lg">
-                <div className="p-3 bg-indigo-600 bg-opacity-75 rounded-full">
-                  <MdOutlineSecurity className="text-white text-4xl" />
-                </div>
-                <div className="text-center text-lg text-slate-400 p-3">Thanh toán bảo mật</div>
-                <div className="text-slate-500">100% bảo mật</div>
-              </div>
-              <div className="flex flex-col items-center px-5 py-6 bg-white shadow-sm justify-center rounded-lg">
-                <div className="p-3 bg-indigo-600 bg-opacity-75 rounded-full">
-                  <FaArrowsRotate className="text-white text-4xl" />
-                </div>
-                <div className="text-center text-lg text-slate-400 p-3">30 ngày hoàn trả</div>
-                <div className="text-slate-500">Hoàn tiền trong 30 ngày</div>
-              </div>
-              <div className="flex flex-col items-center px-5 py-6 bg-white shadow-sm justify-center rounded-lg">
-                <div className="p-3 bg-indigo-600 bg-opacity-75 rounded-full">
-                  <FaPhoneFlip className="text-white text-4xl" />
-                </div>
-                <div className="text-center text-lg text-slate-400 p-3">Hỗ trợ 24/7</div>
-                <div className="text-slate-500">Hỗ trợ mọi lúc nhanh nhất</div>
-              </div>
-            </div>
+        <div className="">
+          <section className="py-4">
+            <Policy />
           </section>
-          <div className="flex justify-between px-8">
+          {/* <div className="flex justify-between px-8">
             <div>Sản phẩm</div>
             <div className="space-x-4">
               <Button>Tất cả</Button>
@@ -127,7 +56,8 @@ const Home = () => {
               <Button>Sổ-tập-bao thư</Button>
               <Button>Kệ-rổ</Button>
             </div>
-          </div>
+          </div> */}
+
           {isLoading ? (
             <Skeleton />
           ) : (

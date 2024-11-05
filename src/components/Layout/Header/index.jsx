@@ -1,12 +1,16 @@
-import { Drawer, Dropdown, Input, Modal } from 'antd'
-import React, { useState } from 'react'
+import { Avatar, Card, Drawer, Dropdown, Input, Modal, Skeleton } from 'antd'
+import React, { useEffect, useState } from 'react'
 import { FaSearch, FaShoppingBag, FaUser } from 'react-icons/fa'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../App'
 import authService from '../../../services/authService'
 import authActions from '../../../services/authAction'
+import productService from '../../../services/products/productService'
+import { formatVND, toImageLink } from '../../../services/commonService'
+import Empty from '../../Empty'
+import debounce from 'debounce'
 
-const Header = () => {
+const Header = ({ onSearch }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [open, setOpen] = useState(false)
@@ -14,11 +18,43 @@ const Header = () => {
   const { state, dispatch } = useAuth()
   // const [username, setUsername] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [searchValue, setSearchValue] = useState('')
+  const navigate = useNavigate()
+  const [loading, setLoading] = useState(false)
+  const [products, setProducts] = useState([])
 
   // useEffect(() => {
   //   const user = authService.getCurrentUser()
   //   user ? setUsername(user.name) : setUsername('')
   // }, [state.isAuthenticated])
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true)
+      try {
+        const res = await productService.getFilteredProducts({
+          page: 1,
+          pageSize: 4,
+          search: searchValue,
+        })
+        // console.log(res.data)
+        setProducts(res.data.items)
+      } catch (error) {
+        console.error('Error:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    if (searchValue) {
+      const debouncedFetch = debounce(fetchProducts, 300)
+      debouncedFetch()
+
+      return () => debouncedFetch.clear()
+    } else {
+      setProducts([])
+    }
+  }, [searchValue])
 
   const showDrawer = () => {
     setOpen(true)
@@ -45,6 +81,13 @@ const Header = () => {
   }
   const handleCancel = () => {
     setIsModalOpen(false)
+  }
+
+  const handleSearch = (value) => {
+    onSearch(value)
+    setSearchValue('')
+    navigate('/product')
+    onClose()
   }
 
   const items = [
@@ -98,7 +141,7 @@ const Header = () => {
           </div>
           <Link to="/cart">
             <FaShoppingBag
-              className={`text-3xl text-sky-700 hover:text-orange-300  mx-4 ${
+              className={`text-3xl text-sky-700 hover:text-orange-300 ml-4 ${
                 location.pathname === '/cart' ? 'text-orange-300' : 'text-sky-700'
               }`}
             />
@@ -202,8 +245,44 @@ const Header = () => {
         </div>
       </nav>
 
-      <Drawer onClose={onClose} open={open} placement="top" height={150}>
-        <Input.Search placeholder="Tìm kiếm" size="large" />
+      <Drawer
+        title="Tìm kiếm theo tên sản phẩm"
+        onClose={onClose}
+        open={open}
+        placement="right"
+        // styles={{ content: { height: 'fit-content' } }}
+      >
+        <Input.Search
+          placeholder="Tìm kiếm"
+          size="large"
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          onSearch={handleSearch}
+        />
+
+        {loading && searchValue ? (
+          <Skeleton active />
+        ) : products.length > 0 && searchValue ? (
+          products.map((product) => (
+            <Card
+              className="rounded-none"
+              key={product.id}
+              style={{ width: '100%', marginBottom: 16 }}
+              onClick={() => {
+                navigate(`/product-details/${product.id}`)
+                onClose()
+              }}
+            >
+              <Card.Meta
+                avatar={<Avatar className="w-24 h-24" src={toImageLink(product.imageUrl)} />}
+                title={product.name}
+                description={`Giá: ${formatVND(product.price)}`}
+              />
+            </Card>
+          ))
+        ) : (
+          searchValue && <Empty title="Không có sản phẩm nào được tìm thấy!" />
+        )}
       </Drawer>
     </>
   )

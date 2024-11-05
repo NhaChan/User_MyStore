@@ -21,7 +21,7 @@ const breadcrumb = [
   },
 ]
 
-const Product = () => {
+const Product = ({ search }) => {
   const [products, setProducts] = useState([])
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
@@ -59,6 +59,7 @@ const Product = () => {
         const res = await productService.getFilteredProducts({
           page,
           pageSize,
+          search,
           brandIds: selectedBrandIds,
           categoryIds: selectedCategoryIds,
           sorter: selectedSorter,
@@ -81,6 +82,7 @@ const Product = () => {
   }, [
     page,
     pageSize,
+    search,
     selectedBrandIds,
     priceRange,
     selectedCategoryIds,
@@ -213,7 +215,7 @@ const Product = () => {
               max={500000}
               onChange={handlePriceChange}
               value={priceRange}
-              step={0}
+              step={10000}
               className="pb-6"
             />
             <div className="flex pb-5 ">
