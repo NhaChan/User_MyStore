@@ -1,4 +1,4 @@
-import { Button, Carousel, Divider, Rate, Skeleton } from 'antd'
+import { Carousel, Divider, Rate, Skeleton } from 'antd'
 import React, { useEffect, useState } from 'react'
 import productService from '../../services/products/productService'
 import { formatVND, showError, toImageLink } from '../../services/commonService'
@@ -38,16 +38,15 @@ const Home = () => {
     <>
       <div className="bg-gray-50">
         <CarouselComponent />
-
+        <section className="py-4">
+          <Policy />
+        </section>
         {/* Categories */}
         <div>
           <Category />
         </div>
 
         <div className="">
-          <section className="py-4">
-            <Policy />
-          </section>
           {/* <div className="flex justify-between px-8">
             <div>Sản phẩm</div>
             <div className="space-x-4">

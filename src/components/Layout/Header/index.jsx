@@ -147,7 +147,7 @@ const Header = ({ onSearch }) => {
             />
           </Link>
           {state.isAuthenticated ? (
-            <>
+            <div className="pl-4">
               <button
                 type="button"
                 className="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
@@ -187,7 +187,7 @@ const Header = ({ onSearch }) => {
                   />
                 </svg>
               </button>
-            </>
+            </div>
           ) : (
             <Link to="/login">
               <FaUser className="text-3xl text-sky-700 mx-4" />

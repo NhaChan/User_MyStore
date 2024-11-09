@@ -6,6 +6,7 @@ import { createContext, useContext, useEffect, useReducer, useState } from 'reac
 import { initialState, reducer } from './services/authReducer'
 import { showError } from './services/commonService'
 import userService from './services/userService'
+import ChatBot from './chat'
 
 const AuthContext = createContext()
 export const useAuth = () => useContext(AuthContext)
@@ -33,6 +34,7 @@ function App() {
   return (
     <AuthContext.Provider value={{ state, dispatch }}>
       <FavoritesContext.Provider value={[favorite, setFavorite]}>
+        <ChatBot />
         <Router>
           <Routes>
             {generatePublicRoutes(state.isAuthenticated)}

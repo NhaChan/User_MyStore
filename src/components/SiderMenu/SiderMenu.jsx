@@ -41,7 +41,6 @@ export default function SiderMenu() {
       //   setIsLoading(true)
       try {
         const res = await userService.getInfo()
-        // console.log('info', res)
         setData(res.data)
       } catch (error) {
         showError(error)
@@ -77,6 +76,7 @@ export default function SiderMenu() {
       >
         <p>Bạn có chắc chắn muốn đăng xuất?</p>
       </Modal>
+      
       <Sider
         collapsed={collapsed}
         onCollapse={(collapsed) => setCollapsed(collapsed)}
@@ -87,11 +87,11 @@ export default function SiderMenu() {
       >
         <Card className="rounded-sm mb-2">
           <div className="flex flex-col space-y-2 items-center justify-center">
-            <img
-              className="w-32 h-32 rounded-full"
-              src="https://i.pinimg.com/564x/c0/d3/21/c0d32107d903d756e9b14a24e8f34736.jpg" // User profile image
-              alt="user"
-            />
+                <img
+                  className="w-32 h-32 rounded-full"
+                  src="https://i.pinimg.com/736x/03/73/62/037362f54125111ea08efb8e42afb532.jpg"
+                  alt="user"
+                />
             <div>{data.fullname}</div>
             <div className="flex p-1">
               <div className="px-2">

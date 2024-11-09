@@ -45,28 +45,30 @@ const CarouselComponent = () => {
         </Carousel>
       </div>
     </div>
-    // <Carousel arrows autoplay autoplaySpeed={3000} infinite={false}>
-    //   <div>
+    // <div className="h-[calc(100vh-6rem)] bg-cover">
+    //   <Carousel arrows autoplay autoplaySpeed={3000} infinite={false}>
     //     <div>
-    //       <img src="/Carousel1.jpg" alt="banner1" className="w-full max-h-[500px]" />
+    //       <div>
+    //         <img src="bn1.png" alt="banner1" className="w-full max-h-[500px]" />
+    //       </div>
     //     </div>
-    //   </div>
-    //   <div>
     //     <div>
-    //       <img src="/Carousel2.jpg" alt="banner2" className="w-full max-h-[500px]" />
+    //       <div>
+    //         <img src="/Carousel2.jpg" alt="banner2" className="w-full max-h-[500px]" />
+    //       </div>
     //     </div>
-    //   </div>
-    //   <div>
     //     <div>
-    //       <img src="/Carousel3.jpg" alt="banner3" className="w-full max-h-[500px]" />
+    //       <div>
+    //         <img src="/Carousel3.jpg" alt="banner3" className="w-full max-h-[500px]" />
+    //       </div>
     //     </div>
-    //   </div>
-    //   <div>
     //     <div>
-    //       <img src="/Carousel4.jpg" alt="banner4" className="w-full max-h-[500px]" />
+    //       <div>
+    //         <img src="/Carousel4.jpg" alt="banner4" className="w-full max-h-[500px]" />
+    //       </div>
     //     </div>
-    //   </div>
-    // </Carousel>
+    //   </Carousel>
+    // </div>
   )
 }
 
