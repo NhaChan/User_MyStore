@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { authHeader } from './authHeader'
+import { authHeader, authImageHeader } from './authHeader'
 
 const API_URL = process.env.REACT_APP_BASE_URL + '/api/user'
 
@@ -31,6 +31,11 @@ const getFavoriteProduct = async (page, pageSize, search) =>
     },
   })
 
+const updateAvt = async (image) =>
+  await axios.put(API_URL + '/avatar', image, { headers: authImageHeader() })
+
+const getAvatar = async () => await axios.get(API_URL + '/avatar', { headers: authHeader() })
+
 const userService = {
   getAddress,
   updateAddress,
@@ -40,6 +45,8 @@ const userService = {
   getFavorite,
   deleteFavorite,
   getFavoriteProduct,
+  updateAvt,
+  getAvatar,
 }
 
 export default userService

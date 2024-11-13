@@ -15,7 +15,7 @@ import {
   Steps,
   Table,
 } from 'antd'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { formatVND, showError, toImageLink } from '../../services/commonService'
 import cartService from '../../services/cartService'
 import TextArea from 'antd/es/input/TextArea'
@@ -26,6 +26,7 @@ import addressService from '../../services/addressService'
 import debounce from 'debounce'
 import orderService from '../../services/orderService'
 import { useNavigate } from 'react-router-dom'
+import { CartContext } from '../../App'
 
 const breadcrumb = [
   {
@@ -56,6 +57,8 @@ const CartItem = () => {
   const [selectedDistrict, setSelectedDistrict] = useState(null)
   const [loadingUpdate, setLoadingUpdate] = useState(false)
   const navigate = useNavigate()
+
+  const { setCountCart } = useContext(CartContext)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -208,23 +211,28 @@ const CartItem = () => {
         return
       }
       await cartService.deleteCart(selectedRowKeys)
-      notification.success({ message: 'Xóa thành công.' })
-      setData(data.filter((item) => !selectedRowKeys.includes(item.productId)))
+      notification.success({ message: 'Xóa thành công.', placement: 'top' })
+
+      const newData = data.filter((item) => !selectedRowKeys.includes(item.productId))
+      setCountCart(newData.map((item) => item.productId))
+      setData(newData)
       setSelectedRowKeys([])
     } catch (error) {
       showError(error)
     }
   }
 
-  const handleDeleteIdCart = async () => {
+  const handleDeleteIdCart = async (id) => {
     try {
-      if (selectedRowKeys.length === 0) {
-        notification.warning({ message: 'Vui lòng chọn sản phẩm cần xóa' })
-        return
-      }
-      await cartService.deleteCart(selectedRowKeys)
+      // if (selectedRowKeys.length === 0) {
+      //   notification.warning({ message: 'Vui lòng chọn sản phẩm cần xóa' })
+      //   return
+      // }
+      await cartService.deleteCartId(id)
       notification.success({ message: 'Xóa thành công.' })
-      setData(data.filter((item) => !selectedRowKeys.includes(item.productId)))
+      const newData = data.filter((item) => item.id !== id)
+      setCountCart(newData.map((item) => item.id))
+      setData(newData)
       setSelectedRowKeys([])
     } catch (error) {
       showError(error)
@@ -319,8 +327,13 @@ const CartItem = () => {
         </Button>
       ),
       align: 'center',
-      render: () => (
-        <Button danger className="border-0 flex items-center" onClick={handleDeleteIdCart}>
+      dataIndex: 'id',
+      render: (value) => (
+        <Button
+          danger
+          className="border-0 flex items-center"
+          onClick={() => handleDeleteIdCart(value)}
+        >
           <DeleteOutlined />
         </Button>
       ),

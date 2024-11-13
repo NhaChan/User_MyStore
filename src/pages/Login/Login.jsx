@@ -1,6 +1,6 @@
 import { Button, Divider, Form, Input, notification, Spin } from 'antd'
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { LockOutlined, MailOutlined } from '@ant-design/icons'
 import { showError } from '../../services/commonService'
 import authService from '../../services/authService'
@@ -11,7 +11,7 @@ const Login = () => {
   const [form] = Form.useForm()
   const [loading, setLoading] = useState(false)
   const { dispatch } = useAuth()
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
 
   const handleSubmit = async () => {
     setLoading(true)
@@ -20,7 +20,8 @@ const Login = () => {
       await authService.login(data)
       dispatch(authActions.LOGIN())
       notification.success({ message: 'Đăng nhập thành công' })
-      navigate('/')
+      // navigate('/')
+      window.location.replace('/')
     } catch (error) {
       showError(error)
     } finally {

@@ -1,14 +1,16 @@
-import { Avatar, Card, Drawer, Dropdown, Input, Modal, Skeleton } from 'antd'
-import React, { useEffect, useState } from 'react'
+import { Avatar, Badge, Card, Drawer, Dropdown, Input, Modal, Skeleton } from 'antd'
+import React, { useContext, useEffect, useState } from 'react'
 import { FaSearch, FaShoppingBag, FaUser } from 'react-icons/fa'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { useAuth } from '../../../App'
+import { CartContext, useAuth } from '../../../App'
 import authService from '../../../services/authService'
 import authActions from '../../../services/authAction'
 import productService from '../../../services/products/productService'
-import { formatVND, toImageLink } from '../../../services/commonService'
+import { formatVND, showError, toImageLink } from '../../../services/commonService'
 import Empty from '../../Empty'
 import debounce from 'debounce'
+import userService from '../../../services/userService'
+// import userService from '../../../services/userService'
 
 const Header = ({ onSearch }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -22,6 +24,8 @@ const Header = ({ onSearch }) => {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [products, setProducts] = useState([])
+  const [avatar, setAvatar] = useState(null)
+  const { countCart } = useContext(CartContext)
 
   // useEffect(() => {
   //   const user = authService.getCurrentUser()
@@ -37,7 +41,6 @@ const Header = ({ onSearch }) => {
           pageSize: 4,
           search: searchValue,
         })
-        // console.log(res.data)
         setProducts(res.data.items)
       } catch (error) {
         console.error('Error:', error)
@@ -55,6 +58,21 @@ const Header = ({ onSearch }) => {
       setProducts([])
     }
   }, [searchValue])
+
+  useEffect(() => {
+    const fetch = async () => {
+      if (state.isAuthenticated) {
+        try {
+          const avt = await userService.getAvatar()
+          setAvatar(avt.data.imageUrl)
+          // console.log(avt)
+        } catch (error) {
+          showError(error)
+        }
+      }
+    }
+    fetch()
+  }, [state.isAuthenticated])
 
   const showDrawer = () => {
     setOpen(true)
@@ -77,6 +95,10 @@ const Header = ({ onSearch }) => {
   const handleLogout = () => {
     dispatch(authActions.LOGOUT)
     authService.logout()
+    // if (window.Kommunicate && typeof window.Kommunicate.logout === 'function') {
+    //   window.Kommunicate.logout()
+    // }
+    // window.kommunicate = null
     setIsModalOpen(false)
   }
   const handleCancel = () => {
@@ -139,13 +161,17 @@ const Header = ({ onSearch }) => {
               <FaSearch className="text-sky-700 text-xl" />
             </button>
           </div>
-          <Link to="/cart">
-            <FaShoppingBag
-              className={`text-3xl text-sky-700 hover:text-orange-300 ml-4 ${
-                location.pathname === '/cart' ? 'text-orange-300' : 'text-sky-700'
-              }`}
-            />
-          </Link>
+
+          <Badge count={countCart.length} size="small" showZero color="red">
+            <Link to="/cart">
+              <FaShoppingBag
+                className={`text-3xl text-sky-700 hover:text-orange-300 ml-4 ${
+                  location.pathname === '/cart' ? 'text-orange-300' : 'text-sky-700'
+                }`}
+              />
+            </Link>
+          </Badge>
+
           {state.isAuthenticated ? (
             <div className="pl-4">
               <button
@@ -158,7 +184,10 @@ const Header = ({ onSearch }) => {
                 <Dropdown menu={{ items }} trigger={['click']}>
                   <img
                     className="w-8 h-8 rounded-full"
-                    src="https://i.pinimg.com/564x/c0/d3/21/c0d32107d903d756e9b14a24e8f34736.jpg"
+                    src={
+                      toImageLink(avatar) ||
+                      'https://i.pinimg.com/736x/03/73/62/037362f54125111ea08efb8e42afb532.jpg'
+                    }
                     alt="user"
                   />
                 </Dropdown>

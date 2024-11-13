@@ -21,11 +21,18 @@ const deleteCart = async (productIds) => {
   })
 }
 
+const deleteCartId = async (id) =>
+  await axios.delete(API_URL + `/delete/${id}`, { headers: authHeader() })
+
+const count = async () => await axios.get(API_URL + '/count-cart', { headers: authHeader() })
+
 const cartService = {
   getAllCartByUserId,
   addToCart,
   deleteCart,
   updateQuantity,
+  count,
+  deleteCartId,
 }
 
 export default cartService

@@ -8,9 +8,8 @@ import cartService from '../../services/cartService'
 import { HeartFilled, HeartOutlined, HomeOutlined } from '@ant-design/icons'
 import BreadcrumbLink from '../../components/BreadcrumbLink'
 import userService from '../../services/userService'
-import { FavoritesContext } from '../../App'
+import { CartContext, FavoritesContext } from '../../App'
 import Review from '../../components/Review'
-import Empty from '../../components/Empty'
 
 const breadcrumb = (id, name) => [
   {
@@ -38,6 +37,8 @@ const ProductDetail = ({ product }) => {
 
   const favorite = useContext(FavoritesContext)
   const [favorites, setFavorite] = favorite
+  const { countCart, setCountCart } = useContext(CartContext)
+  // const [cartItems, setCartItems] = useState([])
 
   const { id: stringId } = useParams()
   const id = parseInt(stringId, 10)
@@ -93,14 +94,7 @@ const ProductDetail = ({ product }) => {
     {
       key: '3',
       label: <span className="">ĐÁNH GIÁ</span>,
-      children:
-        data.rating > 0 ? (
-          <Review id={id} rating={data.rating} />
-        ) : (
-          <div>
-            <Empty title="Chưa có đánh giá nào!" />
-          </div>
-        ),
+      children: <Review id={id} rating={data.rating} />,
     },
   ]
 
@@ -133,6 +127,10 @@ const ProductDetail = ({ product }) => {
         quantity: quantity,
       }
       await cartService.addToCart(cartItem)
+
+      const isProductInCart = countCart.some((productId) => productId === id)
+      if (!isProductInCart) setCountCart((prev) => [...prev, id])
+
       notification.success({ message: 'Thêm vào giỏ hành thành công.', placement: 'top' })
     } catch (error) {
       // console.log(error)

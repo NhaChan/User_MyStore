@@ -22,6 +22,17 @@
   width: 380px !important;
 }
 
+.mck-box-body .mck-message-inner {
+  /* overflow-y: auto !important;
+  scrollbar-width: none !important;
+  scrollbar-color: transparent transparent !important; */
+  position: absolute !important;
+  display: table-row !important;
+  overflow: auto !important;
+  scrollbar-width: none !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
 /* .mck-running-on .notranslate .vis {
   display: none !important;
 } */

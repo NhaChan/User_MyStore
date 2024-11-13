@@ -24,12 +24,28 @@ const getCurrentUser = () => {
   return user ? JSON.parse(user) : user
 }
 
+const getCurrentPhone = () => {
+  const accessToken = getCurrentUser()
+  if (accessToken && accessToken.phoneNumber) {
+    return accessToken.phoneNumber
+  }
+}
+
+const getCurrentName = () => {
+  const accessToken = getCurrentUser()
+  if (accessToken && accessToken.fullName) {
+    return accessToken.fullName
+  }
+}
+
 const setUserToken = (access_token) =>
   Cookies.set('access_token', access_token, { expires: 5 * 60 * 1000 })
 
 const logout = () => {
+  window.kommunicate.logout()
   Cookies.remove('user_data')
   Cookies.remove('access_token')
+  window.location.replace('/login')
 }
 
 const codeResetPassword = async (email) =>
@@ -47,6 +63,8 @@ const authService = {
   logout,
   codeResetPassword,
   resetPassword,
+  getCurrentPhone,
+  getCurrentName,
 }
 
 export default authService

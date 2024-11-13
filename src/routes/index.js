@@ -13,6 +13,7 @@ import OrderDetail from '../pages/Order'
 import Order from '../pages/Order/Order'
 import Payment from '../pages/Payment/Payment'
 import Favorite from '../pages/Favorite/Favorite'
+import ScrollToTop from '../components/ScrollToTop/ScrollToTop'
 
 export const navigation = [{ name: 'Home', to: '/' }]
 
@@ -50,9 +51,12 @@ export const generatePublicRoutes = () => {
         key={index}
         path={route.path}
         element={
-          <Layout>
-            <Page />
-          </Layout>
+          <>
+            <ScrollToTop />
+            <Layout>
+              <Page />
+            </Layout>
+          </>
         }
       />
     )
@@ -76,9 +80,12 @@ export const generatePrivateRoutes = (isAuthenticated) => {
           key={index}
           path={route.path}
           element={
-            <Layout>
-              <Page />
-            </Layout>
+            <>
+              <ScrollToTop />
+              <Layout>
+                <Page />
+              </Layout>
+            </>
           }
         />
       )

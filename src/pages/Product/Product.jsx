@@ -10,6 +10,7 @@ import categoryService from '../../services/products/categoryService'
 import { FaAngleDown } from 'react-icons/fa'
 import { BsFire } from 'react-icons/bs'
 import Empty from '../../components/Empty'
+import { useLocation } from 'react-router-dom'
 
 const breadcrumb = [
   {
@@ -22,6 +23,7 @@ const breadcrumb = [
 ]
 
 const Product = ({ search }) => {
+  const location = useLocation()
   const [products, setProducts] = useState([])
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
@@ -50,6 +52,16 @@ const Product = ({ search }) => {
     setPage(newPage)
     setPageSize(newPageSize)
   }
+
+  useEffect(() => {
+    const initialCategoryId = location.state?.selectedCategoryId
+    if (initialCategoryId) {
+      setSelectedCategoryIds([initialCategoryId])
+    }
+    if (location.state?.discount) {
+      setDiscount(true)
+    }
+  }, [location.state])
 
   useEffect(() => {
     setLoading(true)
