@@ -136,7 +136,7 @@ const ProductDetail = ({ product }) => {
       // console.log(error)
       if (error.response?.status === 401) {
         notification.error({ message: error.response.data || 'Bạn chưa đăng nhập tài khoản!' })
-      }
+      } else showError(error)
     } finally {
       setIsAddCart(false)
     }
@@ -265,12 +265,13 @@ const ProductDetail = ({ product }) => {
                   >
                     Mua ngay
                   </Button>
+
                   <Button
                     onClick={addToCart}
                     size="large"
                     danger
                     loading={isAddCart}
-                    disabled={isAddCart}
+                    disabled={data.quantity <= 0 || isAddCart}
                     className="rounded-none flex items-center justify-center p-6"
                   >
                     <BsCartPlus className="text-xl" />

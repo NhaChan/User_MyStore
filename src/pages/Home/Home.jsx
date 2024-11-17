@@ -57,7 +57,7 @@ const Home = () => {
         </div>
 
         <div className="">
-          <div className="bg-gray-50 p-8">
+          <div className="p-8">
             <div className="flex justify-center text-4xl text-secondary items-center">Bán chạy</div>
             {isLoading ? (
               <Skeleton />
@@ -76,7 +76,7 @@ const Home = () => {
               </>
             )}
           </div>
-          <div className="p-8">
+          <div className="bg-gray-50 p-8">
             <div className="flex justify-center p-4 text-4xl text-secondary items-center">
               Đang giảm giá
             </div>

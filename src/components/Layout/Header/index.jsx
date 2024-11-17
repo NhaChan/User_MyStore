@@ -161,16 +161,25 @@ const Header = ({ onSearch }) => {
               <FaSearch className="text-sky-700 text-xl" />
             </button>
           </div>
-
-          <Badge count={countCart.length} size="small" showZero color="red">
-            <Link to="/cart">
+          {state.isAuthenticated ? (
+            <Badge count={countCart.length} size="small" showZero color="red">
+              <Link to="/cart">
+                <FaShoppingBag
+                  className={`text-3xl text-sky-700 hover:text-orange-300 ml-4 ${
+                    location.pathname === '/cart' ? 'text-orange-300' : 'text-sky-700'
+                  }`}
+                />
+              </Link>
+            </Badge>
+          ) : (
+            <Link to="/login">
               <FaShoppingBag
                 className={`text-3xl text-sky-700 hover:text-orange-300 ml-4 ${
                   location.pathname === '/cart' ? 'text-orange-300' : 'text-sky-700'
                 }`}
               />
             </Link>
-          </Badge>
+          )}
 
           {state.isAuthenticated ? (
             <div className="pl-4">
@@ -262,12 +271,12 @@ const Header = ({ onSearch }) => {
             </li>
             <li>
               <Link
-                to="/product"
+                to="/news"
                 className={`block py-2 px-3 rounded md:p-0 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:hover:bg-blue-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-blue-700 ${
-                  location.pathname === '/product' ? 'text-blue-700' : 'text-gray-900'
+                  location.pathname === '/news' ? 'text-blue-700' : 'text-gray-900'
                 }`}
               >
-                Liên lạc
+                Tin tức
               </Link>
             </li>
           </ul>

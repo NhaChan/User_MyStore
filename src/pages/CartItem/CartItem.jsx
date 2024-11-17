@@ -1,4 +1,4 @@
-import { DeleteOutlined, HomeOutlined } from '@ant-design/icons'
+import { DeleteOutlined, DropboxOutlined, HomeOutlined } from '@ant-design/icons'
 import {
   Button,
   Card,
@@ -10,6 +10,7 @@ import {
   Modal,
   notification,
   Radio,
+  Result,
   Select,
   Skeleton,
   Steps,
@@ -25,7 +26,7 @@ import userService from '../../services/userService'
 import addressService from '../../services/addressService'
 import debounce from 'debounce'
 import orderService from '../../services/orderService'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { CartContext } from '../../App'
 
 const breadcrumb = [
@@ -69,7 +70,7 @@ const CartItem = () => {
         const result = await addressService.getProvince()
         // console.log('data', result)
         // console.log(address)
-        //console.log(res)
+        // console.log(res)
         setData(res.data)
         setDataAddress(address.data)
         setProvince(result.data.data || [])
@@ -259,6 +260,8 @@ const CartItem = () => {
         return
       }
       const res = await orderService.createOrder(order)
+      const newData = data.filter((item) => !selectedRowKeys.includes(item.productId))
+      setCountCart(newData.map((item) => item.productId))
 
       if (order.paymentMethodId !== 1) {
         // console.log(res.data)
@@ -342,121 +345,135 @@ const CartItem = () => {
 
   return (
     <>
-      <div className="py-2 px-8 sticky top-[6rem] z-40 bg-gray-100">
-        <BreadcrumbLink breadcrumb={breadcrumb} />
-      </div>
-      <div className="bg-gray-100 px-2 mb-2 h-full">
-        <div className="flex flex-col lg:flex-row sm:flex-col justify-between lg:space-x-4">
-          {isLoading ? (
-            <Skeleton paragraph={{ rows: 15 }} />
-          ) : (
-            <>
-              <div className="w-full lg:2/3 sm:w-full">
-                <div>
-                  <div className="bg-white p-4">
-                    <Steps size="small" initial={0} current={currentStep}>
-                      <Steps.Step title="4.000 VND" description="dưới 200.000 VND" />
-                      <Steps.Step
-                        title="2.000 VND"
-                        description="từ 200.000 VND đến dưới 400.000 VND"
-                      />
-                      <Steps.Step title="Miễn phí" description="trên 400.000 VND" />
-                    </Steps>
+      {isLoading ? (
+        <Skeleton paragraph={{ rows: 15 }} />
+      ) : (
+        <>
+          <div className="py-2 px-8 sticky top-[6rem] z-40 bg-gray-100">
+            <BreadcrumbLink breadcrumb={breadcrumb} />
+          </div>
+          {data && data?.length > 0 ? (
+            <div className="bg-gray-100 px-2 mb-2 h-full">
+              <div className="flex flex-col lg:flex-row sm:flex-col justify-between lg:space-x-4">
+                <div className="w-full lg:2/3 sm:w-full">
+                  <div>
+                    <div className="bg-white p-4">
+                      <Steps size="small" initial={0} current={currentStep}>
+                        <Steps.Step title="4.000 VND" description="dưới 200.000 VND" />
+                        <Steps.Step
+                          title="2.000 VND"
+                          description="từ 200.000 VND đến dưới 400.000 VND"
+                        />
+                        <Steps.Step title="Miễn phí" description="trên 400.000 VND" />
+                      </Steps>
+                    </div>
+                    <Divider className="my-[0.1rem] border-0 " />
+                    <Table
+                      pagination={false}
+                      rowSelection={rowSelection}
+                      columns={columns}
+                      dataSource={data}
+                      rowKey={(record) => record.productId}
+                      className="overflow-x-auto"
+                    />
                   </div>
-                  <Divider className="my-[0.1rem] border-0 " />
-                  <Table
-                    pagination={false}
-                    rowSelection={rowSelection}
-                    columns={columns}
-                    dataSource={data}
-                    rowKey={(record) => record.productId}
-                    className="overflow-x-auto"
-                  />
                 </div>
-              </div>
 
-              <div className="w-full lg:w-1/3 sm:w-full">
-                <Card className="rounded-sm mb-2">
-                  <div className="space-x-2">
-                    <div className="flex-col flex">
-                      <div className="flex justify-between">
-                        <div className="flex space-x-1 py-2">
-                          <FaMapMarkerAlt className="text-xl text-red-700" />
-                          <span className="font-bold">
-                            {dataAddress.name} - {dataAddress.phoneNumber}
+                <div className="w-full lg:w-1/3 sm:w-full">
+                  <Card className="rounded-sm mb-2">
+                    <div className="space-x-2">
+                      <div className="flex-col flex">
+                        <div className="flex justify-between">
+                          <div className="flex space-x-1 py-2">
+                            <FaMapMarkerAlt className="text-xl text-red-700" />
+                            <span className="font-bold">
+                              {dataAddress.name} - {dataAddress.phoneNumber}
+                            </span>
+                          </div>
+                          <span
+                            onClick={showModal}
+                            className="text-blue-500 cursor-pointer hover:text-sky-300 py-2"
+                          >
+                            Thay đổi
                           </span>
                         </div>
-                        <span
-                          onClick={showModal}
-                          className="text-blue-500 cursor-pointer hover:text-sky-300 py-2"
-                        >
-                          Thay đổi
+                        <span className="truncate w-80 lg:w-80 md:w-full">
+                          {dataAddress.detail} - {dataAddress.wardName} - {dataAddress.districtName}{' '}
+                          - {dataAddress.provinceName}
                         </span>
                       </div>
-                      <span className="truncate w-80 lg:w-80 md:w-full">
-                        {dataAddress.detail} - {dataAddress.wardName} - {dataAddress.districtName} -{' '}
-                        {dataAddress.provinceName}
-                      </span>
                     </div>
-                  </div>
-                  <Divider className="my-[0.8rem]" />
-                  <div className="flex justify-between py-2">
-                    <div>Tạm tính</div>
-                    <div>{formatVND(approximatePrice)}</div>
-                  </div>
-                  <div className="flex justify-between">
-                    <div>Phí giao hàng</div>
-                    <div>{formatVND(shippingFee)}</div>
-                  </div>
-                  <Divider />
-                  <div className="flex justify-between">
-                    <div>Tổng tiền</div>
-                    <div className="text-xl font-bold text-red-600">
-                      {formatVND(approximatePrice + shippingFee)}
+                    <Divider className="my-[0.8rem]" />
+                    <div className="flex justify-between py-2">
+                      <div>Tạm tính</div>
+                      <div>{formatVND(approximatePrice)}</div>
                     </div>
-                  </div>
-                </Card>
-                <Card className="rounded-sm" title="Thanh toán">
-                  <Radio.Group
-                    onChange={onChange}
-                    value={value}
-                    className="flex flex-col space-y-3"
-                  >
-                    <Radio value={1}>
-                      <div className="flex p-2 items-center">
-                        <span>Thanh toán khi nhận hàng</span>
+                    <div className="flex justify-between">
+                      <div>Phí giao hàng</div>
+                      <div>{formatVND(shippingFee)}</div>
+                    </div>
+                    <Divider />
+                    <div className="flex justify-between">
+                      <div>Tổng tiền</div>
+                      <div className="text-xl font-bold text-red-600">
+                        {formatVND(approximatePrice + shippingFee)}
                       </div>
-                    </Radio>
-                    <Radio value={2}>
-                      <div className="flex space-x-4 p-2 items-center">
-                        <img src="pay1.svg" alt="Logo" className="w-12 mx-auto" />
-                        <span>PayOS</span>
-                      </div>
-                    </Radio>
+                    </div>
+                  </Card>
+                  <Card className="rounded-sm" title="Thanh toán">
+                    <Radio.Group
+                      onChange={onChange}
+                      value={value}
+                      className="flex flex-col space-y-3"
+                    >
+                      <Radio value={1}>
+                        <div className="flex p-2 items-center">
+                          <span>Thanh toán khi nhận hàng</span>
+                        </div>
+                      </Radio>
+                      <Radio value={2}>
+                        <div className="flex space-x-4 p-2 items-center">
+                          <img src="pay1.svg" alt="Logo" className="w-12 mx-auto" />
+                          <span>PayOS</span>
+                        </div>
+                      </Radio>
 
-                    {/* <Radio value={3}>
+                      {/* <Radio value={3}>
                       <div className="flex space-x-4 items-center">
                         <img src="pay2.webp" alt="Logo" className="w-12 mx-auto" />
                         <span>Momo</span>
                       </div>
                     </Radio> */}
-                  </Radio.Group>
-                </Card>
-                <Divider className="my-[0.1rem] border-0" />
-                <Button
-                  onClick={handleOrder}
-                  danger
-                  type="primary"
-                  size="large"
-                  className="w-full rounded-sm"
-                >
-                  Mua hàng
-                </Button>
+                    </Radio.Group>
+                  </Card>
+                  <Divider className="my-[0.1rem] border-0" />
+                  <Button
+                    onClick={handleOrder}
+                    danger
+                    type="primary"
+                    size="large"
+                    className="w-full rounded-sm"
+                  >
+                    Mua hàng
+                  </Button>
+                </div>
               </div>
-            </>
+            </div>
+          ) : (
+            <Result
+              className="h-[calc(100vh-6rem)] py-28"
+              icon={<DropboxOutlined className="text-sky-600 text-[10rem]" />}
+              title="Bạn chưa chọn sản phẩm nào"
+              subTitle="Hãy nhanh tay chọn ngay sản phẩm yêu thích."
+              extra={
+                <Link to="/product">
+                  <Button type="primary">Mua sắm ngay</Button>
+                </Link>
+              }
+            />
           )}
-        </div>
-      </div>
+        </>
+      )}
 
       <Modal
         title="Địa chỉ giao hàng"

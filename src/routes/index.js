@@ -14,6 +14,7 @@ import Order from '../pages/Order/Order'
 import Payment from '../pages/Payment/Payment'
 import Favorite from '../pages/Favorite/Favorite'
 import ScrollToTop from '../components/ScrollToTop/ScrollToTop'
+import News from '../pages/News'
 
 export const navigation = [{ name: 'Home', to: '/' }]
 
@@ -25,6 +26,7 @@ export const publicRoutes = [
   // { path: '/register', component: Register, Layout: null },
   { path: '/product', component: Product },
   { path: '/product-details/:id', component: ProductDetail },
+  { path: 'news', component: News },
 ]
 
 export const privateRoutes = [

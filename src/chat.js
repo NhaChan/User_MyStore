@@ -36,6 +36,12 @@ const ChatBot = () => {
               userName: userData.fullName,
               popupWidget: true,
               automaticChatOpenOnNavigation: true,
+              emojilibrary: true,
+              quickReplies: [
+                'Tôi muốn mua hàng',
+                'Thanh toán trực tuyến như thế nào?',
+                'Tôi muốn tạo tài khoản',
+              ],
             }
 
             var s = document.createElement('script')
@@ -53,6 +59,8 @@ const ChatBot = () => {
               appId: '1a2f23e74c6de8bf756c1d2247eae6bc6',
               popupWidget: true,
               automaticChatOpenOnNavigation: true,
+              emojilibrary: true,
+              quickReplies: ['Hướng dẫn đặt hàng', 'Kiểm tra đơn hàng', 'Hướng dẫn đăng nhập'],
             }
 
             var s = document.createElement('script')
