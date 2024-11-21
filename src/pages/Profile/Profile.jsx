@@ -86,7 +86,7 @@ const Profile = () => {
                         </Form.Item>
                         <Form.Item
                           label="Tên của bạn"
-                          name="fullname"
+                          name="fullName"
                           rules={[
                             {
                               required: true,

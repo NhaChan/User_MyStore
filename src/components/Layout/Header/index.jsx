@@ -64,8 +64,8 @@ const Header = ({ onSearch }) => {
       if (state.isAuthenticated) {
         try {
           const avt = await userService.getAvatar()
-          setAvatar(avt.data.imageUrl)
-          // console.log(avt)
+          setAvatar(avt.data?.imageUrl)
+          // console.log(avt.data)
         } catch (error) {
           showError(error)
         }
@@ -314,7 +314,9 @@ const Header = ({ onSearch }) => {
               <Card.Meta
                 avatar={<Avatar className="w-24 h-24" src={toImageLink(product.imageUrl)} />}
                 title={product.name}
-                description={`Giá: ${formatVND(product.price)}`}
+                description={`Giá: ${formatVND(
+                  product.price - product.price * (product.discount / 100),
+                )}`}
               />
             </Card>
           ))

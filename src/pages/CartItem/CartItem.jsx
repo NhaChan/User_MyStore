@@ -309,6 +309,7 @@ const CartItem = () => {
         <InputNumber
           className="w-14"
           value={value}
+          max={record.stock}
           min={1}
           onChange={(newValue) => handleQuantityChange(newValue, record)}
         />

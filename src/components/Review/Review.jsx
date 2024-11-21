@@ -33,7 +33,7 @@ const Review = ({ id, rating }) => {
   })
 
   return (
-    <div className="px-0 md:px-28">
+    <>
       <div className="flex flex-col-2 sm:flex-row p-8 bg-red-50 w-full border-red-700 text-red-500 mb-2">
         <div className="w-1/4">
           <div>
@@ -154,7 +154,7 @@ const Review = ({ id, rating }) => {
                   description={
                     <div>
                       <Rate allowHalf disabled defaultValue={review.star} />
-                      <div className="text-black mt-2">{review.description}</div>
+                      <div className="text-black mt-2 text-md sm:text-lg">{review.description}</div>
                     </div>
                   }
                 />
@@ -163,7 +163,7 @@ const Review = ({ id, rating }) => {
                     {review.imagesUrls.map((url, j) => (
                       <div key={j} className="flex">
                         <img
-                          className="object-cover md:w-20 md:h-20 w-10 h-10"
+                          className="object-cover md:w-28 md:h-28 w-10 h-10"
                           src={toImageLink(url)}
                           alt=""
                         />
@@ -173,8 +173,11 @@ const Review = ({ id, rating }) => {
                 )}
                 <div className="px-14 py-4">
                   <div className="bg-gray-50 p-2">
-                    <span className="text-gray-300">Phản hồi từ shop: </span>Cảm ơn bạn đã phản hồi
-                    về sản phẩm. Chúc bạn mua sắm vui vẻ. Shop cảm ơn bạn nhé!!
+                    <span className="text-gray-300">Phản hồi từ shop: </span>
+                    <span className="text-md sm:text-lg">
+                      Cảm ơn bạn đã phản hồi về sản phẩm. Chúc bạn mua sắm vui vẻ. Shop cảm ơn bạn
+                      nhé!!
+                    </span>
                   </div>
                 </div>
               </Card>
@@ -242,7 +245,7 @@ const Review = ({ id, rating }) => {
           total={data.pageSize}
         />
       </div>
-    </div>
+    </>
   )
 }
 

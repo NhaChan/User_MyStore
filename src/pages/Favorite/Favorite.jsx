@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import BreadcrumbLink from '../../components/BreadcrumbLink'
-import { HomeTwoTone } from '@ant-design/icons'
-import { Button, Divider, Skeleton } from 'antd'
+import { DropboxOutlined, HomeTwoTone } from '@ant-design/icons'
+import { Button, Divider, Result, Skeleton } from 'antd'
 import SiderMenu from '../../components/SiderMenu/SiderMenu'
 import userService from '../../services/userService'
 import CardProduct from '../../components/CardProduct/CardProduct'
 import { showError } from '../../services/commonService'
+import { Link } from 'react-router-dom'
 
 const Favorite = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -78,20 +79,34 @@ const Favorite = () => {
           ) : (
             <>
               <div className="w-4/5">
-                <div>
-                  <div className="bg-white px-8 py-4">
-                    <span className="text-2xl font-serif">Sản phẩm yêu thích</span>
-                    <Divider className="mb-[0.1rem]" />
-                    <div className="">
-                      <div className=" bg-white py-4 grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-8">
-                        {data.map((product, i) => (
-                          <CardProduct product={product} key={i} isLoading={isLoading} />
-                        ))}
+                {data && data?.length > 0 ? (
+                  <div>
+                    <div className="bg-white px-8 py-4">
+                      <span className="text-2xl font-serif">Sản phẩm yêu thích</span>
+                      <Divider className="mb-[0.1rem]" />
+                      <div className="">
+                        <div className=" bg-white py-4 grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-8">
+                          {data.map((product, i) => (
+                            <CardProduct product={product} key={i} isLoading={isLoading} />
+                          ))}
+                        </div>
                       </div>
+                      {loadMore}
                     </div>
-                    {loadMore}
                   </div>
-                </div>
+                ) : (
+                  <Result
+                    className="h-[calc(100vh-6rem)]"
+                    icon={<DropboxOutlined className="text-sky-600 text-[10rem]" />}
+                    title="Bạn chưa có sản phẩm yêu thích nào"
+                    subTitle="Hãy nhanh tay chọn ngay sản phẩm yêu thích."
+                    extra={
+                      <Link to="/product">
+                        <Button type="primary">Mua sắm ngay</Button>
+                      </Link>
+                    }
+                  />
+                )}
               </div>
             </>
           )}

@@ -44,6 +44,7 @@ export default function SiderMenu() {
       //   setIsLoading(true)
       try {
         const res = await userService.getInfo()
+        // console.log(res.data)
         setData(res.data)
       } catch (error) {
         showError(error)
@@ -70,11 +71,12 @@ export default function SiderMenu() {
       }
       Object.keys(data).forEach((key) => formData.append(key, data[key]))
       const res = await userService.updateAvt(formData)
-      console.log(res)
+      // console.log(res)
       setData(res.data)
       notification.success({
         message: `Thành công.`,
       })
+      setIsModalAvt(false)
     } catch (error) {
       showError(error)
     } finally {
@@ -168,7 +170,7 @@ export default function SiderMenu() {
                 />
               )}
             </Tooltip>
-            <div>{data.fullname}</div>
+            <div>{data.fullName}</div>
             <div className="flex p-1">
               <div className="px-2">
                 <Tooltip color="blue" title="Đổi ảnh đại diện">

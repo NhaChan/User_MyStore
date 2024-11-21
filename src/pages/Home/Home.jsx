@@ -116,25 +116,27 @@ const Home = () => {
             >
               {data.map((product, i) => (
                 <Link key={i} to={`/product-details/${product.id}?name=${product.name}`}>
-                  <div className="px-2">
-                    <div className="flex flex-col border-2 lg:flex-row items-center justify-around space-x-2 px-2 py-4 bg-white rounded-lg hover:shadow-md hover:text-black transition-shadow duration-300 ease-in-out">
-                      <img
-                        className="rounded-full object-cover w-24 h-24"
-                        src={toImageLink(product.imageUrl)}
-                        alt={product.name}
-                      />
-                      <div className="">
-                        <div className="text-md truncate w-32 md:w-36">{product.name}</div>
-                        <Rate disabled count={1} value={product.rating || 0} className="mb-4" />
-                        {product.rating !== undefined
-                          ? product.rating % 2 === 0
-                            ? product.rating
-                            : product.rating.toFixed(1)
-                          : 0}
-                        <div className=" text-red-600">{formatVND(product.price)}</div>
+                  {product.quantity > 0 && (
+                    <div className="px-2">
+                      <div className="flex flex-col border-2 lg:flex-row items-center justify-around space-x-2 px-2 py-4 bg-white rounded-lg hover:shadow-md hover:text-black transition-shadow duration-300 ease-in-out">
+                        <img
+                          className="rounded-full object-cover w-24 h-24"
+                          src={toImageLink(product.imageUrl)}
+                          alt={product.name}
+                        />
+                        <div className="">
+                          <div className="text-md truncate w-32 md:w-36">{product.name}</div>
+                          <Rate disabled count={1} value={product.rating || 0} className="mb-4" />
+                          {product.rating !== undefined
+                            ? product.rating % 2 === 0
+                              ? product.rating
+                              : product.rating.toFixed(1)
+                            : 0}
+                          <div className=" text-red-600">{formatVND(product.price)}</div>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  )}
                 </Link>
               ))}
             </Carousel>

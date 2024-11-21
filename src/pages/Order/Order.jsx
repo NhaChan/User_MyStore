@@ -58,6 +58,7 @@ const Order = () => {
         if (orderStatus === 'all') {
           res = await orderService.getAllOrder(currentPage, currentPageSize, '')
           setData((prevData) => [...prevData, ...res.data.items])
+          // console.log(res.data)
         } else {
           res = await orderService.getStatus(orderStatus, currentPage, currentPageSize, '')
           setData(res.data.items)
@@ -440,16 +441,15 @@ const Order = () => {
                                   </span>
                                 </div>
                                 <div className="flex flex-col sm:flex-row justify-end sm:space-x-2">
-                                  {(order.orderStatus === 4 || order.orderStatus === 5) &&
-                                    order.reviewed === false && (
-                                      <Button
-                                        onClick={() => showModal(order.id)}
-                                        size="large"
-                                        className="rounded-none"
-                                      >
-                                        Đánh giá
-                                      </Button>
-                                    )}
+                                  {order.orderStatus === 5 && order.reviewed === false && (
+                                    <Button
+                                      onClick={() => showModal(order.id)}
+                                      size="large"
+                                      className="rounded-none"
+                                    >
+                                      Đánh giá
+                                    </Button>
+                                  )}
                                   {order.orderStatus === 4 && (
                                     <Popconfirm
                                       title="Xác nhận đơn hàng đã được giao đến bạn"

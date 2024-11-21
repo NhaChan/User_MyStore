@@ -1,4 +1,14 @@
-import { Button, Carousel, Image, InputNumber, Rate, Tabs, Skeleton, notification } from 'antd'
+import {
+  Button,
+  Carousel,
+  Image,
+  InputNumber,
+  Rate,
+  Tabs,
+  Skeleton,
+  notification,
+  Divider,
+} from 'antd'
 import React, { useContext, useEffect, useState } from 'react'
 import { formatVND, showError, toImageLink } from '../../services/commonService'
 import productService from '../../services/products/productService'
@@ -10,6 +20,9 @@ import BreadcrumbLink from '../../components/BreadcrumbLink'
 import userService from '../../services/userService'
 import { CartContext, FavoritesContext } from '../../App'
 import Review from '../../components/Review'
+import { FaCheckCircle } from 'react-icons/fa'
+import { TbArrowsRandom } from 'react-icons/tb'
+import Description from '../../components/Description/Description'
 
 const breadcrumb = (id, name) => [
   {
@@ -65,15 +78,20 @@ const ProductDetail = ({ product }) => {
   const items = [
     {
       key: '1',
+      label: <span className="">ĐÁNH GIÁ</span>,
+      children: <Review id={id} rating={data.rating} />,
+    },
+    {
+      key: '3',
       label: 'CHI TẾT SẨN PHẨM',
-      children: 'Content of Tab Pane 1',
+      children: <Description id={id} />,
     },
     {
       key: '2',
       label: 'VẬN CHUYỂN & TRẢ HÀNG',
       children: (
         <>
-          <div className="py-6">
+          <div className="py-6 text-lg">
             <div className="font-bold">VẬN CHUYỂN</div>
             <div>
               Phí giao hàng dao động từ 10.000đ đến 30.000đ, vận chuyển trong vòng 1 đến 7 ngày làm
@@ -81,7 +99,7 @@ const ProductDetail = ({ product }) => {
               <span className="text-blue-700">090108912</span> để được tư vấn.
             </div>
           </div>
-          <div>
+          <div className="text-lg">
             <div className="font-bold">TRẢ LẠI VÀ ĐỔI HÀNG</div>
             <div>
               Dễ dàng và miễn phí, trong vòng 14 ngày. Xem các điều kiện và thủ tục trong Câu hỏi
@@ -90,11 +108,6 @@ const ProductDetail = ({ product }) => {
           </div>
         </>
       ),
-    },
-    {
-      key: '3',
-      label: <span className="">ĐÁNH GIÁ</span>,
-      children: <Review id={id} rating={data.rating} />,
     },
   ]
 
@@ -107,7 +120,7 @@ const ProductDetail = ({ product }) => {
       setIsLoading(true)
       try {
         const res = await productService.getById(id)
-        // console.log(res)
+        console.log(res)
         setData(res.data)
         setSelectedImage(toImageLink(res.data.imageUrls[0]))
       } catch (error) {
@@ -199,7 +212,7 @@ const ProductDetail = ({ product }) => {
             <div className="w-full lg:w-2/3 px-4 space-y-4">
               <Skeleton loading={isLoading} active>
                 <div className="flex flex-row justify-between items-baseline">
-                  <div className="md:text-xl sm:text-md font-normal mb-4 pr-4">{data.name}</div>
+                  <div className="md:text-xl sm:text-md font-normal mb-2 pr-4">{data.name}</div>
                   <button onClick={clickFavorite}>
                     {isFavorite ? (
                       <HeartFilled className="text-xl md:text-3xl text-red-500" />
@@ -210,7 +223,7 @@ const ProductDetail = ({ product }) => {
                 </div>
                 <div className="text-gray-500 space-x-6 text-xl">
                   <span>
-                    <Rate disabled allowHalf value={data.rating || 0} className="mb-4" />
+                    <Rate disabled allowHalf value={data.rating || 0} className="mb-2" />
                     {data.rating !== undefined
                       ? data.rating % 2 === 0
                         ? data.rating
@@ -243,7 +256,7 @@ const ProductDetail = ({ product }) => {
                   </div>
                 </div>
                 {/* <div className="text-gray-700 mb-4">{data.description}</div> */}
-                <div className="space-x-4 pt-4">
+                <div className="space-x-4 pt-2">
                   <span className="text-gray-500">Số lượng:</span>
                   <InputNumber
                     size="large"
@@ -252,24 +265,40 @@ const ProductDetail = ({ product }) => {
                     defaultValue={1}
                     value={quantity}
                     onChange={(value) => setQuantity(value)}
-                    className="mb-4 rounded-none"
+                    className="mb-2 rounded-none"
                   />
                   <span className="text-gray-500">{data.quantity} Sản phẩm có sẵn</span>
                 </div>
-                <div className="flex space-x-2 pt-4">
-                  <Button
+                <div className="p-4 bg-gray-50">
+                  <div className="flex text-2xl space-x-4 text-green-700 items-center">
+                    <TbArrowsRandom className=" " />
+                    <span>Màu ngẫu nhiên</span>
+                  </div>
+                  <Divider className="border-lime-500 my-[1rem]" />
+                  <div className="flex mb-2 space-x-2 items-center">
+                    <FaCheckCircle className="text-2xl text-red-700" />
+                    <span>Dịch vụ gói quà miễn phí, nếu nhắn tin cho shop</span>
+                  </div>
+                  <div className="flex space-x-2 items-center">
+                    <FaCheckCircle className="text-2xl text-red-700" />
+                    <span>Nhắn tin shop nếu muốn chọn màu bạn nhé!</span>
+                  </div>
+                </div>
+                <div className="flex space-x-2 pt-2">
+                  {/* <Button
                     size="large"
                     danger
                     type="primary"
                     className="rounded-none flex items-center justify-center p-6"
                   >
                     Mua ngay
-                  </Button>
+                  </Button> */}
 
                   <Button
                     onClick={addToCart}
                     size="large"
                     danger
+                    type="primary"
                     loading={isAddCart}
                     disabled={data.quantity <= 0 || isAddCart}
                     className="rounded-none flex items-center justify-center p-6"
