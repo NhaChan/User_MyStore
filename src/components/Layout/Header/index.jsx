@@ -1,6 +1,6 @@
 import { Avatar, Badge, Card, Drawer, Dropdown, Input, Modal, Skeleton } from 'antd'
 import React, { useContext, useEffect, useState } from 'react'
-import { FaSearch, FaShoppingBag, FaUser } from 'react-icons/fa'
+import { FaSearch, FaShoppingBag, FaUser, FaUserCircle } from 'react-icons/fa'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { CartContext, useAuth } from '../../../App'
 import authService from '../../../services/authService'
@@ -14,7 +14,7 @@ import userService from '../../../services/userService'
 
 const Header = ({ onSearch }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false)
+  // const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [open, setOpen] = useState(false)
   const location = useLocation()
   const { state, dispatch } = useAuth()
@@ -85,9 +85,9 @@ const Header = ({ onSearch }) => {
     setIsMenuOpen(!isMenuOpen)
   }
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen)
-  }
+  // const toggleDropdown = () => {
+  //   setIsDropdownOpen(!isDropdownOpen)
+  // }
 
   const showModal = () => {
     setIsModalOpen(true)
@@ -147,155 +147,175 @@ const Header = ({ onSearch }) => {
       >
         <p>Bạn có chắc chắn muốn đăng xuất?</p>
       </Modal>
-      <nav className="bg-white shadow-md px-6 sticky top-0 z-30 h-24 flex items-center justify-between max-w-screen-2xl">
-        <Link to="/" className="flex items-center rtl:space-x-reverse">
-          <img src="/logo2.png" className="w-32 md:w-48" alt="logo" />
-        </Link>
-        <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-          <div className="flex items-center justify-center">
-            <button
-              type="button"
-              onClick={showDrawer}
-              className="p-2 border-2 border-blue-700 rounded-full hover:bg-orange-200"
-            >
-              <FaSearch className="text-sky-700 text-xl" />
-            </button>
-          </div>
-          {state.isAuthenticated ? (
-            <Badge count={countCart.length} size="small" showZero color="red">
-              <Link to="/cart">
-                <FaShoppingBag
-                  className={`text-3xl text-sky-700 hover:text-orange-300 ml-4 ${
-                    location.pathname === '/cart' ? 'text-orange-300' : 'text-sky-700'
-                  }`}
-                />
+      <nav className="bg-white shadow-md sticky top-0 z-30">
+        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-20">
+            {/* Logo với responsive */}
+            <div className="flex-shrink-0">
+              <Link to="/" className="block hover:opacity-90 transition-opacity">
+                <img src="/logo2.png" className="h-12 w-auto sm:h-14 md:h-16" alt="logo" />
               </Link>
-            </Badge>
-          ) : (
-            <Link to="/login">
-              <FaShoppingBag
-                className={`text-3xl text-sky-700 hover:text-orange-300 ml-4 ${
-                  location.pathname === '/cart' ? 'text-orange-300' : 'text-sky-700'
-                }`}
-              />
-            </Link>
-          )}
-
-          {state.isAuthenticated ? (
-            <div className="pl-4">
-              <button
-                type="button"
-                className="flex text-sm bg-gray-800 rounded-full md:me-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-                id="user-menu-button"
-                aria-expanded={isDropdownOpen}
-                onClick={toggleDropdown}
-              >
-                <Dropdown menu={{ items }} trigger={['click']}>
-                  <img
-                    className="w-8 h-8 rounded-full"
-                    src={
-                      toImageLink(avatar) ||
-                      'https://i.pinimg.com/736x/03/73/62/037362f54125111ea08efb8e42afb532.jpg'
-                    }
-                    alt="user"
-                  />
-                </Dropdown>
-              </button>
-              <button
-                onClick={toggleMenu}
-                data-collapse-toggle="navbar-user"
-                type="button"
-                className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-blue-700 dark:focus:ring-blue-600"
-                aria-controls="navbar-user"
-                aria-expanded={isMenuOpen}
-              >
-                <svg
-                  className="w-5 h-5"
-                  aria-hidden="true"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 17 14"
-                >
-                  <path
-                    stroke="currentColor"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M1 1h15M1 7h15M1 13h15"
-                  />
-                </svg>
-              </button>
             </div>
-          ) : (
-            <Link to="/login">
-              <FaUser className="text-3xl text-sky-700 mx-4" />
-            </Link>
-          )}
-        </div>
-        <div
-          className={`items-center justify-between w-full md:flex md:w-auto md:order-1 ${
-            isMenuOpen ? 'block' : 'hidden'
-          }`}
-          id="navbar-user"
-        >
-          <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white">
-            <li>
+
+            {/* Menu chính - ẩn trên mobile */}
+            <div className="hidden md:flex items-center space-x-8">
               <Link
                 to="/"
-                className={`block py-2 px-3 rounded md:p-0 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:hover:bg-blue-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-blue-700 ${
-                  location.pathname === '/' ? 'text-blue-700' : 'text-gray-900'
+                className={`text-base font-medium transition-all duration-200 border-b-2 hover:border-blue-600 py-1 ${
+                  location.pathname === '/'
+                    ? 'text-sky-700 border-sky-700 font-semibold'
+                    : 'text-gray-700 border-transparent'
                 }`}
               >
                 Trang chủ
               </Link>
-            </li>
-            <li>
               <Link
                 to="/product"
-                className={`block py-2 px-3 rounded md:p-0 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:hover:bg-blue-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-blue-700 ${
-                  location.pathname === '/product' ? 'text-blue-700' : 'text-gray-900'
+                className={`text-base font-medium transition-all duration-200 border-b-2 hover:border-blue-600 py-1 ${
+                  location.pathname === '/product'
+                    ? 'text-sky-700 border-sky-700 font-semibold'
+                    : 'text-gray-700 border-transparent'
                 }`}
               >
                 Sản phẩm
               </Link>
-            </li>
-            <li>
-              <Link
-                to="/product-details"
-                className={`block py-2 px-3 rounded md:p-0 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:hover:bg-blue-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-blue-700 ${
-                  location.pathname === '/product-details' ? 'text-blue-700' : 'text-gray-900'
-                }`}
-              >
-                Thông tin
-              </Link>
-            </li>
-            <li>
               <Link
                 to="/news"
-                className={`block py-2 px-3 rounded md:p-0 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:dark:hover:text-blue-500 dark:hover:bg-blue-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-blue-700 ${
-                  location.pathname === '/news' ? 'text-blue-700' : 'text-gray-900'
+                className={`text-base font-medium transition-all duration-200 border-b-2 hover:border-blue-600 py-1 ${
+                  location.pathname === '/news'
+                    ? 'text-sky-700 border-sky-700 font-semibold'
+                    : 'text-gray-700 border-transparent'
                 }`}
               >
-                Tin tức
+                Giới thiệu
               </Link>
-            </li>
-          </ul>
+            </div>
+
+            {/* Icons group */}
+            <div className="flex items-center space-x-4 sm:space-x-6">
+              {/* Search button */}
+              <button
+                type="button"
+                onClick={showDrawer}
+                className="p-2 hover:bg-blue-50 rounded-full transition-colors duration-200 relative group"
+              >
+                <FaSearch className="text-sky-700 text-xl" />
+                <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  Tìm kiếm
+                </span>
+              </button>
+
+              {/* Cart icon với badge được cải thiện */}
+              {state.isAuthenticated ? (
+                <div className="relative group">
+                  <Badge
+                    count={countCart.length}
+                    size="small"
+                    showZero
+                    // color="red"
+                    className="cursor-pointer"
+                  >
+                    <Link to="/cart">
+                      <FaShoppingBag className="text-2xl text-sky-700 hover:text-blue-500 transition-colors duration-200" />
+                    </Link>
+                  </Badge>
+                  <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                    Giỏ hàng
+                  </span>
+                </div>
+              ) : (
+                <Link to="/login">
+                  <FaShoppingBag
+                    className={`text-2xl text-sky-700 hover:text-orange-300 ${
+                      location.pathname === '/cart' ? 'text-orange-300' : 'text-sky-700'
+                    }`}
+                  />
+                </Link>
+              )}
+
+              {/* User avatar/profile với hiệu ứng mới */}
+              {state.isAuthenticated ? (
+                <div className="relative group">
+                  <Dropdown menu={{ items }} trigger={['click']} placement="bottomRight">
+                    <div className="cursor-pointer">
+                      <img
+                        className="w-10 h-10 rounded-full object-cover border-2 border-blue-100 hover:border-blue-400 transition-all duration-200 shadow-sm"
+                        src={
+                          toImageLink(avatar) ||
+                          'https://i.pinimg.com/736x/03/73/62/037362f54125111ea08efb8e42afb532.jpg'
+                          // <div className="rounded-full bg-blue-200 p-2">
+                          //   <FaUserCircle className="text-2xl  text-blue-500" />
+                          // </div>
+                        }
+                        alt="user"
+                      />
+                    </div>
+                  </Dropdown>
+                </div>
+              ) : (
+                <Link to="/login" className="group relative">
+                  <FaUser className="text-2xl text-sky-700 hover:text-blue-500 transition-colors duration-200" />
+                  <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                    Đăng nhập
+                  </span>
+                </Link>
+              )}
+
+              {/* Mobile menu button */}
+              <button
+                onClick={toggleMenu}
+                className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200"
+              >
+                <svg
+                  className="w-6 h-6 text-gray-700"
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {/* Mobile menu */}
+          <div className={`md:hidden ${isMenuOpen ? 'block' : 'hidden'} pb-4`}>
+            <div className="flex flex-col space-y-4">
+              <Link
+                to="/"
+                className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200 ${
+                  location.pathname === '/'
+                    ? 'bg-blue-50 text-sky-700'
+                    : 'text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                Trang chủ
+              </Link>
+              {/* ... các menu item khác tương tự ... */}
+            </div>
+          </div>
         </div>
       </nav>
 
+      {/* Drawer search được cải thiện */}
       <Drawer
-        title="Tìm kiếm theo tên sản phẩm"
+        title={<span className="text-xl font-semibold text-sky-700">Tìm kiếm sản phẩm</span>}
         onClose={onClose}
         open={open}
         placement="right"
-        // styles={{ content: { height: 'fit-content' } }}
+        className="rounded-l-lg"
+        width={320}
       >
         <Input.Search
-          placeholder="Tìm kiếm"
+          placeholder="Nhập tên sản phẩm..."
           size="large"
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           onSearch={handleSearch}
+          className="mb-4"
         />
 
         {loading && searchValue ? (

@@ -66,7 +66,7 @@ const Favorite = () => {
 
   return (
     <>
-      <div className="py-2 px-8 sticky top-[6rem] z-40 bg-gray-100">
+      <div className="py-2 px-8 sticky top-[5rem] z-40 bg-gray-100">
         <BreadcrumbLink breadcrumb={breadcrumb} />
       </div>
       <div className="lg:px-28 px-2 py-4 bg-gray-100">

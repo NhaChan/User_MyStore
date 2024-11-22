@@ -5,33 +5,51 @@ import { MdOutlineSecurity } from 'react-icons/md'
 
 const Policy = () => {
   return (
-    <div className="grid md:grid-cols-4 grid-cols-2 gap-16 px-8">
-      <div className="flex flex-col justify-center items-center px-5 py-6 ">
-        <FaCarSide className="text-white text-6xl p-3 bg-indigo-600 bg-opacity-75 rounded-full " />
-        <div className="text-center text-lg text-slate-400 p-3">Miễn phí giao hàng</div>
-        <div className="text-slate-500">Khi mua đơn hơn 400.000đ</div>
-      </div>
+    <div className="container mx-auto px-4 py-8">
+      <div className="grid md:grid-cols-4 grid-cols-2 gap-6 lg:gap-12">
+        {/* Free Shipping */}
+        <div className="group bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform ">
+          <div className="flex flex-col justify-center items-center">
+            <div className="mb-4 transform group-hover:scale-110 transition-transform duration-300">
+              <FaCarSide className="text-6xl p-4 bg-gradient-to-r from-sky-500 to-indigo-600 text-white rounded-xl" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">Miễn phí giao hàng</h3>
+            <p className="text-gray-600 text-center text-sm">Khi mua đơn hơn 400.000đ</p>
+          </div>
+        </div>
 
-      <div className="flex flex-col items-center px-5 py-6 justify-center">
-        <div className="p-3 bg-indigo-600 bg-opacity-75 rounded-full">
-          <MdOutlineSecurity className="text-white text-4xl" />
+        {/* Secure Payment */}
+        <div className="group bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform ">
+          <div className="flex flex-col justify-center items-center">
+            <div className="mb-4 transform group-hover:scale-110 transition-transform duration-300">
+              <MdOutlineSecurity className="text-6xl p-4 bg-gradient-to-r from-sky-500 to-indigo-600 text-white rounded-xl" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">Thanh toán bảo mật</h3>
+            <p className="text-gray-600 text-center text-sm">100% bảo mật</p>
+          </div>
         </div>
-        <div className="text-center text-lg text-slate-400 p-3">Thanh toán bảo mật</div>
-        <div className="text-slate-500">100% bảo mật</div>
-      </div>
-      <div className="flex flex-col items-center px-5 py-6 justify-center">
-        <div className="p-3 bg-indigo-600 bg-opacity-75 rounded-full">
-          <FaArrowsRotate className="text-white text-4xl" />
+
+        {/* Return Policy */}
+        <div className="group bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform ">
+          <div className="flex flex-col justify-center items-center">
+            <div className="mb-4 transform group-hover:scale-110 transition-transform duration-300">
+              <FaArrowsRotate className="text-6xl p-4 bg-gradient-to-r from-sky-500 to-indigo-600 text-white rounded-xl" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">30 ngày hoàn trả</h3>
+            <p className="text-gray-600 text-center text-sm">Hoàn tiền trong 30 ngày</p>
+          </div>
         </div>
-        <div className="text-center text-lg text-slate-400 p-3">30 ngày hoàn trả</div>
-        <div className="text-slate-500">Hoàn tiền trong 30 ngày</div>
-      </div>
-      <div className="flex flex-col items-center px-5 py-6 justify-center">
-        <div className="p-3 bg-indigo-600 bg-opacity-75 rounded-full">
-          <FaPhoneFlip className="text-white text-4xl" />
+
+        {/* Support */}
+        <div className="group bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 transform ">
+          <div className="flex flex-col justify-center items-center">
+            <div className="mb-4 transform group-hover:scale-110 transition-transform duration-300">
+              <FaPhoneFlip className="text-6xl p-4 bg-gradient-to-r from-sky-500 to-indigo-600 text-white rounded-xl" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">Hỗ trợ 24/7</h3>
+            <p className="text-gray-600 text-center text-sm">Hỗ trợ mọi lúc nhanh nhất</p>
+          </div>
         </div>
-        <div className="text-center text-lg text-slate-400 p-3">Hỗ trợ 24/7</div>
-        <div className="text-slate-500">Hỗ trợ mọi lúc nhanh nhất</div>
       </div>
     </div>
   )

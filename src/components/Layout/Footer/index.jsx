@@ -2,11 +2,11 @@ import { Link } from 'react-router-dom'
 
 export default function Footer() {
   return (
-    <footer className="bg-slate-200 dark:bg-gray-900">
+    <footer className="bg-gray-100 dark:bg-gray-800">
       <div className="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
         <div className="md:flex md:justify-between">
           <div className="mb-6 md:mb-0">
-            <Link to="https://flowbite.com/" className="flex items-center">
+            <Link to="/" className="flex items-center">
               <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
                 ZuiZui Shop
               </span>
@@ -17,14 +17,17 @@ export default function Footer() {
               <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
                 Nguồn
               </h2>
-              <ul className="text-gray-500 dark:text-gray-400 font-medium">
+              <ul className="text-gray-600 dark:text-gray-400 font-medium">
                 <li className="mb-4">
-                  <Link to="https://flowbite.com/" className="hover:underline">
+                  <Link to="https://flowbite.com/" className="hover:underline hover:text-blue-500">
                     Ant Design
                   </Link>
                 </li>
                 <li>
-                  <Link to="https://tailwindcss.com/" className="hover:underline">
+                  <Link
+                    to="https://tailwindcss.com/"
+                    className="hover:underline hover:text-blue-500"
+                  >
                     Tailwind CSS
                   </Link>
                 </li>
@@ -34,14 +37,14 @@ export default function Footer() {
               <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
                 Về chúng tôi
               </h2>
-              <ul className="text-gray-500 dark:text-gray-400 font-medium">
+              <ul className="text-gray-600 dark:text-gray-400 font-medium">
                 <li className="mb-4">
-                  <Link to="#" className="hover:underline ">
+                  <Link to="#" className="hover:underline hover:text-blue-500">
                     Github
                   </Link>
                 </li>
                 <li>
-                  <Link to="#" className="hover:underline">
+                  <Link to="#" className="hover:underline hover:text-blue-500">
                     Liên hệ
                   </Link>
                 </li>
@@ -51,14 +54,14 @@ export default function Footer() {
               <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
                 Chính sách
               </h2>
-              <ul className="text-gray-500 dark:text-gray-400 font-medium">
+              <ul className="text-gray-600 dark:text-gray-400 font-medium">
                 <li className="mb-4">
-                  <Link to="#" className="hover:underline">
+                  <Link to="#" className="hover:underline hover:text-blue-500">
                     Chính sách bảo mật
                   </Link>
                 </li>
                 <li>
-                  <Link to="#" className="hover:underline">
+                  <Link to="#" className="hover:underline hover:text-blue-500">
                     Điều khoản
                   </Link>
                 </li>
@@ -76,7 +79,7 @@ export default function Footer() {
             . All Rights Reserved.
           </span>
           <div className="flex mt-4 sm:justify-center sm:mt-0">
-            <Link to="#" className="text-gray-500 hover:text-gray-900 dark:hover:text-white">
+            <Link to="#" className="text-gray-500 hover:text-blue-500 dark:hover:text-white">
               <svg
                 className="w-4 h-4"
                 aria-hidden="true"
@@ -92,7 +95,7 @@ export default function Footer() {
               </svg>
               <span className="sr-only">Facebook page</span>
             </Link>
-            <Link to="#" className="text-gray-500 hover:text-gray-900 dark:hover:text-white ms-5">
+            <Link to="#" className="text-gray-500 hover:text-blue-500 dark:hover:text-white ms-5">
               <svg
                 className="w-4 h-4"
                 aria-hidden="true"
@@ -104,7 +107,7 @@ export default function Footer() {
               </svg>
               <span className="sr-only">Discord community</span>
             </Link>
-            <Link to="#" className="text-gray-500 hover:text-gray-900 dark:hover:text-white ms-5">
+            <Link to="#" className="text-gray-500 hover:text-blue-500 dark:hover:text-white ms-5">
               <svg
                 className="w-4 h-4"
                 aria-hidden="true"
@@ -120,7 +123,7 @@ export default function Footer() {
               </svg>
               <span className="sr-only">Twitter page</span>
             </Link>
-            <Link to="#" className="text-gray-500 hover:text-gray-900 dark:hover:text-white ms-5">
+            <Link to="#" className="text-gray-500 hover:text-blue-500 dark:hover:text-white ms-5">
               <svg
                 className="w-4 h-4"
                 aria-hidden="true"
@@ -136,7 +139,7 @@ export default function Footer() {
               </svg>
               <span className="sr-only">GitHub account</span>
             </Link>
-            <Link to="#" className="text-gray-500 hover:text-gray-900 dark:hover:text-white ms-5">
+            <Link to="#" className="text-gray-500 hover:text-blue-500 dark:hover:text-white ms-5">
               <svg
                 className="w-4 h-4"
                 aria-hidden="true"

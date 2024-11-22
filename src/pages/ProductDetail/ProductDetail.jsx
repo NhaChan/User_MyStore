@@ -157,7 +157,7 @@ const ProductDetail = ({ product }) => {
 
   return (
     <>
-      <div className="py-2 px-8 sticky top-[6rem] z-40 bg-gray-50">
+      <div className="py-2 px-8 sticky top-[5rem] z-40 bg-gray-50">
         <BreadcrumbLink breadcrumb={breadcrumb(id, queryParams.get('name'))} />
       </div>
       <div className="md:px-10 sm:p-2 bg-gray-50">

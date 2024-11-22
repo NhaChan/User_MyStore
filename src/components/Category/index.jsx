@@ -31,38 +31,48 @@ const Category = () => {
   }
 
   return (
-    <div className="container mx-auto md:px-20 px-4 bg-gray-100">
+    <div className="container mx-auto px-4 py-8 bg-white rounded-xl">
+      <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Danh mục sản phẩm</h2>
       {isLoading ? (
-        <Skeleton />
+        <Skeleton active />
       ) : (
         <Carousel
           responsive={[
-            { breakpoint: 900, settings: { slidesToShow: 7 } },
-            { breakpoint: 640, settings: { slidesToShow: 4 } },
+            { breakpoint: 1024, settings: { slidesToShow: 7 } },
+            { breakpoint: 768, settings: { slidesToShow: 5 } },
+            { breakpoint: 640, settings: { slidesToShow: 3 } },
           ]}
           infinite
           arrows
           autoplay
           autoplaySpeed={3000}
           slidesToShow={7}
-          className="py-6"
+          className="py-4"
         >
           {categories.map((category) => (
             <div
               key={category.id}
               onClick={() => handleCategoryClick(category.id)}
-              className="flex flex-col items-center"
+              className="group cursor-pointer px-2"
             >
-              <div className="items-center">
-                <div className="md:px-6 px-2">
+              <div className="flex flex-col items-center space-y-3">
+                <div
+                  className="relative p-2 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-full 
+                              transform transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg"
+                >
                   <Image
                     preview={false}
                     src={toImageLink(category.imageUrl)}
-                    alt=""
-                    className=" object-cover w-10 h-10 rounded-full drop-shadow-lg cursor-pointer hover: shadow-xl"
+                    alt={category.name}
+                    className="w-10 h-10 rounded-full object-cover"
                   />
+                  <div className="absolute inset-0 rounded-full bg-blue-500 opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
                 </div>
-                <div className="text-center mt-2">{category.name}</div>
+                <div className="text-center">
+                  <h3 className="text-sm font-medium text-gray-800 group-hover:text-blue-600 transition-colors duration-300">
+                    {category.name}
+                  </h3>
+                </div>
               </div>
             </div>
           ))}

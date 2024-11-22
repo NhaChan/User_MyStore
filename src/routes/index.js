@@ -26,7 +26,7 @@ export const publicRoutes = [
   // { path: '/register', component: Register, Layout: null },
   { path: '/product', component: Product },
   { path: '/product-details/:id', component: ProductDetail },
-  { path: 'news', component: News },
+  { path: '/news', component: News },
 ]
 
 export const privateRoutes = [

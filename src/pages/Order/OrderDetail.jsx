@@ -74,7 +74,7 @@ const OrderDetail = () => {
 
   return (
     <>
-      <div className="py-2 px-8 sticky top-[6rem] z-40 bg-gray-100">
+      <div className="py-2 px-8 sticky top-[5rem] z-40 bg-gray-100">
         <BreadcrumbLink breadcrumb={breadcrumb(id)} />
       </div>
       {isLoading ? (
@@ -96,125 +96,6 @@ const OrderDetail = () => {
               </div>
               <Divider className="my-[0.1rem] border-0 " />
 
-              {/* <div className="bg-white p-4">
-                <Steps
-                  current={currentStep}
-                  status=""
-                  labelPlacement="vertical"
-                  items={[
-                    {
-                      title: 'Đã đặt hàng',
-                      description: <div>{formatDateTime(orderInfo.orderDate)}</div>,
-                      icon: (
-                        <button
-                          className={`p-2 border-2 rounded-full ${
-                            currentStep === 0 ? 'bg-orange-200' : 'border-green-500'
-                          }`}
-                        >
-                          <IoDocumentSharp
-                            className={`p-2 border-2 rounded-full ${
-                              currentStep === 0
-                                ? 'bg-orange-200 text-orange-500'
-                                : currentStep > 0
-                                ? 'bg-green-200 text-green-500'
-                                : 'border-green-500 text-green-500'
-                            }`}
-                          />
-                        </button>
-                      ),
-                    },
-                    {
-                      title: 'Đã xác nhận',
-                      icon: (
-                        <button
-                          className={`p-2 border-2 rounded-full ${
-                            currentStep === 0
-                              ? 'bg-orange-200 text-orange-500'
-                              : currentStep > 0
-                              ? 'bg-green-200 text-green-500'
-                              : 'border-green-500 text-green-500'
-                          }`}
-                        >
-                          <PiCopyFill
-                            className={`${
-                              currentStep === 1 ? 'text-orange-500' : 'text-green-500'
-                            } text-3xl`}
-                          />
-                        </button>
-                      ),
-                    },
-                    {
-                      title: 'Đã giao cho đơn vị vận chuyển',
-                      icon: (
-                        <button
-                          className={`p-2 border-2 rounded-full ${
-                            currentStep === 0
-                              ? 'bg-orange-200 text-orange-500'
-                              : currentStep > 1
-                              ? 'bg-green-200 text-green-500'
-                              : 'border-green-500 text-green-500'
-                          }`}
-                        >
-                          <FaTruck
-                            className={`${
-                              currentStep === 2 ? 'text-orange-500' : 'text-green-500'
-                            } text-3xl`}
-                          />
-                        </button>
-                      ),
-                    },
-                    {
-                      title: 'Đã nhận được hàng',
-                      icon: (
-                        <button
-                          className={`p-2 border-2 rounded-full ${
-                            currentStep === 3 ? 'bg-orange-200' : 'border-green-500'
-                          }`}
-                        >
-                          <MdAssignmentReturned
-                            className={`${
-                              currentStep === 3 ? 'text-orange-500' : 'text-green-500'
-                            } text-3xl`}
-                          />
-                        </button>
-                      ),
-                    },
-                    {
-                      title: 'Hoàn thành',
-                      icon: (
-                        <button
-                          className={`p-2 border-2 rounded-full ${
-                            currentStep === 4 ? 'bg-orange-200' : 'border-green-500'
-                          }`}
-                        >
-                          <MdOutlineRecommend
-                            className={`${
-                              currentStep === 4 ? 'text-orange-500' : 'text-green-500'
-                            } text-3xl`}
-                          />
-                        </button>
-                      ),
-                    },
-                    {
-                      title: 'Đã hủy',
-                      icon: (
-                        <button
-                          className={`p-2 border-2 rounded-full ${
-                            currentStep === 5 ? 'bg-orange-200' : 'border-red-500'
-                          }`}
-                        >
-                          <MdCancel
-                            className={`${
-                              currentStep === 5 ? 'text-orange-500' : 'text-red-500'
-                            } text-3xl`}
-                          />
-                        </button>
-                      ),
-                    },
-                  ]}
-                />
-              </div> */}
-              {/* {currentStep !== -1 ? ( */}
               <div className="bg-white p-4">
                 <Steps
                   current={currentStep}

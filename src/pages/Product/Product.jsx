@@ -158,7 +158,7 @@ const Product = ({ search }) => {
 
   return (
     <>
-      <div className="py-2 px-8 sticky top-[6rem] z-40 bg-gray-50">
+      <div className="py-2 px-8 sticky top-[5rem] z-40 bg-gray-50">
         <BreadcrumbLink breadcrumb={breadcrumb} />
       </div>
       <div className="px-8 py-4">
@@ -285,9 +285,14 @@ const Product = ({ search }) => {
             </div>
             <Divider />
             <div className="text-3xl">
-              <Checkbox onChange={handleDiscountChange} checked={discount}>
-                <span className="flex items-center text-2xl text-red-600">
-                  <BsFire className=" " /> Đang giảm giá
+              <Checkbox
+                onChange={handleDiscountChange}
+                checked={discount}
+                className="flex items-center text-2xl text-red-600 hover:text-red-700 transition-colors duration-300"
+              >
+                <span className="flex items-center">
+                  <BsFire className="mr-2 text-red-500" />
+                  <span className="font-semibold">Đang giảm giá</span>
                 </span>
               </Checkbox>
             </div>
