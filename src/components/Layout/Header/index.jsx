@@ -1,6 +1,6 @@
-import { Avatar, Badge, Card, Drawer, Dropdown, Input, Modal, Skeleton } from 'antd'
-import React, { useContext, useEffect, useState } from 'react'
-import { FaSearch, FaShoppingBag, FaUser, FaUserCircle } from 'react-icons/fa'
+import { Avatar, Badge, Card, Drawer, Dropdown, Input, Modal, Skeleton, Spin } from 'antd'
+import React, { useContext, useEffect, useRef, useState } from 'react'
+import { FaSearch, FaShoppingBag, FaUser } from 'react-icons/fa'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { CartContext, useAuth } from '../../../App'
 import authService from '../../../services/authService'
@@ -11,6 +11,10 @@ import Empty from '../../Empty'
 import debounce from 'debounce'
 import userService from '../../../services/userService'
 // import userService from '../../../services/userService'
+
+import * as tf from '@tensorflow/tfjs'
+import ButtonHandler from '../../ImageSearch/ImageSearch'
+import { detect } from '../../../utils/detect'
 
 const Header = ({ onSearch }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -26,6 +30,16 @@ const Header = ({ onSearch }) => {
   const [products, setProducts] = useState([])
   const [avatar, setAvatar] = useState(null)
   const { countCart } = useContext(CartContext)
+
+  const [openDrawer, setOpenDrawer] = useState(false)
+  const [model, setModel] = useState({
+    net: null,
+    inputShape: [1, 0, 0, 3],
+  }) // init model & input shape
+
+  // references
+  const imageRef = useRef(null)
+  const canvasRef = useRef(null)
 
   // useEffect(() => {
   //   const user = authService.getCurrentUser()
@@ -79,6 +93,7 @@ const Header = ({ onSearch }) => {
   }
   const onClose = () => {
     setOpen(false)
+    setOpenDrawer(false)
   }
 
   const toggleMenu = () => {
@@ -135,6 +150,75 @@ const Header = ({ onSearch }) => {
     },
   ]
 
+  const showImageDrawer = () => {
+    setOpenDrawer(true)
+  }
+
+  useEffect(() => {
+    tf.ready().then(async () => {
+      const yolov8 = await tf.loadGraphModel(
+        // `${window.location.href}/${modelName}_web_model/model.json`,
+        'yolov8n_web_model/model.json',
+        {
+          onProgress: (fractions) => {
+            setLoading({ loading: true, progress: fractions }) // set loading fractions
+          },
+        },
+      ) // load model
+
+      // warming up model
+      const dummyInput = tf.ones(yolov8.inputs[0].shape)
+      const warmupResults = yolov8.execute(dummyInput)
+
+      setLoading({ loading: false, progress: 1 })
+      setModel({
+        net: yolov8,
+        inputShape: yolov8.inputs[0].shape,
+      }) // set model & input shape
+
+      tf.dispose([warmupResults, dummyInput]) // cleanup memory
+    })
+  }, [])
+
+  const handleImageDetection = async (imageElement) => {
+    setLoading(true)
+    try {
+      const labels = await detect(imageElement, model) // Gọi hàm detect để lấy predictedLabels
+      setSearchValue(labels.join(' ')) // Cập nhật searchValue với các label dự đoán
+      setOpenDrawer(true)
+    } catch (error) {
+      console.error('Error detecting image:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    // Fetch products when searchValue changes
+    const fetchProducts = async () => {
+      setLoading(true)
+      try {
+        const res = await productService.getFilteredProducts({
+          page: 1,
+          pageSize: 4,
+          search: searchValue, // Tìm kiếm sản phẩm theo label
+        })
+        console.log(res.data.items)
+        setProducts(res.data.items)
+      } catch (error) {
+        console.error('Error:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    if (searchValue) {
+      fetchProducts()
+    } else {
+      setProducts([])
+    }
+  }, [searchValue])
+
   return (
     <>
       <Modal
@@ -147,6 +231,47 @@ const Header = ({ onSearch }) => {
       >
         <p>Bạn có chắc chắn muốn đăng xuất?</p>
       </Modal>
+      <Drawer
+        title={
+          <span className="text-xl font-semibold text-sky-700">Tìm kiếm theo ảnh sản phẩm</span>
+        }
+        onClose={onClose}
+        open={openDrawer}
+      >
+        <div style={{ textAlign: 'center' }}>
+          <img
+            src={imageRef.current?.src}
+            alt="Uploaded"
+            style={{ maxWidth: '100%', maxHeight: '200px', marginBottom: '20px' }}
+          />
+          {loading && searchValue ? (
+            <Skeleton active />
+          ) : products.length > 0 && searchValue ? (
+            products.map((product) => (
+              <Card
+                className="rounded-none"
+                key={product.id}
+                style={{ width: '100%', marginBottom: 16 }}
+                onClick={() => {
+                  navigate(`/product-details/${product.id}`)
+                  onClose()
+                }}
+              >
+                <Card.Meta
+                  avatar={<Avatar className="w-24 h-24" src={toImageLink(product.imageUrl)} />}
+                  title={product.name}
+                  description={`Giá: ${formatVND(
+                    product.price - product.price * (product.discount / 100),
+                  )}`}
+                />
+              </Card>
+            ))
+          ) : (
+            searchValue && <Empty title="Không có sản phẩm nào được tìm thấy!" />
+          )}
+        </div>
+      </Drawer>
+
       <nav className="bg-white shadow-md sticky top-0 z-30">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
@@ -193,6 +318,22 @@ const Header = ({ onSearch }) => {
 
             {/* Icons group */}
             <div className="flex items-center space-x-4 sm:space-x-6">
+              <div>
+                {loading.loading && <Spin />}
+
+                <img
+                  src="#"
+                  ref={imageRef}
+                  alt=""
+                  // onLoad={() => detect(imageRef.current, model, canvasRef.current)}
+                  onLoad={() => {
+                    handleImageDetection(imageRef.current) // Gọi tự động khi ảnh được tải lên
+                    showImageDrawer() // Hiển thị Drawer ngay sau khi ảnh được xử lý
+                  }}
+                />
+                <canvas ref={canvasRef} />
+              </div>
+              <ButtonHandler imageRef={imageRef} />
               {/* Search button */}
               <button
                 type="button"
@@ -215,8 +356,15 @@ const Header = ({ onSearch }) => {
                     // color="red"
                     className="cursor-pointer"
                   >
-                    <Link to="/cart">
-                      <FaShoppingBag className="text-2xl text-sky-700 hover:text-blue-500 transition-colors duration-200" />
+                    <Link
+                      to="/cart"
+                      className={
+                        location.pathname === '/cart'
+                          ? 'text-2xl text-blue-500'
+                          : 'text-2xl text-sky-700'
+                      }
+                    >
+                      <FaShoppingBag className="text-2xl hover:text-blue-500 transition-colors duration-200" />
                     </Link>
                   </Badge>
                   <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
@@ -243,9 +391,6 @@ const Header = ({ onSearch }) => {
                         src={
                           toImageLink(avatar) ||
                           'https://i.pinimg.com/736x/03/73/62/037362f54125111ea08efb8e42afb532.jpg'
-                          // <div className="rounded-full bg-blue-200 p-2">
-                          //   <FaUserCircle className="text-2xl  text-blue-500" />
-                          // </div>
                         }
                         alt="user"
                       />

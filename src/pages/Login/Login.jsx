@@ -65,10 +65,10 @@ const Login = () => {
                   required: true,
                   message: 'Vui lòng nhập mật khẩu',
                 },
-                {
-                  pattern: /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{8,})/,
-                  message: 'Mật khẩu phải có ít nhất 8 ký tự, chữ in hoa và ký tự đặc biệt',
-                },
+                // {
+                //   pattern: /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{8,})/,
+                //   message: 'Mật khẩu phải có ít nhất 8 ký tự, chữ in hoa và ký tự đặc biệt',
+                // },
               ]}
             >
               <Input.Password

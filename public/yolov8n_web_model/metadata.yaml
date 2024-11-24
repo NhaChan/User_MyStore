@@ -1,0 +1,20 @@
+description: Ultralytics best model trained on /kaggle/input/datastationery/data.yaml
+author: Ultralytics
+date: '2024-11-23T16:47:42.135212'
+version: 8.3.36
+license: AGPL-3.0 License (https://ultralytics.com/license)
+docs: https://docs.ultralytics.com
+stride: 32
+task: detect
+batch: 1
+imgsz:
+- 640
+- 640
+names:
+  0: Sharpner
+  1: ballpen
+  2: book
+  3: eraser
+  4: notebook
+  5: pencil
+  6: scale

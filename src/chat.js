@@ -32,16 +32,17 @@ const ChatBot = () => {
           ;(function (d, m) {
             var kommunicateSettings = {
               appId: '1a2f23e74c6de8bf756c1d2247eae6bc6',
-              userId: userData.phoneNumber,
-              userName: userData.fullName,
+              userId: userData.phoneNumber || '',
+              userName: userData.fullName || 'Khách',
               popupWidget: true,
               automaticChatOpenOnNavigation: true,
               emojilibrary: true,
               quickReplies: [
                 'Tôi muốn mua hàng',
                 'Thanh toán trực tuyến như thế nào?',
-                'Tôi muốn tạo tài khoản',
+                'Kiểm tra đơn hàng',
               ],
+              audio: false,
             }
 
             var s = document.createElement('script')
@@ -60,7 +61,8 @@ const ChatBot = () => {
               popupWidget: true,
               automaticChatOpenOnNavigation: true,
               emojilibrary: true,
-              quickReplies: ['Hướng dẫn đặt hàng', 'Kiểm tra đơn hàng', 'Hướng dẫn đăng nhập'],
+              quickReplies: ['Hướng dẫn đặt hàng', 'Kiểm tra đơn hàng', 'Tôi muốn tạo tài khoản'],
+              audio: false,
             }
 
             var s = document.createElement('script')
