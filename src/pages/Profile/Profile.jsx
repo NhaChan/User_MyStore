@@ -49,7 +49,7 @@ const Profile = () => {
       const value = await form.validateFields()
       //console.log(value)
       await userService.updateInfo(value)
-      notification.success({ message: 'Cập nhật thông tin thành công.' })
+      notification.success({ message: 'Cập nhật thông tin thành công.', placement: 'top' })
     } catch (error) {
       showError(error)
     } finally {

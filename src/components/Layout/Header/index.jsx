@@ -184,7 +184,8 @@ const Header = ({ onSearch }) => {
     setLoading(true)
     try {
       const labels = await detect(imageElement, model) // Gọi hàm detect để lấy predictedLabels
-      setSearchValue(labels.join(' ')) // Cập nhật searchValue với các label dự đoán
+      setSearchValue(labels)
+      // setSearchValue(labels.join(' ')) // Cập nhật searchValue với các label dự đoán
       setOpenDrawer(true)
     } catch (error) {
       console.error('Error detecting image:', error)
@@ -193,27 +194,60 @@ const Header = ({ onSearch }) => {
     }
   }
 
-  useEffect(() => {
-    // Fetch products when searchValue changes
-    const fetchProducts = async () => {
-      setLoading(true)
-      try {
-        const res = await productService.getFilteredProducts({
-          page: 1,
-          pageSize: 4,
-          search: searchValue, // Tìm kiếm sản phẩm theo label
-        })
-        console.log(res.data.items)
-        setProducts(res.data.items)
-      } catch (error) {
-        console.error('Error:', error)
-      } finally {
-        setLoading(false)
-      }
+  const fetchProductsByKeywords = async (keywords) => {
+    setLoading(true)
+    try {
+      const allResults = await Promise.all(
+        keywords.map((keyword) =>
+          productService.getFilteredProducts({
+            page: 1,
+            pageSize: 4,
+            search: keyword,
+          }),
+        ),
+      )
+      // Hợp nhất các sản phẩm từ các kết quả tìm kiếm
+      const mergedResults = allResults.flatMap((res) => res.data.items)
+      // Loại bỏ sản phẩm trùng lặp (dựa trên ID hoặc thuộc tính duy nhất)
+      const uniqueProducts = Array.from(
+        new Map(mergedResults.map((item) => [item.id, item])).values(),
+      )
+      setProducts(uniqueProducts)
+    } catch (error) {
+      console.error('Error fetching products by keywords:', error)
+    } finally {
+      setLoading(false)
     }
+  }
 
+  useEffect(() => {
+    console.log('Search value:', searchValue) // Log kiểm tra giá trị
     if (searchValue) {
-      fetchProducts()
+      const fetchProducts = async () => {
+        if (Array.isArray(searchValue)) {
+          await fetchProductsByKeywords(searchValue)
+        } else {
+          // Trường hợp là chuỗi
+          setLoading(true)
+          try {
+            const res = await productService.getFilteredProducts({
+              page: 1,
+              pageSize: 4,
+              search: searchValue,
+            })
+            console.log('API response:', res.data.items)
+            setProducts(res.data.items)
+          } catch (error) {
+            console.error('Error:', error)
+          } finally {
+            setLoading(false)
+          }
+        }
+      }
+
+      const debouncedFetch = debounce(fetchProducts, 300)
+      debouncedFetch()
+      return () => debouncedFetch.clear()
     } else {
       setProducts([])
     }
@@ -318,11 +352,12 @@ const Header = ({ onSearch }) => {
 
             {/* Icons group */}
             <div className="flex items-center space-x-4 sm:space-x-6">
-              <div>
-                {loading.loading && <Spin />}
+              <div className="relative flex flex-col items-center justify-center w-full max-w-2xl mx-auto">
+                {loading.loading && <Spin className="absolute z-10" />}
 
                 <img
                   src="#"
+                  className="max-w-full h-auto rounded-md"
                   ref={imageRef}
                   alt=""
                   // onLoad={() => detect(imageRef.current, model, canvasRef.current)}
@@ -331,7 +366,10 @@ const Header = ({ onSearch }) => {
                     showImageDrawer() // Hiển thị Drawer ngay sau khi ảnh được xử lý
                   }}
                 />
-                <canvas ref={canvasRef} />
+                <canvas
+                  ref={canvasRef}
+                  className="absolute top-0 left-0 w-full h-full pointer-events-none"
+                />
               </div>
               <ButtonHandler imageRef={imageRef} />
               {/* Search button */}
@@ -438,6 +476,26 @@ const Header = ({ onSearch }) => {
                 }`}
               >
                 Trang chủ
+              </Link>
+              <Link
+                to="/product"
+                className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200 ${
+                  location.pathname === '/product'
+                    ? 'bg-blue-50 text-sky-700'
+                    : 'text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                Sản phẩm
+              </Link>
+              <Link
+                to="/news"
+                className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors duration-200 ${
+                  location.pathname === '/news'
+                    ? 'bg-blue-50 text-sky-700'
+                    : 'text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                Giới thiệu
               </Link>
               {/* ... các menu item khác tương tự ... */}
             </div>

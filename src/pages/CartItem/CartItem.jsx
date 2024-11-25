@@ -86,7 +86,7 @@ const CartItem = () => {
   const debounceUpdateQuantity = debounce(async (id, quantity) => {
     try {
       await cartService.updateQuantity(id, { quantity })
-      //notification.success({ message: 'Thành công!' })
+      //notification.success({ message: 'Thành công!', placement: 'top' })
     } catch (error) {
       showError(error)
     }
@@ -189,7 +189,7 @@ const CartItem = () => {
       const value = await form.validateFields()
       // console.log(value)
       await userService.updateAddress(value)
-      notification.success({ message: 'Cập nhật địa chỉ thành công.' })
+      notification.success({ message: 'Cập nhật địa chỉ thành công.', placement: 'top' })
       setIsModalOpen(false)
       setDataAddress(value)
     } catch (error) {
@@ -208,11 +208,11 @@ const CartItem = () => {
   const handleDelete = async () => {
     try {
       if (selectedRowKeys.length === 0) {
-        notification.warning({ message: 'Vui lòng chọn sản phẩm cần xóa' })
+        notification.warning({ message: 'Vui lòng chọn sản phẩm cần xóa', placement: 'top' })
         return
       }
       await cartService.deleteCart(selectedRowKeys)
-      notification.success({ message: 'Xóa thành công.', placement: 'top' })
+      //notification.success({ message: 'Xóa thành công.', placement: 'top' })
 
       const newData = data.filter((item) => !selectedRowKeys.includes(item.productId))
       setCountCart(newData.map((item) => item.productId))
@@ -230,7 +230,7 @@ const CartItem = () => {
       //   return
       // }
       await cartService.deleteCartId(id)
-      notification.success({ message: 'Xóa thành công.' })
+      //notification.success({ message: 'Xóa thành công.', placement: 'top' })
       const newData = data.filter((item) => item.id !== id)
       setCountCart(newData.map((item) => item.id))
       setData(newData)
@@ -256,7 +256,7 @@ const CartItem = () => {
         //userIP: 'string',
       }
       if (selectedRowKeys.length === 0) {
-        notification.warning({ message: 'Vui lòng chọn sản phẩm muốn mua' })
+        notification.warning({ message: 'Vui lòng chọn sản phẩm muốn mua', placement: 'top' })
         return
       }
       const res = await orderService.createOrder(order)
@@ -267,7 +267,7 @@ const CartItem = () => {
         // console.log(res.data)
         window.location.replace(res.data)
       } else {
-        notification.success({ message: 'Đặt hàng thành công.' })
+        notification.success({ message: 'Đặt hàng thành công.', placement: 'top' })
         navigate('/orders')
       }
     } catch (error) {

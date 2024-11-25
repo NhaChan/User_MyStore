@@ -141,6 +141,7 @@ const Order = () => {
           message: 'Thành công',
           description: 'Đã gửi đánh giá của bạn.',
           className: 'text-green-500',
+          placement: 'top',
         })
 
         setData((prevData) =>

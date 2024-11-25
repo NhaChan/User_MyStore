@@ -74,7 +74,7 @@ const Home = () => {
           <Category />
         </div>
 
-        <div className="mb-16">
+        <div className="p-8">
           <div className="flex items-center justify-center gap-2 mb-8">
             <FireOutlined className="text-3xl text-orange-500" />
             <h2 className="text-3xl font-bold text-gray-800">Sản phẩm bán chạy</h2>
@@ -105,7 +105,7 @@ const Home = () => {
         {/* Discounted Products Section */}
         <div
           ref={discountSectionRef}
-          className="bg-gradient-to-r from-pink-50 to-purple-50 rounded-2xl p-8 mb-16"
+          className="bg-gradient-to-r from-pink-50 to-purple-50 rounded-2xl p-8"
         >
           <div className="flex items-center justify-center gap-2 mb-8 text-red-500">
             <PercentageOutlined className="text-3xl " />
@@ -135,7 +135,7 @@ const Home = () => {
           )}
         </div>
 
-        <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-2xl p-8 mb-16">
+        <div className="bg-gradient-to-r from-blue-50 to-green-50 rounded-2xl p-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="md:w-1/2">
               <h2 className="text-3xl font-bold text-gray-800 mb-4">

@@ -1,9 +1,12 @@
 import { useState, useRef } from 'react'
 import { FaCamera } from 'react-icons/fa'
+import { useLocation } from 'react-router-dom'
 
-const ButtonHandler = ({ imageRef }) => {
+const ButtonHandler = ({ imageRef, handleImageDetection, showImageDrawe }) => {
   const [streaming, setStreaming] = useState(null) // streaming state
   const inputImageRef = useRef(null) // video input reference
+  const location = useLocation()
+  const isProductDetailsPage = location.pathname.startsWith('/product-details/')
 
   // closing image
   const closeImage = () => {
@@ -49,7 +52,7 @@ const ButtonHandler = ({ imageRef }) => {
           else if (streaming === 'image') closeImage()
         }}
       >
-        <FaCamera className="text-sky-700 text-xl" />
+        {!isProductDetailsPage && <FaCamera className="text-sky-700 text-xl" />}
       </button>
     </div>
   )

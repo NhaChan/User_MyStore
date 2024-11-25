@@ -19,7 +19,7 @@ const Login = () => {
       const data = form.getFieldsValue()
       await authService.login(data)
       dispatch(authActions.LOGIN())
-      notification.success({ message: 'Đăng nhập thành công' })
+      notification.success({ message: 'Đăng nhập thành công', placement: 'top' })
       // navigate('/')
       window.location.replace('/')
     } catch (error) {

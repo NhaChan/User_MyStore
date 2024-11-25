@@ -16,11 +16,12 @@ const ConfirmCode = () => {
       // console.log(res)
       notification.success({
         message: 'Gửi mã thành công',
+        placement: 'top',
       })
       navigate('/confirm-code')
     } catch (error) {
       //   notification.error({
-      //     message: 'Mã xác thực không đúng',
+      //     message: 'Mã xác thực không đúng', placement: 'top'
       //   })
       showError(error)
     } finally {

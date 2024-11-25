@@ -27,11 +27,13 @@ export default function Payment() {
         notification.success({
           message: 'Thành công',
           description: 'Thanh toán thành công',
+          placement: 'top',
         })
       } catch (error) {
         notification.error({
           message: 'Thất bại',
           description: 'Thanh toán thất bại',
+          placement: 'top',
         })
       } finally {
         navigate('/orders')

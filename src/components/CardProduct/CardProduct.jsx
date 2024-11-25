@@ -23,7 +23,7 @@ const CardProduct = ({ product, isLoading }) => {
       }
     } catch (error) {
       // showError(error)
-      notification.error({ message: 'Bạn chưa đăng nhập tài khoản' })
+      notification.error({ message: 'Bạn chưa đăng nhập tài khoản', placement: 'top' })
     }
   }
 

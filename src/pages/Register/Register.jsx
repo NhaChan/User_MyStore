@@ -34,6 +34,7 @@ const Register = () => {
       // console.log(res)
       notification.success({
         message: 'Gửi mã thành công',
+        placement: 'top',
       })
       setTimer(60)
       setIsCodeSent(true)
@@ -52,6 +53,7 @@ const Register = () => {
       await authService.confirmCode({ email: email, token: code })
       notification.success({
         message: 'Xác nhận mã thành công',
+        placement: 'top',
       })
       setIsConfirmCode(true)
     } catch (error) {
@@ -76,6 +78,7 @@ const Register = () => {
       // console.log(res)
       notification.success({
         message: 'Đăng ký tài khoản thành công',
+        placement: 'top',
       })
       navigate('/login')
     } catch (error) {

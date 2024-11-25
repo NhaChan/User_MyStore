@@ -82,7 +82,7 @@ export default function Footer() {
             <Link to="#" className="text-gray-500 hover:text-blue-500 dark:hover:text-white">
               <svg
                 className="w-4 h-4"
-                aria-hidden="true"
+                // aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="currentColor"
                 viewBox="0 0 8 19"
@@ -98,7 +98,7 @@ export default function Footer() {
             <Link to="#" className="text-gray-500 hover:text-blue-500 dark:hover:text-white ms-5">
               <svg
                 className="w-4 h-4"
-                aria-hidden="true"
+                // aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="currentColor"
                 viewBox="0 0 21 16"
@@ -110,7 +110,7 @@ export default function Footer() {
             <Link to="#" className="text-gray-500 hover:text-blue-500 dark:hover:text-white ms-5">
               <svg
                 className="w-4 h-4"
-                aria-hidden="true"
+                // aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="currentColor"
                 viewBox="0 0 20 17"
@@ -126,7 +126,7 @@ export default function Footer() {
             <Link to="#" className="text-gray-500 hover:text-blue-500 dark:hover:text-white ms-5">
               <svg
                 className="w-4 h-4"
-                aria-hidden="true"
+                // aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="currentColor"
                 viewBox="0 0 20 20"
@@ -142,7 +142,7 @@ export default function Footer() {
             <Link to="#" className="text-gray-500 hover:text-blue-500 dark:hover:text-white ms-5">
               <svg
                 className="w-4 h-4"
-                aria-hidden="true"
+                // aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="currentColor"
                 viewBox="0 0 20 20"

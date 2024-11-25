@@ -75,6 +75,7 @@ export default function SiderMenu() {
       setData(res.data)
       notification.success({
         message: `Thành công.`,
+        placement: 'top',
       })
       setIsModalAvt(false)
     } catch (error) {

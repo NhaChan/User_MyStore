@@ -68,7 +68,12 @@ const ProductDetail = ({ product }) => {
         setFavorite([...favorites, id])
       }
     } catch (error) {
-      showError(error)
+      if (error.response?.status === 401) {
+        notification.error({
+          message: error.response.data || 'Bạn chưa đăng nhập tài khoản!',
+          placement: 'top',
+        })
+      } else showError(error)
     }
   }
 
@@ -148,7 +153,10 @@ const ProductDetail = ({ product }) => {
     } catch (error) {
       // console.log(error)
       if (error.response?.status === 401) {
-        notification.error({ message: error.response.data || 'Bạn chưa đăng nhập tài khoản!' })
+        notification.error({
+          message: error.response.data || 'Bạn chưa đăng nhập tài khoản!',
+          placement: 'top',
+        })
       } else showError(error)
     } finally {
       setIsAddCart(false)
