@@ -94,7 +94,7 @@ const ResetPassword = () => {
         <div className="px-10 py-16 col-span-2 md:col-span-1">
           {!isCodeSent ? (
             <>
-              <h2 className="text-3xl font-bold text-center mb-6 text-indigo-600">Đổi mật khẩu</h2>
+              <h2 className="text-3xl font-bold text-center mb-6 text-indigo-600">Quên mật khẩu</h2>
               <Form form={form} onFinish={handleSendCode}>
                 <Form.Item
                   // label="Email"

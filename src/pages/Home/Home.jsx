@@ -11,30 +11,27 @@ import { ArrowRightOutlined, FireOutlined, PercentageOutlined } from '@ant-desig
 
 const Home = () => {
   const [isLoading, setIsLoading] = useState(false)
-  const [data, setData] = useState([])
   const discountSectionRef = useRef(null)
+  const [bestSelling, setBestSelling] = useState([])
+  const [discount, setDiscount] = useState([])
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchDatabySold = async () => {
       setIsLoading(true)
       try {
-        const data = await productService.getAll()
-        setData(data.data.items)
+        const data = await productService.getBySold()
+        const byDiscount = await productService.getByDiscount()
+        // console.log(data.data.items.slice(0, 6))
+        setBestSelling(data.data.items.slice(0, 6))
+        setDiscount(byDiscount.data.items.slice(0, 6))
       } catch (error) {
         showError(error)
       } finally {
         setIsLoading(false)
       }
     }
-    fetchData()
+    fetchDatabySold()
   }, [])
-
-  const bestSelling = data.sort((a, b) => b.sold - a.sold).slice(0, 6)
-
-  const discounted = data
-    .filter((product) => product.discount > 0)
-    .sort((a, b) => b.discount - a.discount)
-    .slice(0, 6)
 
   const scrollToDiscountSection = () => {
     if (discountSectionRef.current) {
@@ -70,11 +67,11 @@ const Home = () => {
             <Button>Kệ-rổ</Button>
           </div>
         </div> */}
-        <div className="bg-white rounded-xl shadow-sm mb-12">
+        <div className="bg-white rounded-xl shadow-sm">
           <Category />
         </div>
 
-        <div className="p-8">
+        <div className="p-8 mt-12">
           <div className="flex items-center justify-center gap-2 mb-8">
             <FireOutlined className="text-3xl text-orange-500" />
             <h2 className="text-3xl font-bold text-gray-800">Sản phẩm bán chạy</h2>
@@ -84,7 +81,7 @@ const Home = () => {
             <Skeleton />
           ) : (
             <>
-              <div className="grid lg:grid-cols-6 md:grid-cols-3 grid-cols-2 gap-4 p-4">
+              <div className="grid lg:grid-cols-6 md:grid-cols-3 grid-cols-2 gap-4">
                 {bestSelling.map((product, i) => (
                   <CardProduct product={product} key={i} isLoading={isLoading} />
                 ))}
@@ -107,7 +104,7 @@ const Home = () => {
           ref={discountSectionRef}
           className="bg-gradient-to-r from-pink-50 to-purple-50 rounded-2xl p-8"
         >
-          <div className="flex items-center justify-center gap-2 mb-8 text-red-500">
+          <div className="flex items-center justify-center gap-2 mb-8 text-red-500 mt-12">
             <PercentageOutlined className="text-3xl " />
             <h2 className="text-3xl font-bold">Đang giảm giá</h2>
           </div>
@@ -117,7 +114,7 @@ const Home = () => {
           ) : (
             <>
               <div className="grid lg:grid-cols-6 md:grid-cols-3 grid-cols-2 gap-6">
-                {discounted.map((product, i) => (
+                {discount.map((product, i) => (
                   <CardProduct product={product} key={i} isLoading={isLoading} />
                 ))}
               </div>

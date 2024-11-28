@@ -1,4 +1,4 @@
-import { Button, Divider, Form, Input, notification, Spin } from 'antd'
+import { Button, Form, Input, notification, Spin } from 'antd'
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { LockOutlined, MailOutlined } from '@ant-design/icons'
@@ -92,7 +92,7 @@ const Login = () => {
             </Button>
           </Form>
           <div className="mt-6 text-center">
-            <Divider plain>Hoặc</Divider>
+            {/* <Divider plain>Hoặc</Divider>
             <div className="flex justify-center mt-4">
               <button className="flex items-center px-4 py-2 border border-blue-700 rounded-3xl hover:bg-blue-300 mx-2">
                 <img
@@ -110,7 +110,7 @@ const Login = () => {
                 />
                 GitHub
               </button>
-            </div>
+            </div> */}
             <p className="mt-6 text-sm text-gray-700">
               Bạn chưa có tài khoản?
               <Link to="/register" className="text-blue-700">

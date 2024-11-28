@@ -19,15 +19,12 @@ export default function Footer() {
               </h2>
               <ul className="text-gray-600 dark:text-gray-400 font-medium">
                 <li className="mb-4">
-                  <Link to="https://flowbite.com/" className="hover:underline hover:text-blue-500">
+                  <Link to="#" className="hover:underline hover:text-blue-500">
                     Ant Design
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    to="https://tailwindcss.com/"
-                    className="hover:underline hover:text-blue-500"
-                  >
+                  <Link to="#" className="hover:underline hover:text-blue-500">
                     Tailwind CSS
                   </Link>
                 </li>

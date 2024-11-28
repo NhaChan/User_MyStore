@@ -113,14 +113,14 @@ const Profile = () => {
                         <Form.Item
                           label="Email"
                           name="email"
-                          rules={[
-                            {
-                              required: true,
-                              message: 'Số điện thoại là bắt buộc',
-                            },
-                          ]}
+                          // rules={[
+                          //   {
+                          //     required: true,
+                          //     message: 'Số điện thoại là bắt buộc',
+                          //   },
+                          // ]}
                         >
-                          <Input size="large" placeholder="..." />
+                          <Input disabled size="large" placeholder="..." />
                         </Form.Item>
                       </div>
                       <div className="flex justify-end items-end">

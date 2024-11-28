@@ -119,10 +119,10 @@ const CartItem = () => {
       setShippingFee(0)
       setCurrentStep(2)
     } else if (approximate >= 200000 && approximate < 400000) {
-      setShippingFee(2000)
+      setShippingFee(20000)
       setCurrentStep(1)
     } else {
-      setShippingFee(4000)
+      setShippingFee(40000)
       setCurrentStep(0)
     }
   }
@@ -360,9 +360,9 @@ const CartItem = () => {
                   <div>
                     <div className="bg-white p-4">
                       <Steps size="small" initial={0} current={currentStep}>
-                        <Steps.Step title="4.000 VND" description="dưới 200.000 VND" />
+                        <Steps.Step title="40.000 VND" description="dưới 200.000 VND" />
                         <Steps.Step
-                          title="2.000 VND"
+                          title="20.000 VND"
                           description="từ 200.000 VND đến dưới 400.000 VND"
                         />
                         <Steps.Step title="Miễn phí" description="trên 400.000 VND" />

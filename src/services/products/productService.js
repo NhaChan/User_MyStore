@@ -36,6 +36,10 @@ const getFilteredProducts = async (filters) =>
     paramsSerializer: { indexes: true },
   })
 
+const getBySold = async () => await axios.get(API_URL + '/descending-by-sold')
+
+const getByDiscount = async () => await axios.get(API_URL + '/descending-by-discount')
+
 const productService = {
   getAll,
   fetchProductAttributes,
@@ -45,6 +49,8 @@ const productService = {
   deleteProduct,
   getFilteredProducts,
   getReview,
+  getBySold,
+  getByDiscount,
 }
 
 export default productService

@@ -352,26 +352,28 @@ const Header = ({ onSearch }) => {
 
             {/* Icons group */}
             <div className="flex items-center space-x-4 sm:space-x-6">
-              <div className="relative flex flex-col items-center justify-center w-full max-w-2xl mx-auto">
+              <div>
                 {loading.loading && <Spin className="absolute z-10" />}
-
-                <img
-                  src="#"
-                  className="max-w-full h-auto rounded-md"
-                  ref={imageRef}
-                  alt=""
-                  // onLoad={() => detect(imageRef.current, model, canvasRef.current)}
-                  onLoad={() => {
-                    handleImageDetection(imageRef.current) // Gọi tự động khi ảnh được tải lên
-                    showImageDrawer() // Hiển thị Drawer ngay sau khi ảnh được xử lý
-                  }}
-                />
-                <canvas
-                  ref={canvasRef}
-                  className="absolute top-0 left-0 w-full h-full pointer-events-none"
-                />
+                <div className="relative flex flex-col items-center justify-center max-w-2xl mx-auto">
+                  <img
+                    src="#"
+                    className="max-w-full h-auto rounded-md"
+                    ref={imageRef}
+                    alt=""
+                    // onLoad={() => detect(imageRef.current, model, canvasRef.current)}
+                    onLoad={() => {
+                      handleImageDetection(imageRef.current) // Gọi tự động khi ảnh được tải lên
+                      showImageDrawer() // Hiển thị Drawer ngay sau khi ảnh được xử lý
+                    }}
+                  />
+                  <canvas
+                    ref={canvasRef}
+                    className="absolute top-0 left-0 w-full h-full pointer-events-none"
+                  />
+                </div>
+                <ButtonHandler imageRef={imageRef} />
               </div>
-              <ButtonHandler imageRef={imageRef} />
+
               {/* Search button */}
               <button
                 type="button"
@@ -379,9 +381,9 @@ const Header = ({ onSearch }) => {
                 className="p-2 hover:bg-blue-50 rounded-full transition-colors duration-200 relative group"
               >
                 <FaSearch className="text-sky-700 text-xl" />
-                <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                {/* <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                   Tìm kiếm
-                </span>
+                </span> */}
               </button>
 
               {/* Cart icon với badge được cải thiện */}
@@ -405,9 +407,9 @@ const Header = ({ onSearch }) => {
                       <FaShoppingBag className="text-2xl hover:text-blue-500 transition-colors duration-200" />
                     </Link>
                   </Badge>
-                  <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                  {/* <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                     Giỏ hàng
-                  </span>
+                  </span> */}
                 </div>
               ) : (
                 <Link to="/login">
@@ -421,7 +423,7 @@ const Header = ({ onSearch }) => {
 
               {/* User avatar/profile với hiệu ứng mới */}
               {state.isAuthenticated ? (
-                <div className="relative group">
+                <div className="group relative">
                   <Dropdown menu={{ items }} trigger={['click']} placement="bottomRight">
                     <div className="cursor-pointer">
                       <img

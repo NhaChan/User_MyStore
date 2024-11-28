@@ -32,7 +32,7 @@ const Category = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 bg-white rounded-xl">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Danh mục sản phẩm</h2>
+      {/* <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Danh mục sản phẩm</h2> */}
       {isLoading ? (
         <Skeleton active />
       ) : (
@@ -47,7 +47,7 @@ const Category = () => {
           autoplay
           autoplaySpeed={3000}
           slidesToShow={7}
-          className="py-4"
+          className="py-2"
         >
           {categories.map((category) => (
             <div
@@ -55,7 +55,7 @@ const Category = () => {
               onClick={() => handleCategoryClick(category.id)}
               className="group cursor-pointer px-2"
             >
-              <div className="flex flex-col items-center space-y-3">
+              <div className="flex flex-col items-center space-y-3 py-3">
                 <div
                   className="relative p-2 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-full 
                               transform transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg"
