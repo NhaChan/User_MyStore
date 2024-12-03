@@ -46,7 +46,8 @@ const Review = ({ id, rating }) => {
             className="text-2xl hidden sm:block text-red-500"
             allowHalf
             disabled
-            defaultValue={rating}
+            // defaultValue={rating}
+            value={rating}
           />
         </div>
         <div className="w-3/4">
@@ -204,7 +205,7 @@ const Review = ({ id, rating }) => {
                   description={
                     <div>
                       <Rate allowHalf disabled defaultValue={review.star} />
-                      <div className="text-black mt-2">{review.description}</div>
+                      <div className="text-black mt-2 text-md sm:text-lg">{review.description}</div>
                     </div>
                   }
                 />
@@ -223,9 +224,12 @@ const Review = ({ id, rating }) => {
                 )}
                 <div className="px-14 py-4">
                   <div className="bg-gray-50 p-2">
-                    <span className="text-gray-300">Phản hồi từ shop: </span>Cảm ơn bạn đã phản hồi
-                    về sản phẩm của shop chúng tôi. Nếu sản phẩm không phù hợp hay xảy ra vấn đề,
-                    mong bạn nhắn shop giải quyết. Đừng vội đánh giá shop buồn.
+                    <span className="text-gray-300">Phản hồi từ shop: </span>
+                    <span className="text-md sm:text-lg">
+                      Cảm ơn bạn đã phản hồi về sản phẩm của shop chúng tôi. Nếu sản phẩm không phù
+                      hợp hay xảy ra vấn đề, mong bạn nhắn shop giải quyết. Đừng vội đánh giá shop
+                      buồn.
+                    </span>
                   </div>
                 </div>
               </Card>

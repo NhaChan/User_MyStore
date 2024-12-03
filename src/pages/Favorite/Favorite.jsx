@@ -102,7 +102,7 @@ const Favorite = () => {
                     subTitle="Hãy nhanh tay chọn ngay sản phẩm yêu thích."
                     extra={
                       <Link to="/product">
-                        <Button type="primary">Mua sắm ngay</Button>
+                        <Button type="primary">Xem sản phẩm</Button>
                       </Link>
                     }
                   />

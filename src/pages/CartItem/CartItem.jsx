@@ -115,7 +115,7 @@ const CartItem = () => {
   }
 
   const totalShippingFee = (approximate) => {
-    if (approximate > 400000 || approximate === 0) {
+    if (approximate > 400000) {
       setShippingFee(0)
       setCurrentStep(2)
     } else if (approximate >= 200000 && approximate < 400000) {
@@ -241,7 +241,15 @@ const CartItem = () => {
   }
 
   const handleOrder = async () => {
+    setIsLoading(true)
     try {
+      if (!dataAddress || Object.values(dataAddress).some((e) => !e)) {
+        notification.warning({
+          message: 'Vui lòng cập nhật đầy đủ địa chỉ giao hàng trước khi đặt hàng.',
+          placement: 'top',
+        })
+        return
+      }
       const order = {
         total: approximatePrice + shippingFee,
         shippingCost: shippingFee,
@@ -272,6 +280,8 @@ const CartItem = () => {
       }
     } catch (error) {
       showError(error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -454,6 +464,7 @@ const CartItem = () => {
                     type="primary"
                     size="large"
                     className="w-full rounded-sm"
+                    loading={isLoading}
                   >
                     Mua hàng
                   </Button>
