@@ -56,6 +56,7 @@ const Header = ({ onSearch }) => {
           search: searchValue,
         })
         setProducts(res.data.items)
+        console.log('object', res.data.items)
       } catch (error) {
         console.error('Error:', error)
       } finally {
@@ -63,7 +64,7 @@ const Header = ({ onSearch }) => {
       }
     }
 
-    if (searchValue) {
+    if (typeof searchValue === 'string' && searchValue.trim() !== '') {
       const debouncedFetch = debounce(fetchProducts, 300)
       debouncedFetch()
 
@@ -185,7 +186,13 @@ const Header = ({ onSearch }) => {
     setLoading(true)
     try {
       const labels = await detect(imageElement, model) // Gọi hàm detect để lấy predictedLabels
+      if (labels.length === 0) {
+        setSearchValue([])
+        setProducts([])
+        return
+      }
       setSearchValue(labels)
+      // console.log('labels:', labels)
       // setSearchValue(labels.join(' ')) // Cập nhật searchValue với các label dự đoán
       setOpenDrawer(true)
     } catch (error) {
@@ -196,6 +203,7 @@ const Header = ({ onSearch }) => {
   }
 
   const fetchProductsByKeywords = async (keywords) => {
+    // console.log('keywords', keywords)
     setLoading(true)
     try {
       const allResults = await Promise.all(
@@ -214,6 +222,7 @@ const Header = ({ onSearch }) => {
         new Map(mergedResults.map((item) => [item.id, item])).values(),
       )
       setProducts(uniqueProducts)
+      console.log('uniqueProducts', uniqueProducts)
     } catch (error) {
       console.error('Error fetching products by keywords:', error)
     } finally {
@@ -222,33 +231,17 @@ const Header = ({ onSearch }) => {
   }
 
   useEffect(() => {
-    console.log('Search value:', searchValue) // Log kiểm tra giá trị
-    if (searchValue) {
+    if (searchValue && searchValue.length > 0) {
       const fetchProducts = async () => {
-        if (Array.isArray(searchValue)) {
-          await fetchProductsByKeywords(searchValue)
-        } else {
-          // Trường hợp là chuỗi
-          setLoading(true)
-          try {
-            const res = await productService.getFilteredProducts({
-              page: 1,
-              pageSize: 4,
-              search: searchValue,
-            })
-            console.log('API response:', res.data.items)
-            setProducts(res.data.items)
-          } catch (error) {
-            console.error('Error:', error)
-          } finally {
-            setLoading(false)
-          }
-        }
+        const uniqueKeywords = Array.from(new Set(searchValue))
+        await fetchProductsByKeywords(uniqueKeywords)
       }
 
       const debouncedFetch = debounce(fetchProducts, 300)
       debouncedFetch()
-      return () => debouncedFetch.clear()
+      return () => {
+        debouncedFetch.clear()
+      }
     } else {
       setProducts([])
     }
@@ -372,7 +365,11 @@ const Header = ({ onSearch }) => {
                     className="absolute top-0 left-0 w-full h-full pointer-events-none"
                   />
                 </div>
-                <ButtonHandler imageRef={imageRef} />
+                <ButtonHandler
+                  imageRef={imageRef}
+                  handleImageDetection={handleImageDetection}
+                  showImageDrawer={showImageDrawer}
+                />
               </div>
 
               {/* Search button */}
