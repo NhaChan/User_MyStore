@@ -1,4 +1,4 @@
-import { Avatar, Badge, Card, Drawer, Dropdown, Input, Modal, Skeleton, Spin } from 'antd'
+import { Badge, Card, Drawer, Dropdown, Input, Modal, Skeleton, Spin } from 'antd'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { FaSearch, FaShoppingBag, FaUser } from 'react-icons/fa'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
@@ -30,8 +30,9 @@ const Header = ({ onSearch }) => {
   const [products, setProducts] = useState([])
   const [avatar, setAvatar] = useState(null)
   const { countCart } = useContext(CartContext)
+  const [imageSearchLabels, setImageSearchLabels] = useState([])
+  const [showImage, setShowImage] = useState(false)
 
-  const [openDrawer, setOpenDrawer] = useState(false)
   const [model, setModel] = useState({
     net: null,
     inputShape: [1, 0, 0, 3],
@@ -39,7 +40,6 @@ const Header = ({ onSearch }) => {
 
   // references
   const imageRef = useRef(null)
-  const canvasRef = useRef(null)
 
   // useEffect(() => {
   //   const user = authService.getCurrentUser()
@@ -52,10 +52,10 @@ const Header = ({ onSearch }) => {
       try {
         const res = await productService.getFilteredProducts({
           page: 1,
-          pageSize: 4,
+          pageSize: 6,
           search: searchValue,
         })
-        setProducts(res.data.items)
+        setProducts(res?.data?.items || [])
         console.log('object', res.data.items)
       } catch (error) {
         console.error('Error:', error)
@@ -64,7 +64,7 @@ const Header = ({ onSearch }) => {
       }
     }
 
-    if (typeof searchValue === 'string' && searchValue.trim() !== '') {
+    if (searchValue) {
       const debouncedFetch = debounce(fetchProducts, 300)
       debouncedFetch()
 
@@ -94,7 +94,13 @@ const Header = ({ onSearch }) => {
   }
   const onClose = () => {
     setOpen(false)
-    setOpenDrawer(false)
+    setSearchValue('')
+    setImageSearchLabels([])
+    setShowImage(false)
+    if (imageRef.current) {
+      imageRef.current.src = '' // Xóa hình ảnh đã tải lên
+    }
+    setProducts([])
   }
 
   const toggleMenu = () => {
@@ -152,7 +158,8 @@ const Header = ({ onSearch }) => {
   ]
 
   const showImageDrawer = () => {
-    setOpenDrawer(true)
+    // setOpenDrawer(true)
+    setOpen(true)
   }
 
   useEffect(() => {
@@ -182,70 +189,58 @@ const Header = ({ onSearch }) => {
     })
   }, [])
 
+  useEffect(() => {
+    const fetchImageSearchProducts = async () => {
+      setLoading(true)
+      try {
+        const allResults = await Promise.all(
+          imageSearchLabels.map((label) =>
+            productService.getFilteredProducts({
+              page: 1,
+              pageSize: 6,
+              search: label,
+            }),
+          ),
+        )
+        const mergedResults = allResults.flatMap((res) => res.data.items)
+        const uniqueProducts = Array.from(
+          new Map(mergedResults.map((item) => [item.id, item])).values(),
+        )
+        setProducts(uniqueProducts || [])
+        console.log('ImageSearch:', uniqueProducts)
+      } catch (error) {
+        console.error('Error in image search:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    if (imageSearchLabels && imageSearchLabels.length > 0) {
+      fetchImageSearchProducts()
+    } else {
+      setProducts([])
+    }
+  }, [imageSearchLabels])
+
   const handleImageDetection = async (imageElement) => {
     setLoading(true)
     try {
-      const labels = await detect(imageElement, model) // Gọi hàm detect để lấy predictedLabels
-      if (labels.length === 0) {
-        setSearchValue([])
+      const labels = await detect(imageElement, model)
+      if (!labels || labels.length === 0) {
+        setImageSearchLabels([])
         setProducts([])
+        setShowImage(false)
         return
       }
-      setSearchValue(labels)
-      // console.log('labels:', labels)
-      // setSearchValue(labels.join(' ')) // Cập nhật searchValue với các label dự đoán
-      setOpenDrawer(true)
+      setImageSearchLabels(labels) // Cập nhật nhãn tìm kiếm từ hình ảnh
+      setShowImage(true)
+      // setOpenDrawer(true)
     } catch (error) {
       console.error('Error detecting image:', error)
     } finally {
       setLoading(false)
     }
   }
-
-  const fetchProductsByKeywords = async (keywords) => {
-    // console.log('keywords', keywords)
-    setLoading(true)
-    try {
-      const allResults = await Promise.all(
-        keywords.map((keyword) =>
-          productService.getFilteredProducts({
-            page: 1,
-            pageSize: 4,
-            search: keyword,
-          }),
-        ),
-      )
-      // Hợp nhất các sản phẩm từ các kết quả tìm kiếm
-      const mergedResults = allResults.flatMap((res) => res.data.items)
-      // Loại bỏ sản phẩm trùng lặp (dựa trên ID hoặc thuộc tính duy nhất)
-      const uniqueProducts = Array.from(
-        new Map(mergedResults.map((item) => [item.id, item])).values(),
-      )
-      setProducts(uniqueProducts)
-      console.log('uniqueProducts', uniqueProducts)
-    } catch (error) {
-      console.error('Error fetching products by keywords:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    if (searchValue && searchValue.length > 0) {
-      const fetchProducts = async () => {
-        const uniqueKeywords = Array.from(new Set(searchValue))
-        await fetchProductsByKeywords(uniqueKeywords)
-      }
-
-      const debouncedFetch = debounce(fetchProducts, 300)
-      debouncedFetch()
-      return () => {
-        debouncedFetch.clear()
-      }
-    } else {
-      setProducts([])
-    }
-  }, [searchValue])
 
   return (
     <>
@@ -259,46 +254,6 @@ const Header = ({ onSearch }) => {
       >
         <p>Bạn có chắc chắn muốn đăng xuất?</p>
       </Modal>
-      <Drawer
-        title={
-          <span className="text-xl font-semibold text-sky-700">Tìm kiếm theo ảnh sản phẩm</span>
-        }
-        onClose={onClose}
-        open={openDrawer}
-      >
-        <div style={{ textAlign: 'center' }}>
-          <img
-            src={imageRef.current?.src}
-            alt="Uploaded"
-            style={{ maxWidth: '100%', maxHeight: '200px', marginBottom: '20px' }}
-          />
-          {loading && searchValue ? (
-            <Skeleton active />
-          ) : products.length > 0 && searchValue ? (
-            products.map((product) => (
-              <Card
-                className="rounded-none"
-                key={product.id}
-                style={{ width: '100%', marginBottom: 16 }}
-                onClick={() => {
-                  navigate(`/product-details/${product.id}`)
-                  onClose()
-                }}
-              >
-                <Card.Meta
-                  avatar={<Avatar className="w-24 h-24" src={toImageLink(product.imageUrl)} />}
-                  title={product.name}
-                  description={`Giá: ${formatVND(
-                    product.price - product.price * (product.discount / 100),
-                  )}`}
-                />
-              </Card>
-            ))
-          ) : (
-            searchValue && <Empty title="Không có sản phẩm nào được tìm thấy!" />
-          )}
-        </div>
-      </Drawer>
 
       <nav className="bg-white shadow-md sticky top-0 z-30">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -346,32 +301,6 @@ const Header = ({ onSearch }) => {
 
             {/* Icons group */}
             <div className="flex items-center space-x-4 sm:space-x-6">
-              <div>
-                {loading.loading && <Spin className="absolute z-10" />}
-                <div className="relative flex flex-col items-center justify-center max-w-2xl mx-auto">
-                  <img
-                    src="#"
-                    className="max-w-full h-auto rounded-md"
-                    ref={imageRef}
-                    alt=""
-                    // onLoad={() => detect(imageRef.current, model, canvasRef.current)}
-                    onLoad={() => {
-                      handleImageDetection(imageRef.current) // Gọi tự động khi ảnh được tải lên
-                      showImageDrawer() // Hiển thị Drawer ngay sau khi ảnh được xử lý
-                    }}
-                  />
-                  <canvas
-                    ref={canvasRef}
-                    className="absolute top-0 left-0 w-full h-full pointer-events-none"
-                  />
-                </div>
-                <ButtonHandler
-                  imageRef={imageRef}
-                  handleImageDetection={handleImageDetection}
-                  showImageDrawer={showImageDrawer}
-                />
-              </div>
-
               {/* Search button */}
               <button
                 type="button"
@@ -508,43 +437,94 @@ const Header = ({ onSearch }) => {
         title={<span className="text-xl font-semibold text-sky-700">Tìm kiếm sản phẩm</span>}
         onClose={onClose}
         open={open}
-        placement="right"
+        placement="top"
         className="rounded-l-lg"
-        width={320}
+        // width={420}
+        styles={{ wrapper: { height: 'fit-content' } }}
       >
-        <Input.Search
-          placeholder="Nhập tên sản phẩm..."
-          size="large"
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          onSearch={handleSearch}
-          className="mb-4"
-        />
+        <div className="flex items-center justify-center space-x-4">
+          <Input.Search
+            placeholder="Nhập tên sản phẩm..."
+            size="large"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            onSearch={handleSearch}
+            className="mb-4"
+            style={{ width: '920px' }}
+          />
+          <ButtonHandler
+            imageRef={imageRef}
+            handleImageDetection={handleImageDetection}
+            showImageDrawer={showImageDrawer}
+          />
+          {loading.loading && <Spin className="absolute z-10" />}
+          <img
+            src="#"
+            className="max-w-full h-auto rounded-md"
+            ref={imageRef}
+            alt=""
+            onLoad={() => {
+              handleImageDetection(imageRef.current) // Gọi tự động khi ảnh được tải lên
+            }}
+          />
+          {showImage && imageRef.current?.src && (
+            <img
+              src={imageRef.current?.src}
+              alt="Uploaded"
+              style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '8px' }}
+            />
+          )}
+        </div>
 
-        {loading && searchValue ? (
+        {loading && searchValue && imageSearchLabels ? (
           <Skeleton active />
-        ) : products.length > 0 && searchValue ? (
-          products.map((product) => (
-            <Card
-              className="rounded-none"
-              key={product.id}
-              style={{ width: '100%', marginBottom: 16 }}
-              onClick={() => {
-                navigate(`/product-details/${product.id}`)
-                onClose()
-              }}
-            >
-              <Card.Meta
-                avatar={<Avatar className="w-24 h-24" src={toImageLink(product.imageUrl)} />}
-                title={product.name}
-                description={`Giá: ${formatVND(
-                  product.price - product.price * (product.discount / 100),
-                )}`}
-              />
-            </Card>
-          ))
+        ) : products?.length > 0 ? (
+          <div className="grid lg:grid-cols-6 md:grid-cols-3 grid-cols-2 gap-4 px-28 py-2">
+            {products.map((product, i) => (
+              <Card
+                hoverable={product.quantity <= 0 ? false : true}
+                loading={loading}
+                key={i}
+                className="w-full h-fit"
+                onClick={() => {
+                  navigate(`/product-details/${product.id}?name=${product.name}`)
+                  onClose()
+                }}
+                cover={
+                  <img
+                    // className="h-64 object-cover"
+                    className={
+                      product.quantity <= 0
+                        ? 'h-64 object-cover filter grayscale'
+                        : 'h-64 object-cover'
+                    }
+                    alt={product.name}
+                    src={toImageLink(product.imageUrl)}
+                  />
+                }
+              >
+                <div className="truncate w-20 md:w-36">{product.name}</div>
+                <div className="py-2 flex justify-between">
+                  <div>
+                    <span className="text-red-600 text-lg font-sans">
+                      {formatVND(product.price - product.price * (product.discount / 100))}
+                    </span>{' '}
+                    <span className="line-through">{formatVND(product.price)}</span>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
         ) : (
-          searchValue && <Empty title="Không có sản phẩm nào được tìm thấy!" />
+          <Empty
+            title={
+              searchValue.trim() === ''
+                ? 'Hãy tiến hành tìm kiếm!'
+                : imageSearchLabels && imageSearchLabels.length > 0
+                ? 'Không tìm thấy sản phẩm nào phù hợp với hình ảnh đã tải lên!'
+                : 'Không tìm thấy sản phẩm nào phù hợp với từ khóa tìm kiếm!'
+            }
+          />
         )}
       </Drawer>
     </>
