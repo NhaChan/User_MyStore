@@ -1,4 +1,4 @@
-import { Badge, Card, Drawer, Dropdown, Input, Modal, Skeleton, Spin } from 'antd'
+import { Badge, Card, Drawer, Dropdown, Input, Modal, Spin } from 'antd'
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { FaSearch, FaShoppingBag, FaUser } from 'react-icons/fa'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
@@ -445,7 +445,7 @@ const Header = ({ onSearch }) => {
         </div>
 
         {loading && searchValue && imageSearchLabels ? (
-          <Skeleton active />
+          <Spin size="large" />
         ) : products?.length > 0 ? (
           <div className="grid lg:grid-cols-6 md:grid-cols-3 grid-cols-2 gap-4 px-28 py-2">
             {products.map((product, i) => (
@@ -489,7 +489,7 @@ const Header = ({ onSearch }) => {
               searchValue.trim() === ''
                 ? 'Hãy tiến hành tìm kiếm!'
                 : searchValue && searchValue.length > 0
-                ? 'Không tìm thấy sản phẩm nào phù hợp với từ khóa tìm kiếm!'
+                ? `Không tìm thấy sản phẩm nào phù hợp với từ khóa "${searchValue}"!`
                 : 'Không tìm thấy sản phẩm nào phù hợp với hình ảnh đã tải lên!'
             }
           />

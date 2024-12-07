@@ -52,7 +52,7 @@ const ButtonHandler = ({ imageRef, handleImageDetection, showImageDrawe }) => {
           else if (streaming === 'image') closeImage()
         }}
       >
-        {!isProductDetailsPage && <FaCamera className="text-sky-700 text-xl" />}
+        {!isProductDetailsPage && <FaCamera className="text-sky-700 text-3xl" />}
       </button>
     </div>
   )

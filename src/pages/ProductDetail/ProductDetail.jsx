@@ -244,24 +244,26 @@ const ProductDetail = ({ product }) => {
                   <span>{data.sold} Đã bán</span>
                 </div>
                 <div>
-                  <div className="flex items-center w-full bg-gradient-to-r from-red-700 via-red-500 to-pink-500 p-2 text-white text-2xl">
-                    <BsFire className="text-red-300 text-2xl" />
-                    Flash Sale
-                  </div>
-                  <div className="mb-2 p-4 bg-gray-50">
-                    {data.discount > 0 ? (
-                      <>
+                  {data.discount > 0 ? (
+                    <>
+                      <div className="flex items-center w-full bg-gradient-to-r from-red-700 via-red-500 to-pink-500 p-2 text-white text-2xl">
+                        <BsFire className="text-red-300 text-2xl" />
+                        Đang được giảm giá
+                      </div>
+                      <div className="mb-2 p-4 bg-gray-50">
                         <span className="line-through text-xl">{formatVND(data.price)}</span>
                         <span className="text-3xl text-red-600 font-medium px-4">
                           {formatVND(discountPrice())}
                         </span>
-                      </>
-                    ) : (
-                      <span className="text-2xl text-red-500 font-medium">
+                      </div>
+                    </>
+                  ) : (
+                    <div className="mb-2 p-4 bg-gray-50">
+                      <span className="text-3xl font-medium text-red-500 ">
                         {formatVND(data.price)}
                       </span>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
                 {/* <div className="text-gray-700 mb-4">{data.description}</div> */}
                 <div className="space-x-4 pt-2">

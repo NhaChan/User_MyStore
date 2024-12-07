@@ -94,7 +94,7 @@ const CardProduct = ({ product, isLoading }) => {
           <div className="py-2 flex justify-between">
             <div>
               <span className="text-red-600 text-lg font-sans">{formatVND(discountPrice)}</span>{' '}
-              <span className="line-through">{formatVND(product.price)}</span>
+              {/* <span className="line-through">{formatVND(product.price)}</span> */}
             </div>
             <div onClick={(e) => e.preventDefault()}>
               <button onClick={clickFavorite}>
