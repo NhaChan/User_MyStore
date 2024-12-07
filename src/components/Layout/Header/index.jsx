@@ -2,7 +2,7 @@ import { Badge, Card, Drawer, Dropdown, Input, Modal, Skeleton, Spin } from 'ant
 import React, { useContext, useEffect, useRef, useState } from 'react'
 import { FaSearch, FaShoppingBag, FaUser } from 'react-icons/fa'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { CartContext, useAuth } from '../../../App'
+import { CartContext, useAuth, useModel } from '../../../App'
 import authService from '../../../services/authService'
 import authActions from '../../../services/authAction'
 import productService from '../../../services/products/productService'
@@ -10,13 +10,12 @@ import { formatVND, showError, toImageLink } from '../../../services/commonServi
 import Empty from '../../Empty'
 import debounce from 'debounce'
 import userService from '../../../services/userService'
-// import userService from '../../../services/userService'
 
-import * as tf from '@tensorflow/tfjs'
 import ButtonHandler from '../../ImageSearch/ImageSearch'
 import { detect } from '../../../utils/detect'
 
 const Header = ({ onSearch }) => {
+  const { model } = useModel()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   // const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [open, setOpen] = useState(false)
@@ -33,10 +32,10 @@ const Header = ({ onSearch }) => {
   const [imageSearchLabels, setImageSearchLabels] = useState([])
   const [showImage, setShowImage] = useState(false)
 
-  const [model, setModel] = useState({
-    net: null,
-    inputShape: [1, 0, 0, 3],
-  }) // init model & input shape
+  // const [model, setModel] = useState({
+  //   net: null,
+  //   inputShape: [1, 0, 0, 3],
+  // }) // init model & input shape
 
   // references
   const imageRef = useRef(null)
@@ -157,38 +156,6 @@ const Header = ({ onSearch }) => {
     },
   ]
 
-  const showImageDrawer = () => {
-    // setOpenDrawer(true)
-    setOpen(true)
-  }
-
-  useEffect(() => {
-    tf.ready().then(async () => {
-      const yolov8 = await tf.loadGraphModel(
-        // `${window.location.href}/${modelName}_web_model/model.json`,
-        'yolov8n_web_model/model.json',
-        {
-          onProgress: (fractions) => {
-            setLoading({ loading: true, progress: fractions }) // set loading fractions
-          },
-        },
-      ) // load model
-
-      // warming up model
-      // const dummyInput = tf.ones(yolov8.inputs[0].shape)
-      const dummyInput = tf.zeros(yolov8.inputs[0].shape)
-      const warmupResults = yolov8.execute(dummyInput)
-
-      setLoading({ loading: false, progress: 1 })
-      setModel({
-        net: yolov8,
-        inputShape: yolov8.inputs[0].shape,
-      }) // set model & input shape
-
-      tf.dispose([warmupResults, dummyInput]) // cleanup memory
-    })
-  }, [])
-
   useEffect(() => {
     const fetchImageSearchProducts = async () => {
       setLoading(true)
@@ -209,7 +176,7 @@ const Header = ({ onSearch }) => {
         setProducts(uniqueProducts || [])
         console.log('ImageSearch:', uniqueProducts)
       } catch (error) {
-        console.error('Error in image search:', error)
+        console.error('Lỗi tìm kiếm bằng hình ảnh')
       } finally {
         setLoading(false)
       }
@@ -223,18 +190,21 @@ const Header = ({ onSearch }) => {
   }, [imageSearchLabels])
 
   const handleImageDetection = async (imageElement) => {
+    if (!model?.net) {
+      console.error('Model not loaded!')
+      return
+    }
     setLoading(true)
     try {
       const labels = await detect(imageElement, model)
       if (!labels || labels.length === 0) {
         setImageSearchLabels([])
         setProducts([])
-        setShowImage(false)
+        // setShowImage(false)
         return
       }
       setImageSearchLabels(labels) // Cập nhật nhãn tìm kiếm từ hình ảnh
       setShowImage(true)
-      // setOpenDrawer(true)
     } catch (error) {
       console.error('Error detecting image:', error)
     } finally {
@@ -455,7 +425,7 @@ const Header = ({ onSearch }) => {
           <ButtonHandler
             imageRef={imageRef}
             handleImageDetection={handleImageDetection}
-            showImageDrawer={showImageDrawer}
+            // showImageDrawer={showImageDrawer}
           />
           {loading.loading && <Spin className="absolute z-10" />}
           <img
@@ -463,9 +433,7 @@ const Header = ({ onSearch }) => {
             className="max-w-full h-auto rounded-md"
             ref={imageRef}
             alt=""
-            onLoad={() => {
-              handleImageDetection(imageRef.current) // Gọi tự động khi ảnh được tải lên
-            }}
+            onLoad={() => handleImageDetection(imageRef.current)}
           />
           {showImage && imageRef.current?.src && (
             <img
@@ -520,9 +488,9 @@ const Header = ({ onSearch }) => {
             title={
               searchValue.trim() === ''
                 ? 'Hãy tiến hành tìm kiếm!'
-                : imageSearchLabels && imageSearchLabels.length > 0
-                ? 'Không tìm thấy sản phẩm nào phù hợp với hình ảnh đã tải lên!'
-                : 'Không tìm thấy sản phẩm nào phù hợp với từ khóa tìm kiếm!'
+                : searchValue && searchValue.length > 0
+                ? 'Không tìm thấy sản phẩm nào phù hợp với từ khóa tìm kiếm!'
+                : 'Không tìm thấy sản phẩm nào phù hợp với hình ảnh đã tải lên!'
             }
           />
         )}

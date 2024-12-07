@@ -31,7 +31,8 @@ const ChatBot = () => {
         if (userData) {
           ;(function (d, m) {
             var kommunicateSettings = {
-              appId: '1a2f23e74c6de8bf756c1d2247eae6bc6',
+              // appId: '1a2f23e74c6de8bf756c1d2247eae6bc6',
+              appId: '23f59dc0514c8f8e6153716b2174a66f9',
               userId: userData.phoneNumber || '',
               userName: userData.fullName || 'Khách',
               popupWidget: true,
@@ -57,7 +58,7 @@ const ChatBot = () => {
         } else {
           ;(function (d, m) {
             var kommunicateSettings = {
-              appId: '1a2f23e74c6de8bf756c1d2247eae6bc6',
+              appId: '23f59dc0514c8f8e6153716b2174a66f9',
               popupWidget: true,
               automaticChatOpenOnNavigation: true,
               emojilibrary: true,
